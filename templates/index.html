@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Bookstore</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <!-- Logo -->
+        <div class="logo">
+            papernest
+        </div>
+
+        <!-- Search Bar and Links -->
+        <div class="search-bar-container">
+            <form class="search-bar" action="/search" method="GET">
+                <input type="text" name="query" placeholder="Search for books..." />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Links -->
+        <div class="user-links">
+            {% if session.get('user') %}
+                <a href="/account">Account</a>
+                <a href="/wishlist">Wishlist</a>
+                <a href="/cart">Cart</a>
+            {% else %}
+                <a href="/login">Login   | </a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="/books">Books</a>
+        <a href="/non_books">Non-Books</a>
+        <a href="/bestsellers_and_new_releases">Bestsellers and New Releases</a>
+        <a href="/collections">Collections</a>
+        <a href="/sale">Sale</a>
+    </nav>
+
+
+    <!-- Main Content -->
+    {% if 'user' in session %}
+        <h1>Welcome to papernest, {{ session['user']['username'] }}!</h1>
+    {% else %}
+        <h1>Welcome to papernest! Register now!</h1>
+    {% endif %}
+
+    <h2>Available Books</h2>
+    <ul>
+        {% for book in books %}
+            <li>
+                <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
+                {% if session.get('user') %}
+                    <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+
+                    <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                        <button type="submit">Add to Wishlist</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books</title>
+</head>
+<body>
+    <h1>Books</h1>
+    <ul>
+        {% for book in books %}
+            <li>
+                <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
+                {% if session.get('user') %}
+                    <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                        <button type="submit">Add to Wishlist</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Back to Home</a>
+</body>
+</html>

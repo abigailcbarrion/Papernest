@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "title": "Flask for Beginners",
+        "author": "John Doe",
+        "price": 29.99
+    },
+    {
+        "id": 2,
+        "title": "Python Web Apps",
+        "author": "Jane Smith",
+        "price": 39.99
+    }
+]
