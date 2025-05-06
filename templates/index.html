@@ -3,99 +3,191 @@
 <head>
     <title>Home - Bookstore</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Top Utility Bar -->
-        <div class="top-bar">
-            <div class="shipping-info">Free shipping for minimum order of Php799.</div>
-            <div class="utility-links">
-                <a href="/discount-card">Discount Card</a>
-                <a href="/about">About Us </a>
-                <a href="/help">Help </a>
-                <div class="currency-toggle">
-                    <select>
-                        <option selected>PHP</option>
-                        <option>USD</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Header Section -->
-        <div class="header">
-            <!-- Logo -->
-            <div class="logo">
-                papernest
-            </div>
-
-            <!-- Search Bar and Links -->
-            <div class="search-bar-container">
-                <form class="search-bar" action="/search" method="GET">
-                    <input type="text" name="query" placeholder="Search for books..." />
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-
-            <!-- Links -->
-            <div class="user-links">
-                {% if session.get('user') %}
-                    <a href="/account">Account</a>
-                    <a href="/wishlist">Wishlist</a>
-                    <a href="/cart">Cart</a>
-                {% else %}
-                    <a href="/login">Login/Register</a>
-                    <a href="/wishlist">Wishlist</a>
-                    <a href="/cart">Cart</a>
-                {% endif %}
-            </div>
-        </div>
+    <div class="page-wrapper">
+      <!-- All your content here (top bar, header, nav, main content, etc.) -->
+      <div class="container">
+          <!-- Top Utility Bar -->
+          <div class="top-bar">
+              <div class="shipping-info">Free shipping for minimum order of Php799.</div>
+              <div class="utility-links">
+                  <a href="/discount-card">Discount Card</a>
+                  <a href="/about">About Us </a>
+                  <a href="/help">Help </a>
+                  <div class="currency-toggle">
+                      <select>
+                          <option selected>PHP</option>
+                          <option>USD</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- Header Section -->
+          <div class="header">
+              <!-- Logo -->
+              <div class="logo">
+                  papernest
+              </div>
+  
+              <!-- Search Bar and Links -->
+              <div class="search-bar-container">
+                  <form class="search-bar" action="/search" method="GET">
+                      <input type="text" name="query" placeholder="Search for books..." />
+                      <button type="submit">Search</button>
+                  </form>
+              </div>
+  
+              <!-- Links -->
+              <div class="user-links">
+                  {% if session.get('user') %}
+                      <a href="/account"><i class="fas fa-user"></i> Account</a>
+                      <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                      <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                  {% else %}
+                      <a href="/login"><i class="fas fa-user"></i> Login/Register</a>
+                      <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                      <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+  
+      <!-- Navigation Bar (outside container for full width) -->
+      <nav>
+          <a href="/books">BOOKS</a>
+          <a href="/non_books">NON-BOOKS</a>
+          <a href="/bestsellers_and_new_releases">BESTSELLERS AND NEW RELEASES</a>
+          <a href="/collections">COLLECTIONS</a>
+          <a href="/sale">SALE</a>
+      </nav>
+  
+      <div class="container">
+          <!-- Main Content -->
+          {% if 'user' in session %}
+              <h1>Welcome to papernest, {{ session['user']['username'] }}!</h1>
+          {% endif %}
+  
+          <h2>Shop by Category</h2>
+          <div class="categories">
+              <button>Children's</button>
+              <button>Design</button>
+              <button>Graphic Novel</button>
+              <button>Humanities</button>
+              <button>Lifestyle</button>
+              <button>Professional</button>
+          </div>
+  
+          <h2>Available Books</h2>
+          <ul>
+              {% for book in books %}
+                  <li>
+                      <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
+                      {% if session.get('user') %}
+                          <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
+                              <input type="hidden" name="book_id" value="{{ book.id }}">
+                              <button type="submit">Add to Cart</button>
+                          </form>
+  
+                          <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
+                              <input type="hidden" name="book_id" value="{{ book.id }}">
+                              <button type="submit">Add to Wishlist</button>
+                          </form>
+                      {% endif %}
+                  </li>
+              {% endfor %}
+          </ul>
+      </div>
     </div>
-    
-    <!-- Navigation Bar (outside container for full width) -->
-    <nav>
-        <a href="/books">BOOKS</a>
-        <a href="/non_books">NON-BOOKS</a>
-        <a href="/bestsellers_and_new_releases">BESTSELLERS AND NEW RELEASES</a>
-        <a href="/collections">COLLECTIONS</a>
-        <a href="/sale">SALE</a>
-    </nav>
-
-    <div class="container">
-        <!-- Main Content -->
-        {% if 'user' in session %}
-            <h1>Welcome to papernest, {{ session['user']['username'] }}!</h1>
-        {% endif %}
-
-        <h2>Shop by Category</h2>
-        <div class="categories">
-            <button>Children's</button>
-            <button>Design</button>
-            <button>Graphic Novel</button>
-            <button>Humanities</button>
-            <button>Lifestyle</button>
-            <button>Professional</button>
-        </div>
-
-        <h2>Available Books</h2>
-        <ul>
-            {% for book in books %}
-                <li>
-                    <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
-                    {% if session.get('user') %}
-                        <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
-                            <input type="hidden" name="book_id" value="{{ book.id }}">
-                            <button type="submit">Add to Cart</button>
-                        </form>
-
-                        <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
-                            <input type="hidden" name="book_id" value="{{ book.id }}">
-                            <button type="submit">Add to Wishlist</button>
-                        </form>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+  
+    <div class="footer-benefits">
+      <div class="benefit-box">
+          <div class="benefit-icon"><i class="fas fa-shopping-basket"></i></div>
+          <div class="benefit-text">
+              <h3>FREE SHIPPING</h3>
+              <p>Shop P799 and above to get your order delivered for free!</p>
+          </div>
+      </div>
+      
+      <div class="benefit-box">
+          <div class="benefit-icon"><i class="fas fa-id-card"></i></div>
+          <div class="benefit-text">
+              <h3>MEMBERSHIP DISCOUNT</h3>
+              <p>Cardholders enjoy additional 5% off on D-Coded items.</p>
+          </div>
+      </div>
+      
+      <div class="benefit-box">
+          <div class="benefit-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <div class="benefit-text">
+              <h3>CASH ON DELIVERY</h3>
+              <p>Cash On Delivery available for orders worth P799 and above.</p>
+          </div>
+      </div>
     </div>
-</body>
+  
+    <footer>
+      <div class="footer-content">
+          <!-- Company Info -->
+          <div class="footer-column">
+              <div class="footer-logo">papernest</div>
+              <p>For inquiries/concerns<br>get in touch with us at</p>
+              <a href="mailto:papernestbookstore@gmail.com"><i class="fas fa-envelope"></i> papernestbookstore@gmail.com</a>
+          </div>
+          
+          <!-- Company Links -->
+          <div class="footer-column">
+              <h3>COMPANY</h3>
+              <ul>
+                  <li><a href="/about">About Us</a></li>
+                  <li><a href="/authors">Featured Authors</a></li>
+              </ul>
+          </div>
+          
+          <!-- Service Links -->
+          <div class="footer-column">
+              <h3>SERVICE</h3>
+              <ul>
+                  <li><a href="/contact">Contact Us</a></li>
+                  <li><a href="/faqs">FAQs</a></li>
+                  <li><a href="/discount-card">Discount Card</a></li>
+              </ul>
+          </div>
+          
+          <!-- Payment Methods -->
+          <div class="footer-column">
+              <h3>PAYMENT METHODS</h3>
+              <div class="payment-method">
+                  <div class="payment-icon"><i class="fas fa-university"></i></div>
+                  <div class="payment-text">
+                      <p>Bank Deposit / Over the Counter</p>
+                      <p>Cash On Delivery</p>
+                  </div>
+              </div>
+              <div class="payment-method">
+                  <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                  <div class="payment-text">
+                      <p>Credit/Debit Cards</p>
+                      <p>Digital Wallet (GCash, Paymaya)</p>
+                      <p>Online Banking</p>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- Social Media Section -->
+          <div class="footer-column">
+              <h3>FOLLOW OUR SOCIAL MEDIA</h3>
+              <div class="social-icons">
+                  <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                  <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              </div>
+          </div>
+      </div>
+    </footer>
+  </body>
+  
 </html>
