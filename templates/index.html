@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="page-wrapper">
-      <!-- All your content here (top bar, header, nav, main content, etc.) -->
       <div class="container">
           <!-- Top Utility Bar -->
           <div class="top-bar">
@@ -25,46 +24,51 @@
                   </div>
               </div>
           </div>
-  
+      </div>
+          
+      <!-- Header-Nav-Wrapper (full width) -->
+      <div class="header-nav-wrapper">
           <!-- Header Section -->
-          <div class="header">
-              <!-- Logo -->
-              <div class="logo">
-                  papernest
-              </div>
-  
-              <!-- Search Bar and Links -->
-              <div class="search-bar-container">
-                  <form class="search-bar" action="/search" method="GET">
-                      <input type="text" name="query" placeholder="Search for books..." />
-                      <button type="submit">Search</button>
-                  </form>
-              </div>
-  
-              <!-- Links -->
-              <div class="user-links">
-                  {% if session.get('user') %}
-                      <a href="/account"><i class="fas fa-user"></i> Account</a>
-                      <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
-                      <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
-                  {% else %}
-                      <a href="/login"><i class="fas fa-user"></i> Login/Register</a>
-                      <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
-                      <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
-                  {% endif %}
+          <div class="header-container">
+              <div class="header">
+                  <!-- Logo -->
+                  <div class="logo">
+                      papernest
+                  </div>
+      
+                  <!-- Search Bar and Links -->
+                  <div class="search-bar-container">
+                      <form class="search-bar" action="/search" method="GET">
+                          <input type="text" name="query" placeholder="Search for books..." />
+                          <button type="submit">Search</button>
+                      </form>
+                  </div>
+      
+                  <!-- Links -->
+                  <div class="user-links">
+                      {% if session.get('user') %}
+                          <a href="/account"><i class="fas fa-user"></i> Account</a>
+                          <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                          <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                      {% else %}
+                          <a href="/login"><i class="fas fa-user"></i> Login/Register</a>
+                          <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                          <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                      {% endif %}
+                  </div>
               </div>
           </div>
+      
+          <!-- Navigation Bar (already full width) -->
+          <nav>
+              <a href="/books">BOOKS</a>
+              <a href="/non_books">NON-BOOKS</a>
+              <a href="/bestsellers_and_new_releases">BESTSELLERS AND NEW RELEASES</a>
+              <a href="/collections">COLLECTIONS</a>
+              <a href="/sale">SALE</a>
+          </nav>
       </div>
-  
-      <!-- Navigation Bar (outside container for full width) -->
-      <nav>
-          <a href="/books">BOOKS</a>
-          <a href="/non_books">NON-BOOKS</a>
-          <a href="/bestsellers_and_new_releases">BESTSELLERS AND NEW RELEASES</a>
-          <a href="/collections">COLLECTIONS</a>
-          <a href="/sale">SALE</a>
-      </nav>
-  
+      <div class="main-content">
       <div class="container">
           <!-- Main Content -->
           {% if 'user' in session %}
@@ -102,7 +106,7 @@
           </ul>
       </div>
     </div>
-  
+  </div>
     <div class="footer-benefits">
       <div class="benefit-box">
           <div class="benefit-icon"><i class="fas fa-shopping-basket"></i></div>

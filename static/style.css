@@ -126,13 +126,31 @@ a:hover {
     border: none;
 }
 /* Header Section */
+
+.header-nav-wrapper {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 1000; /* Ensures it stays above other content */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-top: 1px solid #e8e8e8;
+}
+/* Container for header content */
+.header-container {
+    padding-left: 100px;
+    padding-right: 100px;
+    max-width: 1500px;
+    margin: 0 auto;
+}
 .header {
     display: flex; 
     align-items: center;
     justify-content: space-between;
-    padding: 5px 0;
-    margin-bottom: 5px;
+    padding: 10px 0;
+    background-color: #fff;
 }
+
 
 /* Logo */
 .logo {
@@ -201,14 +219,14 @@ a:hover {
 
 /* Navigation Bar */
 nav {
-    background-color: var(--secondary-color); /* Use #11B8CE for the nav background */
-    padding: 10px 20px; /* Add padding for spacing inside the nav bar */
-    width: 100%; /* Make the nav bar stretch across the screen */
-    box-sizing: border-box; /* Include padding in the width calculation */
+    background-color: var(--secondary-color);
+    padding: 10px 0;
+    width: 100%;
     display: flex;
-    justify-content: space-around;
-    position: relative; /* Ensure it stays in place */
+    justify-content: space-evenly;
 }
+
+
 
 nav a {
     color: white; /* White text for links in the nav bar */
@@ -219,7 +237,10 @@ nav a {
 
 nav a:hover {
     color: var(--link-hover-color); /* Use #545454 (gray) for hover effect */
-    text-decoration: underline;
+}
+.main-content {
+    padding-top: 25px; /* Adds space below the sticky nav bar */
+    
 }
 
 /* Account Page */
