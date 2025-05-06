@@ -17,7 +17,7 @@
     --primary-color: #545454; /* General text color */
     --secondary-color: #11B8CE; /* Headings or highlights */
     --background-color: #ffffff; /* Background color */
-    --border-color: #545454; /* Borders or accents */
+    --border-color: #d3d3d3; /* Borders or accents */
     --link-color: #11B8CE; /* Links */
     --link-hover-color: #545454; /* Links on hover */
     --button-bg-color: #11B8CE; /* Button background */
@@ -35,8 +35,15 @@ body {
     font-family: var(--font-family);
     font-size: var(--body-font-size);
     background-color: var(--background-color);
-    margin: 20px;
+    margin: 0;
     color: var(--primary-color);
+    padding: 0;
+}
+
+/* Container for padded content */
+.container {
+    padding-left: 100px;
+    padding-right: 100px;
 }
 
 h1, h2 {
@@ -51,41 +58,109 @@ a {
 
 a:hover {
     color: var(--link-hover-color);
+}
 
+/* Top Bar Styles */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 14px;
+}
+
+.shipping-info {
+    color: #333;
+}
+
+.utility-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.utility-links a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 0 15px; 
+    border-right: 1px solid #e8e8e8;
+
+    display: inline-block; 
+    text-align: center;  
+}
+
+.utility-links a:first-child {
+    padding-left: 10px; /* Add padding to the first link */
+}
+.utility-links a:hover {
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+.currency-toggle select {
+    padding: 2px 5px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    border: none;
 }
 /* Header Section */
 .header {
-    display: flex; /* Use Flexbox for horizontal alignment */
-    align-items: center; /* Vertically align items */
-    justify-content: space-between; /* Space out the logo and search bar */
-    padding: 10px 20px;
-    margin-bottom: 10px; /* Add spacing below the header */
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    margin-bottom: 5px;
 }
 
 /* Logo */
 .logo {
-    font-family: 'Gilroy', sans-serif; /* Use Gilroy font */
-    font-weight: bold; /* Bold weight */
-    font-size: 48px; /* Large font size */
-    color: #FAC102; /* Yellow color */
-    margin-right: 20px; /* Add spacing between the logo and search bar */
+    font-family: 'Gilroy', sans-serif;
+    font-weight: bold;
+    font-size: 48px;
+    color: #FAC102;
+    margin-right: 50px; /* Add 50px margin between logo and search bar */
+}
+
+/* Search Bar Container */
+.search-bar-container {
+    flex-grow: 1; /* Make search bar take up available space */
+    margin-right: 50px; /* Add 50px margin between search bar and user links */
 }
 
 /* Search Bar */
 .search-bar {
     display: flex;
-    align-items: center; /* Vertically align the input and button */
+    align-items: center;
+    width: 100%; /* Make search bar take full width of container */
 }
 
 .search-bar input {
     padding: 8px;
     font-size: 16px;
     border: 1px solid var(--border-color);
-    border-radius: 5px 0 0 5px; /* Rounded corners on the left */
+    border-radius: 5px 0 0 5px;
     outline: none;
-    width: 300px; /* Set a fixed width for the input */
+    width: 100%; /* Elongate the search bar */
+    min-width: 400px; /* Minimum width */
 }
 
+/* User Links */
+.user-links {
+    display: flex;
+    align-items: center;
+}
+    
+.user-links a {
+    margin-right: 50px; /* Add 50px margin between each link */
+    white-space: nowrap;
+}
+
+.user-links a:last-child {
+    margin-right: 0; /* Remove margin from the last link */
+}
 .search-bar button {
     padding: 8px 15px;
     font-size: 16px;
@@ -123,16 +198,6 @@ nav a:hover {
     color: var(--link-hover-color); /* Use #545454 (gray) for hover effect */
     text-decoration: underline;
 }
-
-/* Remove body margin to make the nav bar flush with the edges */
-body {
-    margin: 0;
-    font-family: var(--font-family);
-    font-size: var(--body-font-size);
-    background-color: var(--background-color);
-    color: var(--primary-color);
-}
-
 
 /* Account Page */
 .account-container {
@@ -183,7 +248,6 @@ body {
 .account-actions .button:hover {
     background-color: var(--button-hover-bg-color);
 }
-
 
 /* Buttons */
 button {
