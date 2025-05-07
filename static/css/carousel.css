@@ -1,0 +1,146 @@
+.carousel-container {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    overflow: hidden;
+}
+
+.carousel {
+    position: relative;
+    height: auto;
+    min-height: 650px;
+    max-height: 80vh;
+    background-color: #f5f5f5;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.slide img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.slide-caption {
+    position: absolute;
+    left: 15%;
+    max-width: 550px;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 25px;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.slide-caption h2 {
+    color: var(--secondary-color);
+    margin-bottom: 12px;
+    font-size: 36px;
+}
+
+.slide-caption p {
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+.slide-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.slide-btn:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 2;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+    left: 20px;
+}
+
+.next {
+    right: 20px;
+}
+
+.dots-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    z-index: 2;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dot.active {
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .carousel {
+        min-height: 400px;
+    }
+
+    .slide-caption {
+        left: 5%;
+        right: 5%;
+        padding: 15px;
+    }
+
+    .slide-caption h2 {
+        font-size: 24px;
+    }
+
+    .slide-caption p {
+        font-size: 16px;
+    }
+}

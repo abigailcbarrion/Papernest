@@ -1,0 +1,16 @@
+/* breadcrumb.css */
+
+.breadcrumb {
+    margin: 20px 0;
+    color: #999;
+    font-size: 14px;
+}
+
+.breadcrumb a {
+    color: #999;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: var(--link-color);
+}

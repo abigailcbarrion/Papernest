@@ -1,0 +1,50 @@
+/* account.css */
+
+.account-container {
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--background-color);
+}
+
+.account-container h1 {
+    font-size: 32px;
+    color: var(--secondary-color);
+}
+
+.account-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.account-container li {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.account-actions {
+    margin-top: 20px;
+}
+
+.account-actions .button {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: var(--button-bg-color);
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.account-actions .button.logout {
+    background-color: var(--link-hover-color);
+}
+
+.account-actions .button:hover {
+    background-color: var(--button-hover-bg-color);
+}
