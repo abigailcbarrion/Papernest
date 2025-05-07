@@ -80,24 +80,67 @@
 .product-price {
     font-size: 18px;
     font-weight: 700;
-    color: #d35400;
+    color: #FAC102;
     margin-bottom: 15px;
 }
 
 .btn-add-cart {
-    background-color: #3498db;
+    flex: 1;
+    background-color: #11B8CE;
     color: white;
     border: none;
     padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
-    width: 100%;
     transition: background-color 0.3s;
 }
 
 .btn-add-cart:hover {
-    background-color: #2980b9;
+    background-color: #ED1D7F;
+}
+
+.product-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-wishlist {
+    background-color: transparent;
+    color: #ccc;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: color 0.3s;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-wishlist:hover, .btn-wishlist:focus, .btn-wishlist.active {
+    color: #ED1D7F;
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-wishlist:focus {
+    outline: 0;
+}
+
+.btn-wishlist.active i {
+    animation: heartBeat 0.3s;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
 }
 
 .carousel-arrow {

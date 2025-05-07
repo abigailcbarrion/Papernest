@@ -44,6 +44,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Wishlist button functionality
+    const wishlistButtons = document.querySelectorAll('.btn-wishlist');
+    wishlistButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Toggle active class
+            this.classList.toggle('active');
+            
+            const productCard = this.closest('.product-card');
+            const productTitle = productCard.querySelector('.product-title').textContent;
+            
+            if (this.classList.contains('active')) {
+                console.log(`Added to wishlist: ${productTitle}`);
+                // Here you would add the item to the wishlist in your database
+            } else {
+                console.log(`Removed from wishlist: ${productTitle}`);
+                // Here you would remove the item from the wishlist in your database
+            }
+        });
+    });
+
     // Handle window resize
     window.addEventListener('resize', function() {
         // Reset scroll when window is resized

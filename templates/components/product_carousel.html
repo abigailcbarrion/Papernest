@@ -1,8 +1,6 @@
 <!-- In your base.html head section -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
 <div class="product-carousel-container">
-    <h2 class="product-carousel-title">Popular Books</h2>
-    
     <div class="product-carousel" id="bookCarousel">
         <!-- Product Cards will be dynamically populated here -->
         {% for book in popular_books %}
@@ -15,7 +13,11 @@
                 <h3 class="product-title">{{ book.title }}</h3>
                 <p class="product-author">by {{ book.author }}</p>
                 <div class="product-price">${{ book.price }}</div>
-                <button class="btn-add-cart">Add to Cart</button>
+                <div class="product-buttons">
+                    <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                    <button class="btn-add-cart">Add to Cart</button>
+                    
+                </div>
             </div>
         </div>
         {% endfor %}
