@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carousel</title>
-    <link rel="stylesheet" href="/static/css/carousel.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carousel.css') }}">
 </head>
 <body>
     <div class="carousel-container">
         <div class="carousel">
             <div class="slide active">
-                <img src="/static/images/carousel/slide1.png" alt="Featured Books">
+                <img src="{{ url_for('static', filename='images/carousel/slide1.png') }}" alt="Featured Books">
             </div>
             <div class="slide">
-                <img src="/static/images/carousel/slide2.png" alt="Summer Reading">
+                <img src="{{ url_for('static', filename='images/carousel/slide2.png') }}" alt="Summer Reading">
             </div>
             <div class="slide">
-                <img src="/static/images/carousel/slide3.png" alt="Special Offers">
+                <img src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Special Offers">
             </div>
         </div>
         
@@ -32,6 +32,6 @@
         </div>
     </div>
 
-    <script src="/static/js/carousel.js" defer></script>
+    <script src="{{ url_for('static', filename='js/carousel.js') }}" defer></script>
 </body>
 </html>

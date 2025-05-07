@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import json
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            static_folder='static',
+            template_folder='templates')
 app.secret_key = 'your_secret_key'  # Required for session
 
 # ---------- File Paths ----------
@@ -31,9 +33,15 @@ def load_books():
 
 # ---------- Routes ----------
 @app.route('/')
-def home():
-    books = load_books()
-    return render_template('index.html', books=books)
+def index():
+    # Load books from JSON file
+    json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'books.json')
+    
+    with open(json_path, 'r') as f:
+        books_data = json.load(f)
+    
+    # Pass the books data to the template
+    return render_template('index.html', popular_books=books_data)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
