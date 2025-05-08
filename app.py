@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from forms import LoginForm, RegistrationForm
 import json
 import os
 
@@ -33,6 +34,7 @@ def load_books():
 
 # ---------- Routes ----------
 @app.route('/')
+@app.route('/home')
 def index():
     # Load books from JSON file
     json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'books.json')
@@ -45,10 +47,11 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
         users = load_users()
-        username = request.form['username']
-        password = request.form['password']
+        username = form.username.data
+        password = form.password.data
 
         # Check if user already exists
         for user in users:
@@ -64,26 +67,36 @@ def register():
         save_users(users)
         return redirect(url_for('login'))
 
-    return render_template('register.html')
+    return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
         users = load_users()
-        username = request.form['username']
-        password = request.form['password']
+        username = form.username.data
+        password = form.password.data
         session.setdefault('cart', [])
         session.setdefault('wishlist', [])
 
+        print(f"Input Username: {username}, Input Password: {password}")  # Debugging
+        print(f"Users: {users}")  # Debugging
+
+        # Validate username and password against the JSON file
         for user in users:
-            if user['username'] == username and user['password'] == password:
-                session['user'] = user
-                session.setdefault('cart', [])
-                session.setdefault('wishlist', [])
-                return redirect(url_for('home'))
+            if user['username'] == username:
+                if user['password'] == password:
+                    # Successful login
+                    session['user'] = user
+                    session.setdefault('cart', [])
+                    session.setdefault('wishlist', [])
+                    return redirect(url_for('index'))
+                else:
+                    # Password mismatch
+                    return "Invalid password. Please try again."
 
         return "Invalid credentials. Try again."
-    return render_template('login.html')
+    return render_template('login.html', form=form)
 
 @app.route('/account')
 def account():
@@ -97,7 +110,7 @@ def account():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
@@ -114,7 +127,7 @@ def add_to_cart():
         session['cart'].append(book_id)
 
     session.modified = True  # Update session
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 
 @app.route('/add_to_wishlist', methods=['POST'])
@@ -132,7 +145,7 @@ def add_to_wishlist():
         session['wishlist'].append(book_id)
 
     session.modified = True  # Update session
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 
 @app.route('/cart')
