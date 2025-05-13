@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session # type: ignore
+from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
+from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays
 import json
 import os
 import random
@@ -74,7 +75,25 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(request.form)
+
+    # Dynamically populate the choices for the dropdowns
+    user_country = get_user_country()
+    provinces = fetch_provinces()
+    form.country.choices = [(user_country, user_country)]  # Example: Set the detected country
+    form.province.choices = [(province['code'], province['name']) for province in provinces]
+    form.city.choices = []  # Initially empty, will be populated dynamically
+    form.barangay.choices = []  # Initially empty, will be populated dynamically
     if request.method == 'POST' and form.validate():
+        # Fetch the postal code based on the selected city
+        city_code = form.city.data
+        postal_code = None
+        if city_code:
+            cities = fetch_cities(form.province.data)  # Fetch cities for the selected province
+            for city in cities:
+                if city[0] == city_code:  # Match the city code
+                    postal_code = city[2]  # Get the postal code
+                    break
+
         users = load_users()
         username = form.username.data
         password = form.password.data
@@ -87,13 +106,24 @@ def register():
         new_user = {
             "id": len(users) + 1,
             "username": username,
-            "password": password
+            "password": password,
+            "postal_code": postal_code  # Save the postal code
         }
         users.append(new_user)
         save_users(users)
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
+
+@app.route('/get_cities/<province_code>', methods=['GET'])
+def get_cities(province_code):
+    cities = fetch_cities(province_code)  # Fetch cities for the selected province
+    return {"cities": cities}  # Return cities as JSON
+
+@app.route('/get_barangays/<city_code>', methods=['GET'])
+def get_barangays(city_code):
+    barangays = fetch_barangays(city_code)  # Fetch barangays using the updated function
+    return {"barangays": barangays}  # Return barangays as JSON
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -236,6 +266,13 @@ def collections():
 def sale():
     # Add logic to load sale items
     return render_template('sale.html')
+
+@app.context_processor
+def inject_forms():
+    return {
+        'login_form': LoginForm(),
+        'registration_form': RegistrationForm()
+    }
 
 # ---------- Main ----------
 if __name__ == '__main__':
