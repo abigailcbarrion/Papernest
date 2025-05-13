@@ -3,7 +3,6 @@
 <head>
     <title>Home - Bookstore</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Add this to your index.html head section -->
 
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,6 +19,7 @@
             
             </div>
         </div>
+        {% include 'components/featured_author.html' %}
         {% include 'components/page_footer.html' %}
     </div>
 </body>
