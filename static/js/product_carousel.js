@@ -1,28 +1,50 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get carousel elements
     const carousel = document.getElementById('bookCarousel');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     
     if (!carousel || !prevBtn || !nextBtn) return;
     
-    let scrollAmount = 0;
-    const cardWidth = 240; // Card width + gap
-    const visibleCards = Math.floor(carousel.offsetWidth / cardWidth);
+    const cards = carousel.querySelectorAll('.product-card');
+    if (cards.length === 0) return;
     
-    // Next button click event
+    const cardWidth = 220; // Width of each card
+    const cardGap = 20;    // Gap between cards
+    const totalCardWidth = cardWidth + cardGap;
+    const visibleCards = 5;
+    
+    let currentPosition = 0;
+    const maxPosition = Math.max(0, cards.length - visibleCards);
+    
+    // Update arrow visibility
+    function updateArrows() {
+        prevBtn.style.opacity = currentPosition <= 0 ? '0.3' : '0.7';
+        prevBtn.style.pointerEvents = currentPosition <= 0 ? 'none' : 'auto';
+        
+        nextBtn.style.opacity = currentPosition >= maxPosition ? '0.3' : '0.7';
+        nextBtn.style.pointerEvents = currentPosition >= maxPosition ? 'none' : 'auto';
+    }
+    
+    // Move carousel by one card
     nextBtn.addEventListener('click', function() {
-        const maxScroll = carousel.scrollWidth - carousel.offsetWidth;
-        scrollAmount = Math.min(scrollAmount + cardWidth * Math.max(1, Math.floor(visibleCards / 2)), maxScroll);
-        carousel.style.transform = `translateX(-${scrollAmount}px)`;
+        if (currentPosition < maxPosition) {
+            currentPosition++;
+            carousel.style.transform = `translateX(-${currentPosition * totalCardWidth}px)`;
+            updateArrows();
+        }
     });
     
-    // Previous button click event
     prevBtn.addEventListener('click', function() {
-        scrollAmount = Math.max(scrollAmount - cardWidth * Math.max(1, Math.floor(visibleCards / 2)), 0);
-        carousel.style.transform = `translateX(-${scrollAmount}px)`;
+        if (currentPosition > 0) {
+            currentPosition--;
+            carousel.style.transform = `translateX(-${currentPosition * totalCardWidth}px)`;
+            updateArrows();
+        }
     });
     
+    // Initialize
+    updateArrows();
+
     // Add to Cart buttons
     const addToCartButtons = document.querySelectorAll('.btn-add-cart');
     addToCartButtons.forEach(button => {
@@ -39,35 +61,32 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(() => {
                 this.textContent = 'Add to Cart';
-                this.style.backgroundColor = '#3498db';
+                this.style.backgroundColor = '#11B8CE';
             }, 1500);
         });
     });
-
+    
     // Wishlist button functionality
     const wishlistButtons = document.querySelectorAll('.btn-wishlist');
     wishlistButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Toggle active class
             this.classList.toggle('active');
-            
             const productCard = this.closest('.product-card');
             const productTitle = productCard.querySelector('.product-title').textContent;
             
             if (this.classList.contains('active')) {
                 console.log(`Added to wishlist: ${productTitle}`);
-                // Here you would add the item to the wishlist in your database
             } else {
                 console.log(`Removed from wishlist: ${productTitle}`);
-                // Here you would remove the item from the wishlist in your database
             }
         });
     });
-
+    
     // Handle window resize
     window.addEventListener('resize', function() {
-        // Reset scroll when window is resized
-        scrollAmount = 0;
+        // Reset position on resize
+        currentPosition = 0;
         carousel.style.transform = `translateX(0)`;
+        updateArrows();
     });
 });

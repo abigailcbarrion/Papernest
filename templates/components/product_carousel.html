@@ -2,21 +2,19 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
 <div class="product-carousel-container">
     <div class="product-carousel" id="bookCarousel">
-        <!-- Product Cards will be dynamically populated here -->
+        <!-- Show all books, not just first 5 -->
         {% for book in popular_books %}
         <div class="product-card">
-            <!-- Placeholder for image - you'll replace this with actual images later -->
             <div class="product-image-container">
                 <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ book.title }}" class="product-image">
             </div>
             <div class="product-info">
                 <h3 class="product-title">{{ book.title }}</h3>
                 <p class="product-author">by {{ book.author }}</p>
-                <div class="product-price">${{ book.price }}</div>
+                <div class="product-price">₱{{ book.price }}</div>
                 <div class="product-buttons">
                     <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
                     <button class="btn-add-cart">Add to Cart</button>
-                    
                 </div>
             </div>
         </div>
