@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session # type: ignore
 from forms import LoginForm, RegistrationForm
 import json
 import os
+import random
 
 app = Flask(__name__, 
             static_folder='static',
@@ -34,16 +35,41 @@ def load_books():
 
 # ---------- Routes ----------
 @app.route('/')
-@app.route('/home')
 def index():
-    # Load books from JSON file
-    json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'books.json')
+    # Load data from JSON files
+    json_path = os.path.join(app.root_path, 'data', 'books.json')
+    authors_path = os.path.join(app.root_path, 'data', 'featured_authors.json')
     
     with open(json_path, 'r') as f:
         books_data = json.load(f)
     
-    # Pass the books data to the template
-    return render_template('index.html', popular_books=books_data)
+    # Create a default author as fallback
+    default_author = {
+        "name": "Featured Author", 
+        "bio": "Information about this author will be coming soon.",
+        "image_url": url_for('static', filename='images/placeholder.jpg'),
+        "source_url": "#",
+        "more_link": "#"
+    }
+    
+    try:
+        with open(authors_path, 'r') as f:
+            authors_data = json.load(f)
+        
+        # Access the nested "featured_authors" key
+        if "featured_authors" in authors_data and authors_data["featured_authors"]:
+            # Get the first author from the list
+            featured_author = authors_data["featured_authors"][0]
+        else:
+            featured_author = default_author
+            
+    except Exception as e:
+        print(f"Error loading authors: {str(e)}")
+        featured_author = default_author
+    
+    return render_template('index.html', 
+                          popular_books=books_data,
+                          featured_author=featured_author)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
