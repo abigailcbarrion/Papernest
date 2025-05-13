@@ -3,31 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <title>Register</title>
 </head>
 <body>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}<br>
-            {{ form.username }}
+    <div class="page-wrapper">
+        <!-- page header -->
+        {% include 'components/page_header.html' %}
+
+        <!-- Registration Form -->
+        <div class="form-wrapper">
+            <h3 class="register-header">Create New Account</h3>
+            <h2 class="register-sub-header">Fill Personal Information</h2>
+            <div class="form-register-container">
+                <form method="POST">
+                    {{ registration_form.hidden_tag() }}
+
+                    <!-- Name Section -->
+                    <div class="name-container">
+                        <div class="name-field">
+                            {{ registration_form.first_name.label }}
+                            {{ registration_form.first_name }}
+                        </div>
+                        <div class="name-field">
+                            {{ registration_form.last_name.label }}
+                            {{ registration_form.last_name }}
+                        </div>
+                    </div>
+
+                    <!-- Personal Information Section -->
+                    <div class="personal-info">
+                        <div>
+                            {{ registration_form.title.label }}
+                            {{ registration_form.title }}
+                        </div>
+                        <div>
+                            {{ registration_form.birth_date.label }}
+                            {{ registration_form.birth_date }}
+                        </div>
+                        <div>
+                            {{ registration_form.gender.label }}
+                            {{ registration_form.gender }}
+                        </div>
+                        <div>
+                            {{ registration_form.phone_number.label }}
+                            {{ registration_form.phone_number }}
+                        </div>
+                    </div>registration_
+
+                    <!-- Account Information Section -->
+                    <div class="account-info">
+                        <div>
+                            {{ registration_form.username.label }}
+                            {{ registration_form.username }}
+                        </div>
+                        <div>
+                            {{ registration_form.email.label }}
+                            {{ registration_form.email }}
+                        </div>
+                        <div>
+                            {{ registration_form.password.label }}
+                            {{ registration_form.password }}
+                        </div>
+                        <div>
+                            {{ registration_form.confirm_password.label }}
+                            {{ registration_form.confirm_password }}
+                        </div>
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="address-info">
+                        <div>
+                            {{ registration_form.country.label }}
+                            {{ registration_form.country }}
+                        </div>
+                        <div>
+                            {{ registration_form.province.label }}
+                            {{ registration_form.province }}
+                        </div>
+                        <div>
+                            {{ registration_form.city.label }}
+                            {{ registration_form.city }}
+                        </div>
+                        <div>
+                            {{ registration_form.barangay.label }}
+                            {{ registration_form.barangay }}
+                        </div>
+                        <div>
+                            {{ registration_form.postal_code.label }}
+                            {{ registration_form.postal_code }}
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        {{ registration_form.register_button }}
+                    </div>
+                </form>
+            </div>
         </div>
-        <div>
-            {{ form.email.label }}<br>
-            {{ form.email }}
-        </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password }}
-        </div>
-        <div>
-            {{ form.confirm_password.label }}<br>
-            {{ form.confirm_password }}
-        </div>
-        <div>
-            {{ form.register_button }}
-        </div>
-    </form>
+    <!-- page footer -->
+    {% include 'components/page_footer.html' %}
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const provinceDropdown = document.getElementById('province');
+        const cityDropdown = document.getElementById('city');
+        const barangayDropdown = document.getElementById('barangay');
+
+        // Fetch cities when a province is selected
+        provinceDropdown.addEventListener('change', function () {
+            const provinceCode = this.value;
+            console.log(`Province selected: ${provinceCode}`); // Debugging
+            if (provinceCode && provinceCode !== "void") {
+                fetch(`/get_cities/${provinceCode}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear and populate the city dropdown
+                        cityDropdown.innerHTML = '<option value="void">--Select the city--</option>';
+                        data.cities.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.code;
+                            option.textContent = city.name;
+                            cityDropdown.appendChild(option);
+                        });
+                        barangayDropdown.innerHTML = '<option value="void">--Select the barangay--</option>'; // Reset barangay dropdown
+                    })
+                    .catch(error => console.error('Error fetching cities:', error)); // Debugging
+            }
+        });
+
+        // Fetch barangays when a city is selected
+        cityDropdown.addEventListener('change', function () {
+            const cityCode = this.value;
+            console.log(`City selected: ${cityCode}`); // Debugging
+            if (cityCode && cityCode !== "void") {
+                fetch(`/get_barangays/${cityCode}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear and populate the barangay dropdown
+                        barangayDropdown.innerHTML = '<option value="void">--Select the barangay--</option>';
+                        data.barangays.forEach(barangay => {
+                            const option = document.createElement('option');
+                            option.value = barangay.code;
+                            option.textContent = barangay.name;
+                            barangayDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching barangays:', error)); // Debugging
+            }
+        });
+    });
+</script>
 </html>
