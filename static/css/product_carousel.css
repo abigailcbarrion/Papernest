@@ -1,29 +1,35 @@
 .product-carousel-container {
     position: relative;
     width: 100%;
-    margin: 60px auto;
-    overflow: hidden; /* Ensures content beyond 5 books is clipped */
-    padding: 0 50px; /* Space for arrows */
-    max-width: 1200px; /* Control maximum width */
+    margin: 30px auto; /* Reduced from 60px auto */
+    overflow: hidden;
+    padding: 0 50px;
+    max-width: 1000px;
 }
 
 .product-carousel-title {
     font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 20px;
+    font-family: 'Gilroy', sans-serif;
+    font-weight: 600;
+    margin-top: 30px; /* Reduced from 30px */
+    margin-bottom: 8px; /* Fixed "none" to an actual value */
     text-align: left;
+    color: #FAC102; 
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
 }
 
-/* Calculate exact width for 5 cards including gaps */
 .product-carousel {
     display: flex;
     transition: transform 0.5s ease;
-    gap: 20px;
-    padding: 10px 0;
-    /* No need for fixed width, container will clip overflow */
+    padding: 0; /* Removed padding entirely */
+    gap: 20px; /* Add space between cards */
 }
 
 .product-card {
+    font-family: 'Gilroy', sans-serif;
     min-width: 220px;
     flex: 0 0 220px; /* Fixed width, no grow, no shrink */
     height: 450px;
@@ -196,5 +202,10 @@
         max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .product-carousel-title {
+        max-width: 1200px; /* Match the container's max-width */
+        padding-left: 10px; /* Keep the same padding at larger sizes */
     }
 }
