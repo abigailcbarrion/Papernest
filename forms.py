@@ -8,17 +8,18 @@ class LoginForm(FlaskForm):
     login_button = SubmitField('Login', render_kw={"class": "btn-login"})
 
 def get_title_list():
-    return ['Ms.', 'Mr.', 'Mrs.', 'Dr.', 'Prof.', 'Dra.', 'Atty.']
+    return [("void", "--Select title--"), ("Ms.", "Ms."), ("Mr.", "Mr."), ("Mrs.", "Mrs."), ("Dr.", "Dr."), ("Prof.", "Prof."), ("Dra.", "Dra."), ("Atty.", "Atty.")]
+
 
 def get_gender_list():
-    return ['Male', 'Female', 'Other']
+    return [("void", "--Select title--"), ("Male", "Male"), ("Female", "Female"), ("Other", "Other")]
 
 class RegistrationForm(FlaskForm):
     first_name = StringField('First Name', [DataRequired(), Length(min=2, max=25)], render_kw={"placeholder": "Enter your first name", "class": "first-name"})
     last_name = StringField('Last Name', [DataRequired(), Length(min=2, max=25)], render_kw={"placeholder": "Enter your last name", "class": "last-name"})
-    title = SelectField('Title', choices=get_title_list(), render_kw={"class": "form-control"})
+    title = SelectField('Title', choices=get_title_list(), default="void", render_kw={"class": "form-control"})
     birth_date = DateField('Birth Date', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"class": "form-control", "placeholder": "YYYY-MM-DD"})
-    gender = SelectField('Gender', choices=get_gender_list(), render_kw={"placeholder": "--Select Gender--", "class": "form-control"})
+    gender = SelectField('Gender', choices=get_gender_list(), default="void", render_kw={"placeholder": "--Select Gender--", "class": "form-control"})
     phone_number = StringField(
         'Phone Number',
         [DataRequired(), Length(min=10, max=15), Regexp(r'^\+?[0-9]*$', message="Invalid phone number")],
@@ -31,8 +32,8 @@ class RegistrationForm(FlaskForm):
 
     # Address fields
     country = SelectField('Country', choices=[], validators=[DataRequired()], render_kw={"id": "country", "class": "form-control"})
-    province = SelectField('Province', choices=[("void", "--Select the province--")], default="void", validators=[DataRequired()], render_kw={"id": "province", "class": "form-control"})
-    city = SelectField('City', choices=[("void", "--Select the city--")], default="void", validators=[DataRequired()], render_kw={"id": "city", "class": "form-control"})
-    barangay = SelectField('Barangay', choices=[("void", "--Select the barangay--")], default="void", validators=[DataRequired()], render_kw={"id": "barangay", "class": "form-control"})
+    province = SelectField('Province', choices=[], default="void", validators=[DataRequired()], render_kw={"id": "province", "class": "form-control"})
+    city = SelectField('City', choices=[], default="void", validators=[DataRequired()], render_kw={"id": "city", "class": "form-control"})
+    barangay = SelectField('Barangay', choices=[], default="void", validators=[DataRequired()], render_kw={"id": "barangay", "class": "form-control"})
     postal_code = StringField('Postal Code', [DataRequired(), Length(min=4, max=10)], render_kw={"id": "postal_code", "class": "form-control", "readonly": True})
     register_button = SubmitField('Register', render_kw={"class": "btn-register"})

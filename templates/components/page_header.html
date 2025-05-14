@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
 </head>
@@ -67,9 +68,14 @@
                                             {{ login_form.username.label }}
                                             {{ login_form.username }}
                                         </div>
-                                        <div class="input-group">
+                                        <div class="input-group password-group">
                                             {{ login_form.password.label }}
-                                            {{ login_form.password }}
+                                            <div class="password-wrapper">
+                                                {{ login_form.password }}
+                                                <span class="toggle-password" id="toggleLoginPassword">
+                                                    <i class="fas fa-eye"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                         <div class="button-group">
                                             {{ login_form.login_button }}

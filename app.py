@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegistrationForm
-from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays
+from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
 import json
 import os
 import random
@@ -36,6 +36,7 @@ def load_books():
 
 # ---------- Routes ----------
 @app.route('/')
+@app.route('/homepage')
 def index():
     # Load data from JSON files
     json_path = os.path.join(app.root_path, 'data', 'books.json')
@@ -79,10 +80,16 @@ def register():
     # Dynamically populate the choices for the dropdowns
     user_country = get_user_country()
     provinces = fetch_provinces()
-    form.country.choices = [(user_country, user_country)]  # Example: Set the detected country
-    form.province.choices = [(province['code'], province['name']) for province in provinces]
-    form.city.choices = []  # Initially empty, will be populated dynamically
-    form.barangay.choices = []  # Initially empty, will be populated dynamically
+    form.country.choices = [("void", "--Select country--"), (user_country, user_country)]
+    form.country.default = "void"
+    form.process()
+    print("User country:", user_country)
+    #sort the provinces in alphabetical order
+    form.province.choices = [("void", "--Select the province--")] + sorted(
+    [(province['code'], province['name']) for province in provinces],
+    key=lambda x: x[1].lower())
+    form.city.choices = [("void", "--Select the city--")]  
+    form.barangay.choices = [("void", "--Select the barangay--")]  
     if request.method == 'POST' and form.validate():
         # Fetch the postal code based on the selected city
         city_code = form.city.data
@@ -93,6 +100,7 @@ def register():
                 if city[0] == city_code:  # Match the city code
                     postal_code = city[2]  # Get the postal code
                     break
+            form.postal_code.data = postal_code
 
         users = load_users()
         username = form.username.data
@@ -113,7 +121,7 @@ def register():
         save_users(users)
         return redirect(url_for('login'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', registration_form=form)
 
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):
@@ -124,6 +132,16 @@ def get_cities(province_code):
 def get_barangays(city_code):
     barangays = fetch_barangays(city_code)  # Fetch barangays using the updated function
     return {"barangays": barangays}  # Return barangays as JSON
+
+@app.route('/get_postal_code', methods=['GET'])
+def get_postal_code():
+    country_code = "PH"
+    city = request.args.get('city')
+    print(f"Postal code lookup: city='{city}', country_code='{country_code}'")  # Debug
+    if not (country_code and city):
+        return jsonify({'postal_code': ''})
+    postal_code = fetch_postal_code(city, country_code)
+    return jsonify({'postal_code': postal_code})
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

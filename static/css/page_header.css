@@ -271,7 +271,7 @@ nav a, .dropdown {
 /* Scope all login dropdown styles to .login-dropdown-content */
 .login-dropdown-content .login-header {
     font-size: 20px;
-    color: #11B8CE;
+    color: var(--primary-color);
     font-weight: bold;
     margin-bottom: 15px;
     text-align: left;
@@ -379,3 +379,29 @@ nav a, .dropdown {
     text-decoration: underline;
     color: #ED1D7F;
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"] {
+    width: 100%;
+    padding-right: 35px; /* Space for the icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #888;
+    font-size: 18px;
+    user-select: none;
+}
+
+.toggle-password:hover {
+    color: #11B8CE;
+}
+

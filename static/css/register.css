@@ -126,3 +126,12 @@ label {
 }
 
 
+/* Style for optional text */
+.title-optional-text {
+    font-family: var(--font-family, Arial, sans-serif);
+    color: var(--primary-color, #333);
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 5px;
+    display: block;
+}
