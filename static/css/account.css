@@ -1,44 +1,64 @@
-/* account.css */
+.account-nav {
+    border: 2px solid #d3d3d3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 20px 0;
+    width: 220px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.account-nav h4 {
+    margin: 0;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: #545454;
+    border-bottom: 1px solid #eee;
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.account-nav h4:last-child {
+    border-bottom: none;
+}
+
+.account-nav h4:hover {
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.account-nav h4.active {
+    font-weight: bold;
+    color: #222;
+}
 
 .account-container {
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
-    padding: 20px;
-    border: 1px solid var(--border-color);
+    border: 2px solid #d3d3d3;
     border-radius: 10px;
-    background-color: var(--background-color);
-}
-
-.account-container h1 {
-    font-size: 32px;
-    color: var(--secondary-color);
-}
-
-.account-container ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 20px 0;
-}
-
-.account-container li {
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-.account-actions {
-    margin-top: 20px;
-}
-
-.account-actions .button {
+    background: #fff;
+    padding: 30px 40px;
+    margin-left: 30px; /* keep as is */
+    margin-top: 40px; /* Match .account-nav margin-top */
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: inline-block;
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: var(--button-bg-color);
-    text-decoration: none;
-    border-radius: 5px;
+    vertical-align: top;
+    min-width: 1300px;   /* increase this value as needed */
+    width: 700px;       /* or set a fixed width if you want */
+    max-width: 100%;    /* prevents overflow */
+}
+
+.account-container h2,
+.account-container h3 {
+    margin-top: 0;
+    padding-top: 0;
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
 }
 
 .account-actions .button.logout {
@@ -47,4 +67,162 @@
 
 .account-actions .button:hover {
     background-color: var(--button-hover-bg-color);
+}
+
+.edit-details-box {
+    border: 2px solid #454545;
+    border-radius: 0px;
+    background: #454545;
+    color: #fff;
+    padding: 14px 24px;
+    margin: 25px 0;
+    width: fit-content;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+}
+
+.edit-details-box:hover {
+    background: #fff; /* Keep the dark background on hover */
+    color: #454545;         /* Keep the text white */
+}
+
+.change-password-box {
+    border: 2px solid #FAC102;
+    border-radius: 0px;
+    background: none;
+    color: #FAC102; /* Yellow text to match border */
+    padding: 14px 24px;
+    margin: 25px 0;
+    width: fit-content;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+}
+
+.change-password-box:hover {
+    background: #FAC102;
+    color: #454545; /* Dark text on yellow */
+}
+
+.edit-actions {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.address-book-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.address-book-header h4 {
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.manage-address-book {
+    color: #FAC102; /* Change this color as needed */
+    font-weight: normal;
+    margin: 0;
+    font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+}
+
+.address-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align left edges */
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.address-row h5 {
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    width: auto;           /* Let them size naturally */
+    box-sizing: border-box;
+    margin: 4px 0 4px 0;   /* Top and bottom margin for spacing */
+    padding: 6px 10px;     /* Padding inside for space on all sides */
+}
+
+.add-address-link {
+    border: 2px solid #FAC102;
+    border-radius: 0px;
+    background: none;
+    color: #FAC102;
+    padding: 10px 20px;
+    margin-left: 10px;
+    width: fit-content;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-size: 16px;
+    font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.add-address-link:hover {
+    background: #FAC102;
+    color: #fff;
+}
+
+.profile-box {
+    border: 2px solid #d3d3d3;
+    border-radius: 0px;
+    background: #fafbfc;
+    padding: 0; /* Remove horizontal padding */
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.profile-box h4 {
+    margin: 0;
+    padding: 10px 30px 10px 10px; /* Top, right, bottom, left (left is 0) */
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.profile-box h4:last-child {
+    border-bottom: none;
+}
+
+.profile-box h4:first-child {
+    background: #D9D9D9;
+    color: #222;
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border-radius: 0;
+    padding: 10px 30px 10px 10px; /* Match the others: left is 0 */
+    margin: 0;
+    text-align: left;
+}
+
+.profile-box h4:not(:first-child) {
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: normal;
+}
+
+.account-main-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Example header CSS */
+.container,
+.header-nav-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }

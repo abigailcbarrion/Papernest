@@ -1,12 +1,11 @@
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
-from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays
-=======
+=========
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegistrationForm
 from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
+>>>>>>>>> Temporary merge branch 2
 import json
 import os
 import random
@@ -137,9 +136,9 @@ def register():
         save_users(users)
         return redirect(url_for('login'))
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     return render_template('register.html', form=form)
-=======
+=========
     return render_template('register.html', registration_form=form)
 >>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
 
@@ -164,7 +163,7 @@ def get_postal_code():
         return jsonify({'postal_code': ''})
     postal_code = fetch_postal_code(city, country_code)
     return jsonify({'postal_code': postal_code})
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
+>>>>>>>>> Temporary merge branch 2
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
