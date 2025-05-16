@@ -5,7 +5,8 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp
 class LoginForm(FlaskForm):
     username = StringField('Username', [DataRequired(), Length(min=4, max=25)], render_kw={"placeholder": "Username", "class": "form-control"})
     password = PasswordField('Password', [DataRequired(), Length(min=6, max=35)], render_kw={"placeholder": "Password", "class": "form-control"})
-    login_button = SubmitField('Login', render_kw={"class": "btn-login"})
+
+    login_button = SubmitField('Login', render_kw={"class": "btn btn-primary"})
 
 def get_title_list():
     return [("void", "--Select title--"), ("Ms.", "Ms."), ("Mr.", "Mr."), ("Mrs.", "Mrs."), ("Dr.", "Dr."), ("Prof.", "Prof."), ("Dra.", "Dra."), ("Atty.", "Atty.")]
