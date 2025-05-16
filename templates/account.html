@@ -4,22 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Add Font Awesome CDN below -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_footer.css') }}">
 </head>
 <body>
-    <div class="account-container">
-        <h1>Welcome, {{ user['username'] }}!</h1>
-        <p>Your account details:</p>
-        <ul>
-            <li><strong>Username:</strong> {{ user['username'] }}</li>
-            <li><strong>User ID:</strong> {{ user['id'] }}</li>
-        </ul>
-
-        <div class="account-actions">
-            <a href="{{ url_for('wishlist') }}" class="button">View Wishlist</a>
-            <a href="{{ url_for('cart') }}" class="button">View Cart</a>
-            <a href="{{ url_for('logout') }}" class="button logout">Logout</a>
+    {% include 'components/page_header.html' %}
+    <div class="account-main-wrapper">
+        <div class="account-nav">
+            <h4 class="active">Dashboard</h4>
+            <h4>My Orders</h4>
+            <h4>Discount Cards</h4>
+            <h4><a href="{{ url_for('logout') }}">Logout</h4>
+        </div>
+        <div class="account-container">
+            <h2>Dashboard</h2>
+            <h3>Account Information</h3>
+            <div class="profile-box">
+                <h4>My Profile</h4>
+                <h4>Title</h4>
+                <h4>First Name</h4>
+                <h4>Last Name</h4>
+                <h4>Birth Date</h4>
+                <h4>Gender</h4>
+                <h4>Phone Number</h4>
+                <h4>Email</h4>
+            </div>
+            <div class="edit-actions">
+                <h4 class="edit-details-box">EDIT DETAILS</h4>
+                <h4 class="change-password-box">CHANGE PASSWORD</h4>
+            </div>
+            <div class="address-book-header">
+                <h4>Address Book</h4>
+                <h5 class="manage-address-book">Manage your Address Book</h5>
+            </div>
+            <div class="address-row-group" style="display: flex; gap: 32px;">
+                <div class="address-row">
+                    <h5>No shipping address configured.</h5>
+                    <h4 class="add-address-link">ADD NEW ADDRESS</h4>
+                </div>
+                <div class="address-row">
+                    <h5>No billing address configured.</h5>
+                    <h4 class="add-address-link">ADD NEW ADDRESS</h4>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navItems = document.querySelectorAll('.account-nav h4');
+        const accountContainer = document.querySelector('.account-container');
+
+        navItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                navItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                if (this.textContent.trim() === 'Dashboard') {
+                    accountContainer.style.display = 'block';
+                } else {
+                    accountContainer.style.display = 'none';
+                }
+            });
+        });
+
+        // Show account container by default
+        accountContainer.style.display = 'block';
+    });
+    </script>
+    {% include 'components/page_footer.html' %}
 </body>
 </html>
