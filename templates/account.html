@@ -24,11 +24,11 @@
             <h3>Account Information</h3>
             <div class="profile-box">
                 <h4>My Profile</h4>
-                <h4>Title: {{ user.title }}</h4>
-                <h4>First Name: {{ user.first_name }}</h4>
-                <h4>Last Name: {{ user.last_name }}</h4>
+                <h4>Title: {{ user.title.title() }}</h4>
+                <h4>First Name: {{ user.first_name.title() }}</h4>
+                <h4>Last Name: {{ user.last_name.title() }}</h4>
                 <h4>Birth Date: {{ user.birth_date }}</h4>
-                <h4>Gender: {{ user.gender }}</h4>
+                <h4>Gender: {{ user.gender.title() }}</h4>
                 <h4>Phone Number: {{ user.phone_number }}</h4>
                 <h4>Email: {{ user.email }}</h4>
             </div>
@@ -43,16 +43,16 @@
             <div class="address-row-group" style="display: flex; gap: 32px;">
                 <div class="address-row">
                     <h5>Shipping Address:</h5>
-                    <p>
-                        {{ user.barangay }}, {{ user.city }}, {{ user.province }}, {{ user.country }}<br>
+                    <p class="address-row-details">
+                        {{ user.barangay.title() }}, {{ user.city.title() }}, {{ user.province.title() }}, {{ user.country.title() }}<br>
                         Postal Code: {{ user.postal_code }}
                     </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
                 <div class="address-row">
                     <h5>Billing Address:</h5>
-                    <p>
-                        {{ user.barangay }}, {{ user.city }}, {{ user.province }}, {{ user.country }}<br>
+                    <p class="address-row-details">
+                        {{ user.barangay.title() }}, {{ user.city.title() }}, {{ user.province.title() }}, {{ user.country.title() }}<br>
                         Postal Code: {{ user.postal_code }}
                     </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>

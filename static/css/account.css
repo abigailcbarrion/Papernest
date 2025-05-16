@@ -144,8 +144,9 @@
     font-weight: normal;
     width: auto;           /* Let them size naturally */
     box-sizing: border-box;
-    margin: 4px 0 4px 0;   /* Top and bottom margin for spacing */
-    padding: 6px 10px;     /* Padding inside for space on all sides */
+    margin: 0;   /* Top and bottom margin for spacing */
+    margin-left: 10px;
+    padding: 0;     /* Padding inside for space on all sides */
 }
 
 .add-address-link {
@@ -223,4 +224,10 @@
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+}
+
+.address-row p{
+    font-size: 11px;
+    margin: 0;
+    margin-left: 10px;
 }
