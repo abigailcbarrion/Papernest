@@ -8,5 +8,18 @@
         "id": 2,
         "username": "johnDoe",
         "password": "password123"
+<<<<<<< HEAD
     }
+=======
+    },
+    {
+        "id": 3,
+        "username": "Abibayy",
+        "password": "genesisjames1119"
+    },
+    {
+        "id": 4,
+        "username": "Butil",
+        "password": "ngmais1208cutie"}
+>>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
 ]

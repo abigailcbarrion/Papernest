@@ -1,0 +1,17 @@
+<div class="featured-author-section">
+    <div class="container featured-author-container">
+        <div class="featured-author-image-container">
+            <img src="{{ featured_author.image_url | default(url_for('static', filename='images/placeholder.jpg')) }}" 
+                 alt="{{ featured_author.name }}" class="featured-author-image">
+        </div>
+        <div class="featured-author-content">
+            <h2 class="featured-author-title">Featured Author</h2>
+            <h3 class="featured-author-name">{{ featured_author.name }}</h3>
+            
+            <p class="featured-author-bio">
+                {{ featured_author.bio | safe }}
+            </p>
+    
+        </div>
+    </div>
+</div>
