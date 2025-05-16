@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegistrationForm
-from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
+from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
+from utilities.login import handle_login
 import json
 import os
 import random
@@ -73,104 +74,27 @@ def index():
                           popular_books=books_data,
                           featured_author=featured_author)
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm(request.form)
-
-    # Dynamically populate the choices for the dropdowns
-    user_country = get_user_country()
-    provinces = fetch_provinces()
-    form.country.choices = [("void", "--Select country--"), (user_country, user_country)]
-    form.country.default = "void"
-    form.process()
-    print("User country:", user_country)
-    #sort the provinces in alphabetical order
-    form.province.choices = [("void", "--Select the province--")] + sorted(
-    [(province['code'], province['name']) for province in provinces],
-    key=lambda x: x[1].lower())
-    form.city.choices = [("void", "--Select the city--")]  
-    form.barangay.choices = [("void", "--Select the barangay--")]  
-    if request.method == 'POST' and form.validate():
-        # Fetch the postal code based on the selected city
-        city_code = form.city.data
-        postal_code = None
-        if city_code:
-            cities = fetch_cities(form.province.data)  # Fetch cities for the selected province
-            for city in cities:
-                if city[0] == city_code:  # Match the city code
-                    postal_code = city[2]  # Get the postal code
-                    break
-            form.postal_code.data = postal_code
-
-        users = load_users()
-        username = form.username.data
-        password = form.password.data
-
-        # Check if user already exists
-        for user in users:
-            if user['username'] == username:
-                return "Username already exists. Try another one."
-
-        new_user = {
-            "id": len(users) + 1,
-            "username": username,
-            "password": password,
-            "postal_code": postal_code  # Save the postal code
-        }
-        users.append(new_user)
-        save_users(users)
-        return redirect(url_for('login'))
-
-    return render_template('register.html', registration_form=form)
-
-@app.route('/get_cities/<province_code>', methods=['GET'])
-def get_cities(province_code):
-    cities = fetch_cities(province_code)  # Fetch cities for the selected province
-    return {"cities": cities}  # Return cities as JSON
-
-@app.route('/get_barangays/<city_code>', methods=['GET'])
-def get_barangays(city_code):
-    barangays = fetch_barangays(city_code)  # Fetch barangays using the updated function
-    return {"barangays": barangays}  # Return barangays as JSON
-
-@app.route('/get_postal_code', methods=['GET'])
-def get_postal_code():
-    country_code = "PH"
-    city = request.args.get('city')
-    print(f"Postal code lookup: city='{city}', country_code='{country_code}'")  # Debug
-    if not (country_code and city):
-        return jsonify({'postal_code': ''})
-    postal_code = fetch_postal_code(city, country_code)
-    return jsonify({'postal_code': postal_code})
+    return handle_register()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
-        users = load_users()
-        username = form.username.data
-        password = form.password.data
-        session.setdefault('cart', [])
-        session.setdefault('wishlist', [])
+    return handle_login()
 
-        print(f"Input Username: {username}, Input Password: {password}")  # Debugging
-        print(f"Users: {users}")  # Debugging
 
-        # Validate username and password against the JSON file
-        for user in users:
-            if user['username'] == username:
-                if user['password'] == password:
-                    # Successful login
-                    session['user'] = user
-                    session.setdefault('cart', [])
-                    session.setdefault('wishlist', [])
-                    return redirect(url_for('index'))
-                else:
-                    # Password mismatch
-                    return "Invalid password. Please try again."
+@app.route('/get_cities/<province_code>', methods=['GET'])
+def get_cities(province_code):
+    return get_cities_json(province_code) 
 
-        return "Invalid credentials. Try again."
-    return render_template('login.html', form=form)
+@app.route('/get_barangays/<city_code>', methods=['GET'])
+def get_barangays(city_code):
+    return get_barangays_json(city_code)
+
+@app.route('/get_postal_code', methods=['GET'])
+def get_postal_code():
+    return get_postal_code_json()
 
 @app.route('/account')
 def account():

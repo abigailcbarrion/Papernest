@@ -17,20 +17,20 @@
             <h4 class="active">Dashboard</h4>
             <h4>My Orders</h4>
             <h4>Discount Cards</h4>
-            <h4><a href="{{ url_for('logout') }}">Logout</h4>
+            <h4><a href="{{ url_for('logout') }}">Logout</a></h4>
         </div>
         <div class="account-container">
             <h2>Dashboard</h2>
             <h3>Account Information</h3>
             <div class="profile-box">
                 <h4>My Profile</h4>
-                <h4>Title</h4>
-                <h4>First Name</h4>
-                <h4>Last Name</h4>
-                <h4>Birth Date</h4>
-                <h4>Gender</h4>
-                <h4>Phone Number</h4>
-                <h4>Email</h4>
+                <h4>Title: {{ user.title }}</h4>
+                <h4>First Name: {{ user.first_name }}</h4>
+                <h4>Last Name: {{ user.last_name }}</h4>
+                <h4>Birth Date: {{ user.birth_date }}</h4>
+                <h4>Gender: {{ user.gender }}</h4>
+                <h4>Phone Number: {{ user.phone_number }}</h4>
+                <h4>Email: {{ user.email }}</h4>
             </div>
             <div class="edit-actions">
                 <h4 class="edit-details-box">EDIT DETAILS</h4>
@@ -42,11 +42,19 @@
             </div>
             <div class="address-row-group" style="display: flex; gap: 32px;">
                 <div class="address-row">
-                    <h5>No shipping address configured.</h5>
+                    <h5>Shipping Address:</h5>
+                    <p>
+                        {{ user.barangay }}, {{ user.city }}, {{ user.province }}, {{ user.country }}<br>
+                        Postal Code: {{ user.postal_code }}
+                    </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
                 <div class="address-row">
-                    <h5>No billing address configured.</h5>
+                    <h5>Billing Address:</h5>
+                    <p>
+                        {{ user.barangay }}, {{ user.city }}, {{ user.province }}, {{ user.country }}<br>
+                        Postal Code: {{ user.postal_code }}
+                    </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
             </div>

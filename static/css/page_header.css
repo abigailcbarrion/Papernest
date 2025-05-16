@@ -64,10 +64,12 @@
 }
 /* Container for header content */
 .header-container {
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-left: 5vw;
+    padding-right: 5vw;
     max-width: 1500px;
     margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .header {
     display: flex; 
@@ -107,7 +109,7 @@
     border-radius: 5px 0 0 5px;
     outline: none;
     width: 100%; /* Elongate the search bar */
-    min-width: 400px; /* Minimum width */
+    min-width: 120px; /* Minimum width */
 }
 
 .search-bar button {
@@ -132,7 +134,7 @@
 }
     
 .user-links a {
-    margin-right: 50px; /* Add 50px margin between each link */
+    margin-right: 24px; /* Add 50px margin between each link */
     white-space: nowrap;
 }
 
