@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Login</title>
 </head>
@@ -29,5 +30,112 @@
             {{ form.register_button }}
         </div>
     </form>
+=======
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <title>Register</title>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- page header -->
+        {% include 'components/page_header.html' %}
+
+        <!-- Registration Form -->
+        <div class="form-wrapper">
+            <h3 class="register-header">Create New Account</h3>
+            <h2 class="register-sub-header">Fill Personal Information</h2>
+            <div class="form-register-container">
+                <form method="POST">
+                    {{ registration_form.hidden_tag() }}
+
+                    <!-- Name Section -->
+                    <div class="name-container">
+                        <div class="name-field">
+                            {{ registration_form.first_name.label }}
+                            {{ registration_form.first_name }}
+                        </div>
+                        <div class="name-field">
+                            {{ registration_form.last_name.label }}
+                            {{ registration_form.last_name }}
+                        </div>
+                    </div>
+
+                    <!-- Personal Information Section -->
+                    <div class="personal-info">
+                        <div>
+                            {{ registration_form.title.label }}
+                            <span class="title-optional-text">(optional)</span>
+                            {{ registration_form.title }}
+                        </div>
+                        <div>
+                            {{ registration_form.birth_date.label }}
+                            {{ registration_form.birth_date }}
+                        </div>
+                        <div>
+                            {{ registration_form.gender.label }}
+                            <span class="title-optional-text">(optional)</span>
+                            {{ registration_form.gender }}
+                        </div>
+                        <div>
+                            {{ registration_form.phone_number.label }}
+                            {{ registration_form.phone_number }}
+                        </div>
+                    </div>
+
+                    <!-- Account Information Section -->
+                    <div class="account-info">
+                        <div>
+                            {{ registration_form.username.label }}
+                            {{ registration_form.username }}
+                        </div>
+                        <div>
+                            {{ registration_form.email.label }}
+                            {{ registration_form.email }}
+                        </div>
+                        <div>
+                            {{ registration_form.password.label }}
+                            {{ registration_form.password }}
+                        </div>
+                        <div>
+                            {{ registration_form.confirm_password.label }}
+                            {{ registration_form.confirm_password }}
+                        </div>
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="address-info">
+                        <div>
+                            {{ registration_form.country.label }}
+                            {{ registration_form.country }}
+                        </div>
+                        <div>
+                            {{ registration_form.province.label }}
+                            {{ registration_form.province }}
+                        </div>
+                        <div>
+                            {{ registration_form.city.label }}
+                            {{ registration_form.city }}
+                        </div>
+                        <div>
+                            {{ registration_form.barangay.label }}
+                            {{ registration_form.barangay }}
+                        </div>
+                        <div>
+                            {{ registration_form.postal_code.label }}
+                            {{ registration_form.postal_code }}
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        {{ registration_form.register_button }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    <!-- page footer -->
+    {% include 'components/page_footer.html' %}
+>>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
 </body>
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </html>

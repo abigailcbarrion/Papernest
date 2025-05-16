@@ -66,13 +66,25 @@ def fetch_barangays(city_code):
         return []
 
 # Fetch postal code for a given city/municipality code (if available)
-def fetch_postal_code(city_code):
+def fetch_postal_code(city, country_code="PH", username="jamesonnn"):
     try:
-        response = requests.get(f"https://psgc.gitlab.io/api/cities-municipalities/{city_code}/")
+        url = f"http://api.geonames.org/postalCodeSearchJSON?placename={city}&country={country_code}&username={username}"
+        print("GeoNames URL:", url)
+        response = requests.get(url)
+        print("GeoNames Response:", response.text)
         if response.status_code == 200:
-            city_data = response.json()
-            # PSGC API may not always have postal code, but if present, it's usually in 'postalCode'
-            return city_data.get("postalCode", "Unknown")
+            data = response.json()
+            if data.get("postalCodes"):
+                city_lower = city.lower().replace("city of ", "").replace("city", "").strip()
+                # Try to find a placeName that matches or contains the city name
+                for place in data["postalCodes"]:
+                    place_name = place.get("placeName", "").lower()
+                    if city_lower in place_name or place_name in city_lower:
+                        return place.get("postalCode", "Unknown")
+                # Fallback: return the first postal code
+                return data["postalCodes"][0].get("postalCode", "Unknown")
+            else:
+                return "Unknown"
         else:
             print(f"Error fetching postal code: {response.status_code}")
             return "Unknown"
