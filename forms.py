@@ -1,37 +1,12 @@
 from flask_wtf import FlaskForm
-<<<<<<< HEAD
-<<<<<<< HEAD
-from wtforms import Form, StringField, PasswordField, validators, SubmitField
-from wtforms.validators import DataRequired, Email, Length, EqualTo
-
-=======
 from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
-=======
-from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField
-from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp
->>>>>>> eb76a5672fdbd5190e96fd403880ec993d5c481a
 
 class LoginForm(FlaskForm):
     username = StringField('Username', [DataRequired(), Length(min=4, max=25)], render_kw={"placeholder": "Username", "class": "form-control"})
     password = PasswordField('Password', [DataRequired(), Length(min=6, max=35)], render_kw={"placeholder": "Password", "class": "form-control"})
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     login_button = SubmitField('Login', render_kw={"class": "btn btn-primary"})
-
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', [DataRequired(), Length(min=4, max=25)])
-    email = StringField('Email', [DataRequired(), Email(message='Invalid email'), Length(max=50)])
-    password = PasswordField('Password', [DataRequired(), Length(min=6, max=35)])
-    confirm_password = PasswordField('Confirm Password', [DataRequired(), EqualTo('password', message='Passwords must match')])
-
-    register_button = SubmitField('Register')
-=======
-=======
->>>>>>> eb76a5672fdbd5190e96fd403880ec993d5c481a
-    login_button = SubmitField('Login', render_kw={"class": "btn-login"})
 
 def get_title_list():
     return [("void", "--Select title--"), ("Ms.", "Ms."), ("Mr.", "Mr."), ("Mrs.", "Mrs."), ("Dr.", "Dr."), ("Prof.", "Prof."), ("Dra.", "Dra."), ("Atty.", "Atty.")]
@@ -62,9 +37,4 @@ class RegistrationForm(FlaskForm):
     city = SelectField('City', choices=[], default="void", validators=[DataRequired()], render_kw={"id": "city", "class": "form-control"})
     barangay = SelectField('Barangay', choices=[], default="void", validators=[DataRequired()], render_kw={"id": "barangay", "class": "form-control"})
     postal_code = StringField('Postal Code', [DataRequired(), Length(min=4, max=10)], render_kw={"id": "postal_code", "class": "form-control", "readonly": True})
-<<<<<<< HEAD
     register_button = SubmitField('Register', render_kw={"class": "btn-register"})
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
-=======
-    register_button = SubmitField('Register', render_kw={"class": "btn-register"})
->>>>>>> eb76a5672fdbd5190e96fd403880ec993d5c481a

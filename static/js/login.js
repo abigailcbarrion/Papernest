@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
             loginDropdown.style.display = 'none';
         }
     });
-<<<<<<< HEAD
-=======
 
     const toggle = document.getElementById('toggleLoginPassword');
     const pwdInput = document.querySelector('.password-wrapper input');
@@ -32,5 +30,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
 });

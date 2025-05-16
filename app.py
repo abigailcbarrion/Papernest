@@ -1,11 +1,6 @@
-<<<<<<<<< Temporary merge branch 1
-from flask import Flask, render_template, request, redirect, url_for, session
-from forms import LoginForm, RegistrationForm
-=========
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegistrationForm
 from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
->>>>>>>>> Temporary merge branch 2
 import json
 import os
 import random
@@ -85,12 +80,6 @@ def register():
     # Dynamically populate the choices for the dropdowns
     user_country = get_user_country()
     provinces = fetch_provinces()
-<<<<<<< HEAD
-    form.country.choices = [(user_country, user_country)]  # Example: Set the detected country
-    form.province.choices = [(province['code'], province['name']) for province in provinces]
-    form.city.choices = []  # Initially empty, will be populated dynamically
-    form.barangay.choices = []  # Initially empty, will be populated dynamically
-=======
     form.country.choices = [("void", "--Select country--"), (user_country, user_country)]
     form.country.default = "void"
     form.process()
@@ -101,7 +90,6 @@ def register():
     key=lambda x: x[1].lower())
     form.city.choices = [("void", "--Select the city--")]  
     form.barangay.choices = [("void", "--Select the barangay--")]  
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
     if request.method == 'POST' and form.validate():
         # Fetch the postal code based on the selected city
         city_code = form.city.data
@@ -112,10 +100,7 @@ def register():
                 if city[0] == city_code:  # Match the city code
                     postal_code = city[2]  # Get the postal code
                     break
-<<<<<<< HEAD
-=======
             form.postal_code.data = postal_code
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
 
         users = load_users()
         username = form.username.data
@@ -136,11 +121,7 @@ def register():
         save_users(users)
         return redirect(url_for('login'))
 
-<<<<<<<<< Temporary merge branch 1
-    return render_template('register.html', form=form)
-=========
     return render_template('register.html', registration_form=form)
->>>>>>> f5184448c81a1479e7114aec64b6b9bc69fdf47f
 
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):
@@ -151,8 +132,6 @@ def get_cities(province_code):
 def get_barangays(city_code):
     barangays = fetch_barangays(city_code)  # Fetch barangays using the updated function
     return {"barangays": barangays}  # Return barangays as JSON
-<<<<<<< HEAD
-=======
 
 @app.route('/get_postal_code', methods=['GET'])
 def get_postal_code():
@@ -163,7 +142,6 @@ def get_postal_code():
         return jsonify({'postal_code': ''})
     postal_code = fetch_postal_code(city, country_code)
     return jsonify({'postal_code': postal_code})
->>>>>>>>> Temporary merge branch 2
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
