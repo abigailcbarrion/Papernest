@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
 from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
 from utilities.login import handle_login
 import json
 import os
-import random
 
 app = Flask(__name__, 
             static_folder='static',
