@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
 from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
 from utilities.login import handle_login
+from utilities.product_view import get_product_view
 import json
 import os
 
@@ -81,7 +82,6 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return handle_login()
-
 
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):
@@ -207,6 +207,11 @@ def collections():
 def sale():
     # Add logic to load sale items
     return render_template('sale.html')
+
+@app.route('/product_view')
+def product_view():
+    return render_template('product_view.html')
+
 
 @app.context_processor
 def inject_forms():
