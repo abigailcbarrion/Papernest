@@ -1,0 +1,16 @@
+.best-seller-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    width: 100%;
+    margin: 0;
+}
+
+.container div{
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0;
+}

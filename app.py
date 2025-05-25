@@ -9,7 +9,7 @@ import os
 app = Flask(__name__, 
             static_folder='static',
             template_folder='templates')
-app.secret_key = 'your_secret_key'  # Required for session
+app.secret_key = '631539ff18360356'  
 
 # ---------- File Paths ----------
 USERS_FILE = 'data/users.json'
@@ -19,11 +19,11 @@ BOOKS_FILE = 'data/books.json'
 def load_json(filepath):
     if not os.path.exists(filepath):
         return []
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def save_json(filepath, data):
-    with open(filepath, 'w') as f:
+    with open(filepath, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)
 
 def load_users():
@@ -210,8 +210,7 @@ def sale():
 
 @app.route('/product_view')
 def product_view():
-    return render_template('product_view.html')
-
+    return get_product_view()
 
 @app.context_processor
 def inject_forms():
