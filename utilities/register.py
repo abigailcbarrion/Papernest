@@ -5,11 +5,10 @@ from flask import render_template, request, redirect, url_for, jsonify, session
 
 def handle_register():
     form = RegistrationForm(request.form)
+    get_country = get_user_country()
     form.country.choices = [
         ("void", "--Select country--"),
-        ("PH", "Philippines"),
-        ("US", "United States"),
-        ("CA", "Canada"),
+        ("PH", get_country)
     ]
     form.country.default = "void"
     form.process()
