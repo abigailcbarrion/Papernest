@@ -59,6 +59,50 @@
     font-weight: bold;
 }
 
+.orders-container {
+    border: 2px solid #d3d3d3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 30px 40px;
+    margin: 40px 40px 40px 40px; /* Increased top margin to move it down */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: block;
+    min-width: 0;
+    box-sizing: border-box;
+    width: 1200px;       /* or set a fixed width if you want */
+    max-width: 1298px;    /* prevents overflow */
+    margin-top: 40px;     /* Extra move downwards */
+}
+
+.orders-container h2 {
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.discount-cards-container {
+    border: 2px solid #d3d3d3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 30px 40px;
+    margin: 40px 40px 40px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: block;
+    min-width: 0;
+    box-sizing: border-box;
+    width: 1200px;       /* or set a fixed width if you want */
+    max-width: 1298px;   /* prevents overflow */
+    margin-top: 40px;    /* Extra move downwards */
+}
+
+.discount-cards-container h2 {
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 0;
+    padding-top: 0;
+}
+
 .account-actions .button.logout {
     background-color: var(--link-hover-color);
 }
@@ -211,7 +255,6 @@
     align-items: flex-start;
 }
 
-/* Example header CSS */
 .container,
 .header-nav-wrapper {
     width: 100%;
@@ -231,3 +274,5 @@
     margin: 0;
     margin-left: 10px;
 }
+
+
