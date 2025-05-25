@@ -1,59 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="page-wrapper">
         {% include 'components/page_header.html' %}
-      <div class="main-content">
-      <div class="container">
-          <!-- Main Content -->
-            <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb">
-        <a href="/">Home</a> / <span>Books</span>
-      </div>
-  
-      <!-- Main Content -->
-      <h2 class="category-heading">SHOP BY CATEGORY</h2>
-      
-      <div class="categories-grid">
-        <a href="/category/fiction" class="category-box">Fiction</a>
-        <a href="/category/non-fiction" class="category-box">Non-Fiction</a>
-        <a href="/category/science-technology" class="category-box">Science & Technology</a>
-        <a href="/category/self-help-development" class="category-box">Self-help & Development</a>
-        <a href="/category/childrens" class="category-box">Children's</a>
-        <a href="/category/academic-reference" class="category-box">Academic Reference</a>
-      
+        <div class="main-content">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">Home</a> / <span>Books</span>
+                </div>
+
+                <h2 class="category-heading">SHOP BY CATEGORY</h2>
+                <div class="categories-grid">
+                    <a href="/category/fiction" class="category-box">Fiction</a>
+                    <a href="/category/non-fiction" class="category-box">Non-Fiction</a>
+                    <a href="/category/science-technology" class="category-box">Science & Technology</a>
+                    <a href="/category/self-help-development" class="category-box">Self-help & Development</a>
+                    <a href="/category/childrens" class="category-box">Children's</a>
+                    <a href="/category/academic-reference" class="category-box">Academic Reference</a>
+                </div>
+
+                <div class="best-seller-container">
+                    <div best-seller-indicators>
+                        <h3 class="best-seller-label">Best Sellers</h3>
+                        <p class="best-seller-description">Discover our Best Selling Books!</p>
+                        <a href="/best-sellers" class="view-best-sellers">Shop Now</a>
+                    </div>
+                    <div class="best-seller-img">
+                        <img src="{{ url_for('static', filename='css/best-seller-img/best-seller-img.jpg') }}" alt="best seller image">
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-          <h2>Available Books</h2>
-          <ul>
-              {% for book in books %}
-                  <li>
-                      <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
-                      {% if session.get('user') %}
-                          <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
-                              <input type="hidden" name="book_id" value="{{ book.id }}">
-                              <button type="submit">Add to Cart</button>
-                          </form>
-  
-                          <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
-                              <input type="hidden" name="book_id" value="{{ book.id }}">
-                              <button type="submit">Add to Wishlist</button>
-                          </form>
-                      {% endif %}
-                  </li>
-              {% endfor %}
-          </ul>
-      </div>
-    </div>
-  </div>
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
-  </body>
-  
+</body>
 </html>
