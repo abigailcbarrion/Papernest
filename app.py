@@ -43,7 +43,7 @@ def index():
     json_path = os.path.join(app.root_path, 'data', 'books.json')
     authors_path = os.path.join(app.root_path, 'data', 'featured_authors.json')
     
-    with open(json_path, 'r') as f:
+    with open(json_path, 'r', encoding='utf-8') as f:
         books_data = json.load(f)
     
     # Create a default author as fallback
@@ -56,7 +56,7 @@ def index():
     }
     
     try:
-        with open(authors_path, 'r') as f:
+        with open(authors_path, 'r', encoding='utf-8') as f:
             authors_data = json.load(f)
         
         # Access the nested "featured_authors" key
