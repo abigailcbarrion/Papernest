@@ -1,0 +1,21 @@
+/*HTML on non_books.html file*/
+.trending-wrapper{
+    background-color: #FAC102;
+    width: 100vw;
+    min-height: 150px;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    padding: 40px 0;
+    overflow: hidden;
+}
+.trending-content{
+    padding: 10px 0 5px;
+}
+.trending-content h1{
+    color: #FFFFFF;
+    font-size: 26px;
+    margin: 0 0 0 60px;
+}
+body{
+     overflow-x: hidden;
+}
