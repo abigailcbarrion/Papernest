@@ -94,6 +94,14 @@
             background-color: #545454;
             text-align: left;
         }
+        .custom-checkbox { position: relative; padding-left: 28px; cursor: pointer; font-size: 15px; user-select: none; display: inline-block; line-height: 22px;  }
+        .custom-checkbox input[type="checkbox"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+        .custom-checkbox .checkmark { position: absolute; left: 0; top: 0; height: 15px; width: 15px; background: #eee; border: 1.5px solid #bbb; border-radius: 4px; transition: background 0.2s; }
+        .custom-checkbox:hover .checkmark { background: #ccc; }
+        .custom-checkbox input:checked ~ .checkmark { background: #11B8CE; border-color: #11B8CE; }
+        .custom-checkbox .checkmark:after { content: ""; position: absolute; display: none; }
+        .custom-checkbox input:checked ~ .checkmark:after { display: block; }
+        .custom-checkbox .checkmark:after { left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
     </style>
 </head>
 <body>
@@ -105,34 +113,105 @@
         </div> 
 
         <div class="collections-layout">
-            <div class="sidebar">
+             <div class="sidebar">
                 <h3>Filter by:</h3>
-                <ul>
-                    <li><strong>PRICE</strong></li>
-                    <ul>
-                        <li><a href="#">From ₱0 to ₱999.99</a></li>
-                        <li><a href="#">From ₱1,000 to ₱1,999.99</a></li>
-                        <li><a href="#">From ₱2,000 and ABOVE</a></li>
-                    </ul>
-                    <li><strong>CATEGORIES</strong></li>
-                    <ul>
-                        <li><a href="#">Summer Collection</a></li>
-                        <li><a href="#">Mental Health</a></li>
-                        <li><a href="#">Staff Picks</a></li>
-                    </ul>
-                    <li><strong>BRAND</strong></li>
-                    <ul>
-                        <li><a href="#">Brand A</a></li>
-                        <li><a href="#">Brand B</a></li>
-                        <li><a href="#">Brand C</a></li>
-                    </ul>
-                    <li><strong>RATING</strong></li>
-                    <ul>
-                        <li><a href="#">★★★★★</a></li>
-                        <li><a href="#">★★★★☆</a></li>
-                        <li><a href="#">★★★☆☆</a></li>
-                    </ul>
-                </ul>
+                <form>
+                    <div>
+                        <strong>PRICE</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="price" value="0-999.99">
+                                <span class="checkmark"></span>
+                                From ₱0 to ₱999.99
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="price" value="1000-1999.99">
+                                <span class="checkmark"></span>
+                                From ₱1,000 to ₱1,999.99
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="price" value="2000-above">
+                                <span class="checkmark"></span>
+                                From ₱2,000 and ABOVE
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <strong>CATEGORIES</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="category" value="summer">
+                                <span class="checkmark"></span>
+                                Summer Collection
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="category" value="mental_health">
+                                <span class="checkmark"></span>
+                                Mental Health
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="category" value="staff_picks">
+                                <span class="checkmark"></span>
+                                Staff Picks
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <strong>BOOK CATEGORIES</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="fiction">
+                                <span class="checkmark"></span>
+                                Fiction
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="non_fiction">
+                                <span class="checkmark"></span>
+                                Non-fiction
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="science_technology">
+                                <span class="checkmark"></span>
+                                Science & Technology
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="children">
+                                <span class="checkmark"></span>
+                                Children's Books
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="self_help">
+                                <span class="checkmark"></span>
+                                Self Help & Personal Development
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="academics">
+                                <span class="checkmark"></span>
+                                Academics & References
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <strong>Product Language</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="language" value="english">
+                                <span class="checkmark"></span>
+                                English
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="language" value="filipino">
+                                <span class="checkmark"></span>
+                                Filipino
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="language" value="spanish">
+                                <span class="checkmark"></span>
+                                Spanish
+                            </label>
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <!-- Main Collection Content -->
