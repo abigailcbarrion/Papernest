@@ -19,6 +19,8 @@
         .breadcrumb a {
             text-decoration: none;
             color: #555;
+            display: inline-block;
+            margin-left: 3%;
         }
         .breadcrumb span {
             color: #555;
@@ -27,6 +29,7 @@
             display: flex;
             padding: 40px;
             gap: 40px;
+            justify-content: center;
         }
         .product-thumbnails img {
             width: 100px;
@@ -173,7 +176,7 @@
             </section>
             <section class="similar-products">
                 <h2>Similar Products</h2>
-                <!-- Add similar products here -->
+                {% include 'components/product_carousel.html' %}
             </section>
         </main>
         <footer>
