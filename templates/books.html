@@ -25,19 +25,37 @@
                     <a href="/category/childrens" class="category-box">Children's</a>
                     <a href="/category/academic-reference" class="category-box">Academic Reference</a>
                 </div>
-
+            </div>
                 <div class="best-seller-container">
-                    <div best-seller-indicators>
+                    <div class="best-seller-indicators">
                         <h3 class="best-seller-label">Best Sellers</h3>
                         <p class="best-seller-description">Discover our Best Selling Books!</p>
-                        <a href="/best-sellers" class="view-best-sellers">Shop Now</a>
+                        <a href="/best-sellers" class="shop-now-hyperlink">Shop Now</a>
                     </div>
                     <div class="best-seller-img">
-                        <img src="{{ url_for('static', filename='css/best-seller-img/best-seller-img.jpg') }}" alt="best seller image">
+                        <img src="{{ url_for('static', filename='images/best-seller-img/bs_img.jpg') }}" alt="best seller image">
                     </div>
                 </div>
 
-            </div>
+                <div class="new-releases-container">
+                    <div class="new-releases-img">
+                        <img src="{{ url_for('static', filename='images/best-seller-img/bs_img.jpg') }}" alt="new releases image">
+                    </div>
+                    <div class="new-releases-indicators">
+                        <h3 class="new-releases-label">New Releases</h3>
+                        <p class="new-releases-description">Explore the Latest Books!</p>
+                        <a href="/new-releases" class="shop-now-hyperlink">Shop Now</a>
+                    </div>    
+                </div>
+
+                <h2 class="popular-categories-label">Most Popular Categories</h2>
+                <div class="popular-categories-carousel">
+                    {% include 'components/product_carousel.html' %}
+                </div>
+                <div class="trending">
+                    <h3>What's Trending?</h3>
+                    {% include 'components/product_carousel.html' %}
+                </div>
         </div>
     </div>
     <footer>
