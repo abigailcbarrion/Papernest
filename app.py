@@ -212,6 +212,11 @@ def sale():
 def product_view():
     return get_product_view()
 
+@app.route('/category/<category_name>')
+def category_products(category_name):
+    # Fetch and display products for the category
+    return render_template('components/product_list.html', category=category_name)
+
 @app.context_processor
 def inject_forms():
     return {
