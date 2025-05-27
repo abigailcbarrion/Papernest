@@ -1,16 +1,119 @@
 .best-seller-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    padding: 20px;
+    height: 20vw;
+    justify-content: space-between; 
+    padding: 20px 0;
     background-color: var(--secondary-color);
-    width: 100%;
-    margin: 0;
+    color: #fff;
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
-.container div{
-    width: 100%;
-    max-width: 1200px;
-    margin: auto;
+.best-seller-indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 0;
+    margin-left: 20vw;
+    min-width: 0;
+}
+
+.shop-now-hyperlink {
+    margin-top: 8px;
+    color: #fff;
+    padding: 0;
+    text-decoration: underline;
+    font-weight: normal;
+    display: inline;
+    transition: color 0.2s;
+}
+.shop-now-hyperlink:hover {
+    background: none;
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+.best-seller-img {
+    flex: 0 0 auto;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.best-seller-img img {
+    max-width: 300px;
+    height: auto;
+    margin-right: 20vw;
+    display: block;
+}
+
+.best-seller-label{
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.new-releases-container{
+    display: flex;
+    flex-direction: row;
+    background-color: #FAC201;
+    width: 100vw;
+    height: 20vw;
+    margin-top: 3vw;
+    margin-bottom: 3vw;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.new-releases-img {
+    flex: 0 0 auto;
+    margin-left: 17vw;
+    padding-left: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.new-releases-img img {
+    max-width: 450px;
+    height: auto;
+    display: block;
+    padding-bottom: 0;
+}
+
+.new-releases-indicators {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    gap: 8px;
+    padding-right: 40px;
+    flex: 1 1 0;
+    margin-right: 22vw;
+    min-width: 0;
+    align-items: flex-end; /* align content to the right */
+}
+
+.new-releases-indicators h3{
+    font-size: 38px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.new-releases-indicators p {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.trending{
+    width: 100vw;
+    height: 30vw;
+    display: flex;
+    margin-top: 3vw;
+    margin-bottom: 3vw;
+    background-color: #FAC201;
     padding: 0;
 }

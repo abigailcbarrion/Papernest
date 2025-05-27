@@ -1,22 +1,35 @@
-<!-- In your base.html head section -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
 <div class="product-carousel-container">
     <div class="product-carousel" id="bookCarousel">
-        <!-- Show all books, not just first 5 -->
-        {% for book in popular_books %}
+        {% for item in popular_items %}
         <div class="product-card">
             <div class="product-image-container">
-                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ book.title }}" class="product-image">
+                {% if page_type == 'books' or page_type == 'homepage' %}
+                    <img src="{{ item.image_path }}" alt="{{ item['Book Name'] }}" class="product-image">
+                {% elif page_type == 'non_books' %}
+                    <img src="{{ item.image_path }}" alt="{{ item['Product Name'] }}" class="product-image">
+                {% endif %}
             </div>
-            <div class="product-info">
-                <h3 class="product-title">{{ book.title }}</h3>
-                <p class="product-author">by {{ book.author }}</p>
-                <div class="product-price">₱{{ book.price }}</div>
-                <div class="product-buttons">
-                    <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
-                    <button class="btn-add-cart">Add to Cart</button>
+            {% if page_type == 'books' or page_type == 'homepage'%}
+                <div class="product-info">
+                    <h3 class="product-title">{{ item["Book Name"] }}</h3>
+                    <p class="product-author">by {{ item["Author"] }}</p>
+                    <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
+                    <div class="product-buttons">
+                        <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                        <button class="btn-add-cart">Add to Cart</button>
+                    </div>
                 </div>
-            </div>
+            {% elif page_type == 'non_books' %}
+                <div class="product-info">
+                    <h3 class="product-title">{{ item["Product Name"] }}</h3>
+                    <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
+                    <div class="product-buttons">
+                        <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                        <button class="btn-add-cart">Add to Cart</button>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
