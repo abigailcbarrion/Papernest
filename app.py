@@ -219,9 +219,22 @@ def sale():
     # Add logic to load sale items
     return render_template('sale.html')
 
-@app.route('/product_view')
-def product_view():
-    return get_product_view()
+@app.route('/product/<int:product_id>')
+def product_view(product_id):
+    books = load_json('data/books.json')
+    # Find the book with the matching Product ID
+    product = next((b for b in books if b.get('Product ID') == product_id), None)
+    if not product:
+        # Optionally, handle not found (404)
+        return "Product not found", 404
+    # Attach image path if needed
+    product['image_path'] = get_books_image_path(product)
+    similar_products = get_trending(curr_section='books')
+    for item in similar_products:
+        item['image_path'] = get_books_image_path(item)
+    return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
+
+
 
 @app.context_processor
 def inject_forms():
