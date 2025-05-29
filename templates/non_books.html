@@ -3,6 +3,8 @@
 <head>
     <title>Non-Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -28,13 +30,20 @@
         <a href="/category/supplies" class="category-box">Supplies</a>
       </div>
 
-
+      <!-- Trending Section -->
+       <div class="trending-wrapper">
+        <div class="trending-content">
+          <h1>What's Trending?</h1>
+        </div>
+            {% include 'components/product_carousel.html'%}
+      </div>
       </div>
     </div>
   </div>
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
+            <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
   </body>
   
 </html>
