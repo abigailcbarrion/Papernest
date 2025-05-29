@@ -32,9 +32,9 @@ BOOK_CATEGORY_FOLDER_MAP = {
     "Fiction": "fiction_images",
     "Non-fiction": "non-fiction_images",
     "Children's Books": "childrens-book_images",
-    "Science & Technology": "science-technology_images",
-    "Academic & Reference Development": "academics-book_images",
-    "Self-Help & Personal Development": "self-help-book_images"
+    "Science and Technology": "science-technology_images",
+    "Academic and Reference Development": "academics-book_images",
+    "Self-Help and Personal Development": "self-help-book_images"
 }   
 
 def get_nonbook_image_path(item, image_key="Product Image Front"):
@@ -56,9 +56,10 @@ def get_nonbook_image_path(item, image_key="Product Image Front"):
 def get_books_image_path(item, image_key="Product Image Front"):
     filename = item.get(image_key)
     if not filename:
+        print(f"[DEBUG] No image filename found for item: {item}")
         return url_for('static', filename='images/placeholder.jpg')
 
-    category = item.get("Category", "Other")
+    category = item.get("Category", "Other").replace("&", "and").replace("-", " ").strip()
     possible_folders = []
 
     # Try mapped category folder first
@@ -73,6 +74,7 @@ def get_books_image_path(item, image_key="Product Image Front"):
     static_folder = os.path.join(current_app.root_path, 'static')
     extensions = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG', 'WEBP']
 
+    tried_paths = []
     for folder in possible_folders:
         for ext in extensions:
             rel_path = f'{folder}/{filename}.{ext}'
@@ -80,6 +82,9 @@ def get_books_image_path(item, image_key="Product Image Front"):
             if os.path.exists(abs_path):
                 return url_for('static', filename=rel_path)
     # fallback
+    print(f"[DEBUG] No valid image found for item: '{item.get('Book Name', filename)}'. Tried paths:")
+    for path in tried_paths:
+        print(f" - {path}")
     return url_for('static', filename='images/placeholder.jpg')
 
 

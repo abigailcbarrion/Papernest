@@ -234,7 +234,15 @@ def product_view(product_id):
         item['image_path'] = get_books_image_path(item)
     return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
 
-
+@app.route('/category/<category_name>')
+def category_products(category_name):
+    books = load_json('data/books.json')
+    # Filter books by category (case-insensitive match)
+    filtered_books = [book for book in books if book.get("Category", "").lower().replace(" ", "-") == category_name.lower()]
+    # Attach image path
+    for book in filtered_books:
+        book['image_path'] = get_books_image_path(book)
+    return render_template('components/product_list.html', category=category_name, products=filtered_books)
 
 @app.context_processor
 def inject_forms():
