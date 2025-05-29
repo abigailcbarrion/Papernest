@@ -53,12 +53,21 @@
 
             <!-- Main Product List Content -->
             <div style="flex:1;">
-                <!-- Product list and category functions here -->
-                {# 
-                {% for product in products %}
-                    <div class="product-card">{{ product.title }}</div>
-                {% endfor %}
-                #}
+                <div class="product-grid">
+                    {% for product in products %}
+                    <div class="product-card">
+                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                            <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
+                        </a>
+                        <div class="product-info">
+                            <h3 class="product-title">{{ product["Book Name"] }}</h3>
+                            <p class="product-author">by {{ product["Author"] }}</p>
+                            <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
