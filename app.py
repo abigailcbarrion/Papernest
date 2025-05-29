@@ -184,6 +184,16 @@ def remove_from_wishlist(book_id):
 
     return redirect(url_for('wishlist'))
 
+@app.route('/about')
+def about():
+    # Add logic to load collections
+    return render_template('about_us.html')
+
+@app.route('/help')
+def help():
+    # Add logic to load sale items
+    return render_template('faqs.html')
+
 @app.route('/books')
 def books():
     books = load_json(BOOKS_FILE)
@@ -243,6 +253,35 @@ def category_products(category_name):
     for book in filtered_books:
         book['image_path'] = get_books_image_path(book)
     return render_template('components/product_list.html', category=category_name, products=filtered_books)
+
+@app.context_processor
+def inject_common_variables():
+    # Create a default author as fallback
+    default_author = {
+        "name": "Featured Author", 
+        "bio": "Information about this author will be coming soon.",
+        "image_url": url_for('static', filename='images/placeholder.jpg'),
+        "source_url": "#",
+        "more_link": "#"
+    }
+    
+    try:
+        authors_path = os.path.join(app.root_path, 'data', 'featured_authors.json')
+        with open(authors_path, 'r', encoding='utf-8') as f:
+            authors_data = json.load(f)
+        
+        # Access the nested "featured_authors" key
+        if "featured_authors" in authors_data and authors_data["featured_authors"]:
+            # Get the first author from the list
+            featured_author = authors_data["featured_authors"][0]
+        else:
+            featured_author = default_author
+            
+    except Exception as e:
+        print(f"Error loading authors: {str(e)}")
+        featured_author = default_author
+    
+    return {'featured_author': featured_author}
 
 @app.context_processor
 def inject_forms():

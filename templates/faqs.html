@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faqs.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        {% include 'components/page_header.html' %}
+        
+        <div class="faq-container">
+            <h1>Frequently Asked Questions</h1>
+            
+            <!-- Browsing and Shopping Section -->
+            <h2 class="faq-category">Browsing and Shopping</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do I need to register to purchase?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, you need to create an account to complete a purchase. Registration is quick and simple, requiring just your email address and basic information. Having an account allows you to track your orders and save your favorite items.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>I'm a Discount Cardholder, do I get any discounts?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! Discount Cardholders receive 10% off all regular-priced items. Simply log in to your account with your Discount Card credentials to automatically apply your discount at checkout.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I browse for books?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You can browse books by category using our navigation menu, use the search bar to find specific titles or authors, or check out our curated collections and recommendations on the homepage.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I add items to my Shopping Cart?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Simply click the "Add to Cart" button on any product page. You can view and edit your cart at any time by clicking the cart icon in the top right corner of the page.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What happens in Checkout?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>During checkout, you'll confirm your items, enter shipping information, select a shipping method, enter payment details, and finally review and place your order.</p>
+                </div>
+            </div>
+            
+            <!-- Payment and Processing Section -->
+            <h2 class="faq-category">Payment and Processing</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I pay? What payment methods are accepted?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We accept credit/debit cards (Visa, Mastercard, American Express), PayPal, and digital wallets like Apple Pay and Google Pay.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I pay Cash on Delivery (COD)?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, Cash on Delivery is available for orders within select areas. Additional fees may apply for this payment method.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What happens after I've paid? Do I get a notification?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>After payment, you'll receive an order confirmation email with your order details. You'll also receive shipping updates once your order is processed and shipped.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Why do the prices of some items change?</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Prices may change due to publisher adjustments, promotional discounts, or limited-time offers. We always display the current price on the product page.</p>
+                </div>
+            </div>
+        </div>
+        
+        {% include 'components/page_footer.html' %}
+    </div>
+
+    <script>
+        // JavaScript for FAQ accordion functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqItem = question.parentElement;
+                    const answer = faqItem.querySelector('.faq-answer');
+                    const icon = question.querySelector('i');
+                    
+                    // Toggle active class
+                    faqItem.classList.toggle('active');
+                    
+                    // Toggle icon
+                    if (faqItem.classList.contains('active')) {
+                        icon.classList.replace('fa-plus', 'fa-minus');
+                    } else {
+                        icon.classList.replace('fa-minus', 'fa-plus');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

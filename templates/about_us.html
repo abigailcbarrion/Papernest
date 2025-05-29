@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+</head>
+<body>
+    <div class="page-wrapper">
+        {% include 'components/page_header.html' %}
+        
+        <div class="about-us-container">
+            <h1>About Us</h1>
+            
+            <div class="about-text">
+                <p>Welcome to Papernest, your go-to destination for all things books! We are passionate about connecting readers with the stories they love. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                
+                <p>At Papernest, we believe in the power of books to inspire, educate, and entertain. Our carefully curated selection includes everything from bestsellers to hidden gems, ensuring there's something for every reader. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            
+            <div class="about-images">
+                <div class="image-placeholder"></div>
+                <div class="image-placeholder"></div>
+                <div class="image-placeholder"></div>
+            </div>
+
+            <!-- Team Section -->
+            <h1 class="team-title">The Papernest</h1>
+            
+            <div class="about-text">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            
+            <div class="team-members">
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{{ url_for('static', filename='images/userplaceholder.jpg') }}" alt="James Patrick Orlanes">
+                    </div>
+                    <h3>James Patrick Orlanes</h3>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                       <img src="{{ url_for('static', filename='images/userplaceholder.jpg') }}" alt="Abigail Barrion">
+                    </div>
+                    <h3>Abigail Barrion</h3>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                         <img src="{{ url_for('static', filename='images/userplaceholder.jpg') }}" alt="James Francis Mercado">
+                    </div>
+                    <h3>James Francis Mercado</h3>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{{ url_for('static', filename='images/userplaceholder.jpg') }}" alt="Althea Mishka Alvarez">
+                    </div>
+                    <h3>Althea Mishka Alvarez</h3>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{{ url_for('static', filename='images/userplaceholder.jpg') }}"    alt="Denmar Redondo">
+                    </div>
+                    <h3>Denmar Redondo</h3>
+                </div>
+            </div>
+        </div>
+        
+        {% include 'components/page_footer.html' %}
+    </div>
+</body>
+</html>
