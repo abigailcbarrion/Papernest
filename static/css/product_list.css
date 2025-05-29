@@ -58,3 +58,50 @@
 .breadcrumb span {
     color: #888;
 }
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+}
+.product-image {
+    width: auto;
+    height: 232px;
+    max-height: 232px;
+    object-fit: cover; /* or use 'contain' if you want the whole image visible with possible whitespace */
+    margin-bottom: 12px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.product-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    min-height: 370px; /* ensures enough space for info */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.product-info {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.btn-add-cart {
+    background: #ED1D7F;
+    color: #fff;
+    border: none;
+    max-height: 42.2px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-add-cart:hover {
+    background: #c01565;
+}
