@@ -5,8 +5,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nonbooks_products.css') }}">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      .products{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 10px;
+        max-width: 1200px;
+        margin: 0 auto; 
+        margin-bottom: 40px;
+      }
+      .sidebar-div{
+        grid-row: span 4 / span 4;
+        margin-left: 0px; 
+      }
+      .products-div{
+        grid-column: span 4 / span 4;
+        grid-row: span 5/ span 5;
+        margin-right: 0px; 
+      }
+    </style>
 </head>
 <body>
     <div class="page-wrapper">
@@ -18,7 +39,6 @@
     <div class="breadcrumb">
         <a href="/">Home</a> / <span>Non-Books</span>
     </div>
-  
       <!-- Main Content -->
       <h2 class="category-heading">SHOP BY CATEGORY</h2>
       <div class="categories-grid">
@@ -37,6 +57,55 @@
         </div>
             {% include 'components/product_carousel.html'%}
       </div>
+
+      <!-- Products Section(nonbooks) -->
+      <div class="products">
+        <div class="sidebar-div">
+            <div class="products-sidebar-container">
+                <h3 class="sidebar-title">Art Supplies</h3>
+                <hr>
+                <div class="sidebar-section">
+                    <h2 class="sidebar-category">Categories</h2>
+                    <ul class="sidebar-sub-info">
+                        <a href="drawing">Drawing</a><br>
+                        <a href="painting">Painting</a><br>
+                        <a href="supports">Supports</a><br>
+                    </ul>
+                </div>
+                <hr>
+                <div class="sidebar-section">
+                    <h2 class="sidebar-price">Price</h2>
+                    <ul class="sidebar-sub-info">
+                        <a href="#">From ₱0.00 to ₱999.99</a><br>
+                        <a href="#">From ₱1,000.00</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="products-div">
+            <div class="products-container">
+                <div class="product-showcase" id="bookShowcase">
+                    {% for book in popular_books %}
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ book.title }}" class="product-image">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">{{ book.title }}</h3>
+                            <p class="product-author">by {{ book.author }}</p>
+                            <div class="product-price">${{ book.price }}</div>
+                            <div class="product-buttons">
+                                <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                                <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}  
+                </div>
+            </div>
+        </div>
+    </div>
+
       </div>
     </div>
   </div>
@@ -45,5 +114,4 @@
     </footer>
             <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
   </body>
-  
 </html>
