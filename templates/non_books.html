@@ -1,118 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Non-Books</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/nonbooks_products.css') }}">
-    <!-- Add Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .products {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 10px;
-            max-width: 1200px;
-            margin: 0 auto; 
-            margin-bottom: 40px;
-        }
-        .sidebar-div {
-            grid-row: span 4 / span 4;
-            margin-left: 0px; 
-        }
-        .products-div {
-            grid-column: span 4 / span 4;
-            grid-row: span 5/ span 5;
-            margin-right: 0px; 
-        }
-    </style>
+  <title>Non-Books</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .products {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-bottom: 40px;
+    }
+    .sidebar-div {
+      grid-row: span 4 / span 4;
+      margin-left: 0px;
+    }
+    .products-div {
+      grid-column: span 4 / span 4;
+      grid-row: span 5 / span 5;
+      margin-right: 0px;
+    }
+  </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        {% include 'components/page_header.html' %}
-        
-        <div class="main-content">
-            <div class="container">
-                <!-- Breadcrumb Navigation -->
-                <div class="breadcrumb">
-                    <a href="/">Home</a> / <span>Non-Books</span>
-                </div>
-                
-                <!-- Main Content -->
-                <h2 class="category-heading">SHOP BY CATEGORY</h2>
-                <div class="categories-grid">
-                    <a href="/category/art-supplies" class="category-box">Art Supplies</a>
-                    <a href="/category/calendars-and-planners" class="category-box">Calendars and Planners</a>
-                    <a href="/category/notebooks-and-journals" class="category-box">Notebooks and Journals</a>
-                    <a href="/category/novelties" class="category-box">Novelties</a>
-                    <a href="/category/reading-accessories" class="category-box">Reading Accessories</a>
-                    <a href="/category/supplies" class="category-box">Supplies</a>
-                </div>
-
-                <!-- Trending Section -->
-                <div class="trending-wrapper">
-                    <div class="trending-content">
-                        <h1>What's Trending?</h1>
-                    </div>
-                    {% include 'components/product_carousel.html' %}
-                </div>
-
-                <!-- Products Section (nonbooks) -->
-                <div class="products">
-                    <div class="sidebar-div">
-                        <div class="products-sidebar-container">
-                            <h3 class="sidebar-title">Art Supplies</h3>
-                            <hr>
-                            <div class="sidebar-section">
-                                <h2 class="sidebar-category">Categories</h2>
-                                <ul class="sidebar-sub-info">
-                                    <a href="drawing">Drawing</a><br>
-                                    <a href="painting">Painting</a><br>
-                                    <a href="supports">Supports</a><br>
-                                </ul>
-                            </div>
-                            <hr>
-                            <div class="sidebar-section">
-                                <h2 class="sidebar-price">Price</h2>
-                                <ul class="sidebar-sub-info">
-                                    <a href="#">From ₱0.00 to ₱999.99</a><br>
-                                    <a href="#">From ₱1,000.00</a>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="products-div">
-                        <div class="products-container">
-                            <div class="product-showcase" id="bookShowcase">
-                                {% for item in popular_items %}
-                                <div class="product-card">
-                                    <div class="product-image-container">
-                                        <img src="{{ item.image_path }}" alt="{{ item['Product Name'] }}" class="product-image">
-                                    </div>
-                                    <div class="product-info">
-                                        <h3 class="product-title">{{ item["Product Name"] }}</h3>
-                                        <p class="product-author">{{ item.get("Brand", "No Brand") }}</p>
-                                        <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
-                                        <div class="product-buttons">
-                                            <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
-                                            <button class="btn-add-cart">Add to Cart</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}  
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="page-wrapper">
+    {% include 'components/page_header.html' %}
+    <div class="main-content">
+      <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+          <a href="/">Home</a> / <span>Non-Books</span>
         </div>
+        <h2 class="category-heading">SHOP BY CATEGORY</h2>
+        <div class="categories-grid">
+          <a href="/category/art-supplies" class="category-box">Art Supplies</a>
+          <a href="/category/calendars-and-planners" class="category-box">Calendars and Planners</a>
+          <a href="/category/notebooks-and-journals" class="category-box">Notebooks and Journals</a>
+          <a href="/category/novelties" class="category-box">Novelties</a>
+          <a href="/category/reading-accessories" class="category-box">Reading Accessories</a>
+          <a href="/category/supplies" class="category-box">Supplies</a>
+        </div>
+        <!-- Trending Section -->
+        <div class="trending-wrapper">
+          <div class="trending-content">
+            <h1>What's Trending?</h1>
+          </div>
+          {% include 'components/product_carousel.html'%}
+        </div>
+        <!-- Products Section (nonbooks) -->
+        <div class="products">
+          <div class="sidebar-div">
+            <div class="products-sidebar-container">
+              <h3 class="sidebar-title">Art Supplies</h3>
+              <hr>
+              <div class="sidebar-section">
+                <h2 class="sidebar-category">Categories</h2>
+                <ul class="sidebar-sub-info">
+                  <a href="drawing">Drawing</a><br>
+                  <a href="painting">Painting</a><br>
+                  <a href="supports">Supports</a><br>
+                </ul>
+              </div>
+              <hr>
+              <div class="sidebar-section">
+                <h2 class="sidebar-price">Price</h2>
+                <ul class="sidebar-sub-info">
+                  <a href="#">From ₱0.00 to ₱999.99</a><br>
+                  <a href="#">From ₱1,000.00</a>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="products-div">
+            <div class="products-container">
+              <div class="product-showcase" id="bookShowcase">
+                {% for book in popular_books %}
+                <div class="product-card">
+                  <div class="product-image-container">
+                    <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="{{ book.title }}" class="product-image">
+                  </div>
+                  <div class="product-info">
+                    <h3 class="product-title">{{ book.title }}</h3>
+                    <p class="product-author">by {{ book.author }}</p>
+                    <div class="product-price">${{ book.price }}</div>
+                    <div class="product-buttons">
+                      <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                      <button class="btn-add-cart">Add to Cart</button>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <footer>
-        {% include 'components/page_footer.html' %}
-    </footer>
+  </div>
+  <footer>
+    {% include 'components/page_footer.html' %}
+  </footer>
+  <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>
 </html>
