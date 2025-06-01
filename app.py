@@ -219,18 +219,25 @@ def non_books():
 
 @app.route('/bestsellers_and_new_releases')
 def bestsellers_and_new_releases():
-    # Add logic to load bestsellers
-    return render_template('bestsellers_and_new_releases.html')
+    # Load any data you need for the template
+    collection_sections = []  # Fill this with your data
+    return render_template('bestsellers_and_new_releases.html', collection_sections=collection_sections)
 
 @app.route('/collections')
 def collections():
     # Add logic to load collections
     return render_template('collections.html')
 
+
 @app.route('/sale')
 def sale():
     # Add logic to load sale items
     return render_template('sale.html')
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    # Add logic to load sale items
+    return render_template('adminlogin.html')
 
 @app.route('/product/<int:product_id>')
 def product_view(product_id):

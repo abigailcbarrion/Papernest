@@ -30,5 +30,21 @@
         "city": "MANILA",
         "barangay": "Barangay 2",
         "postal_code": "1000"
+    },
+    "user3": {
+        "username": "admin",
+        "password": "password",
+        "first_name": "Juan",
+        "last_name": "Dela Cruz",
+        "title": "Mr.",
+        "birth_date": "1990-05-10",
+        "gender": "Male",
+        "phone_number": "09170000000",
+        "email": "admin@example.com",
+        "country": "PH",
+        "province": "NCR",
+        "city": "MANILA",
+        "barangay": "Barangay 2",
+        "postal_code": "1000"
     }
 }
