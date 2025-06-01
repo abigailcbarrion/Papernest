@@ -99,6 +99,14 @@ def admin_dashboard():
 def admin_orders():
     return render_template('components/admin_orders.html')
 
+@app.route('/admin_products', methods=['GET', 'POST'])
+def admin_products():
+    return render_template('components/admin_products.html')
+
+@app.route('/admin_products2', methods=['GET', 'POST'])
+def admin_products2():
+    return render_template('components/admin_products2.html')
+
 @app.route('/admin_registeredUsers', methods=['GET', 'POST'])
 def admin_registeredUsers():
     return render_template('components/admin_registeredUsers.html')
