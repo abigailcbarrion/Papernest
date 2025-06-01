@@ -111,12 +111,9 @@
         <div class="dropdown">
             <a href="/non_books" class="dropbtn">NON BOOKS</a>
             <div class="dropdown-content">
-                <a href="/art_supplies">ART SUPPLIES</a>
-                <a href="/calendars_and_planners">CALENDARS AND PLANNERS</a>
-                <a href="/notebooks_and_journals">NOTEBOOKS & JOURNALS</a>
-                <a href="/novelties">NOVELTIES</a>
-                <a href="/reading_accessories">READING ACCESSORIES</a>
-                <a href="/supplies">SUPPLIES</a>
+                {% for category in non_book_categories %}
+                    <a href="/category/{{ category }}">{{ category.replace('-', ' ').title() }}</a>
+                {% endfor %}
             </div>
         </div>
         <div class="dropdown">
