@@ -99,6 +99,10 @@ def admin_dashboard():
 def admin_orders():
     return render_template('components/admin_orders.html')
 
+@app.route('/admin_registeredUsers', methods=['GET', 'POST'])
+def admin_registeredUsers():
+    return render_template('components/admin_registeredUsers.html')
+
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):
     return get_cities_json(province_code) 
