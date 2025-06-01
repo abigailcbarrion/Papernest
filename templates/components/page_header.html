@@ -111,20 +111,15 @@
         <div class="dropdown">
             <a href="/non_books" class="dropbtn">NON BOOKS</a>
             <div class="dropdown-content">
-                <a href="/art_supplies">ART SUPPLIES</a>
-                <a href="/calendars_and_planners">CALENDARS AND PLANNERS</a>
-                <a href="/notebooks_and_journals">NOTEBOOKS & JOURNALS</a>
-                <a href="/novelties">NOVELTIES</a>
-                <a href="/reading_accessories">READING ACCESSORIES</a>
-                <a href="/supplies">SUPPLIES</a>
+                {% for category in non_book_categories %}
+                    <a href="/category/{{ category }}">{{ category.replace('-', ' ').title() }}</a>
+                {% endfor %}
             </div>
         </div>
         <div class="dropdown">
-            <a href="/bestsellers_and_new_releases" class="dropbtn">BESTSELLERS AND NEW RELEASES</a>
+            <a href="/bestsellers" class="dropbtn">BESTSELLERS</a>
             <div class="dropdown-content">
                 <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
-                <a href="/newest_reads">NEWEST READS</a>
-                <a href="/trending_books_from_booktok">TRENDING BOOKS FROM BOOKTOK</a>
             </div>
         </div>
         <div class="dropdown">

@@ -25,7 +25,7 @@ NON_BOOK_CATEGORY_FOLDER_MAP = {
     # Supplies
     "Supplies - Filing & Storage": "supplies_images",
     "Supplies - Paper": "supplies_images",
-    "Supplies - Writing Instruments": "supplies_images",
+    "Supplies - Writing Instruments": "supplies_images"
 }
 
 BOOK_CATEGORY_FOLDER_MAP = {

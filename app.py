@@ -17,6 +17,14 @@ USERS_FILE = 'data/users.json'
 BOOKS_FILE = 'data/books.json'
 NON_BOOKS_FILE = 'data/non_books.json'
 
+BOOK_CATEGORIES = ['fiction', 'non-fiction', 'science-and-technology', 'self-help-and-personal-development', 'children\'s-books', 'academic-reference-development']
+NON_BOOK_CATEGORIES = ["art-supplies", "calendars-and-planners", "notebooks-and-journals", "novelties", "reading-accessories", "supplies"]
+
+def extract_primary_category(category):
+    if ' - ' in category:
+        return category.split(' - ')[0]
+    return category
+
 # ---------- Helper Functions ----------
 def save_json(filepath, data):
     with open(filepath, 'w', encoding='utf-8') as f:
@@ -217,20 +225,27 @@ def non_books():
         item['image_path'] = get_nonbook_image_path(item)
     return render_template('non_books.html', popular_items=trending_non_books, page_type='non_books')
 
-@app.route('/bestsellers_and_new_releases')
-def bestsellers_and_new_releases():
-    # Add logic to load bestsellers
-    return render_template('bestsellers_and_new_releases.html')
+@app.route('/bestsellers')
+def bestsellers():
+    # Load any data you need for the template
+    collection_sections = []  # Fill this with your data
+    return render_template('bestsellers.html', collection_sections=collection_sections)
 
 @app.route('/collections')
 def collections():
     # Add logic to load collections
     return render_template('collections.html')
 
+
 @app.route('/sale')
 def sale():
     # Add logic to load sale items
     return render_template('sale.html')
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    # Add logic to load sale items
+    return render_template('adminlogin.html')
 
 @app.route('/product/<int:product_id>')
 def product_view(product_id):
@@ -249,13 +264,44 @@ def product_view(product_id):
 
 @app.route('/category/<category_name>')
 def category_products(category_name):
-    books = load_json('data/books.json')
+    books = load_json(BOOKS_FILE)
+    non_books = load_json(NON_BOOKS_FILE)
+
+    # Map URL category names to actual category names
+    category_mapping = {
+        "art-supplies": "Art Supplies",
+        "calendars-and-planners": "Calendars and Planners",
+        "notebooks-and-journals": "Notebooks & Journals", 
+        "novelties": "Novelties",
+        "reading-accessories": "Reading Accessories",
+        "supplies": "Supplies"
+    }
+
+    # Get the actual category name from the URL
+    actual_category = category_mapping.get(category_name.lower(), category_name)
+
     # Filter books by category (case-insensitive match)
     filtered_books = [book for book in books if book.get("Category", "").lower().replace(" ", "-") == category_name.lower()]
     # Attach image path
-    for book in filtered_books:
+    for book in filtered_books: 
         book['image_path'] = get_books_image_path(book)
-    return render_template('components/product_list.html', category=category_name, products=filtered_books)
+
+    # Filter non-books by primary category
+    filtered_non_books = []
+    for non_book in non_books:
+        category = non_book.get("Category", "")
+        primary_category = extract_primary_category(category)
+        
+        if primary_category == actual_category:
+            filtered_non_books.append(non_book)
+
+    for non_book in filtered_non_books:
+        non_book['image_path'] = get_nonbook_image_path(non_book)
+
+    print(f'Current Category: {category_name}')
+
+    all_products = filtered_books + filtered_non_books
+    return render_template('components/product_list.html', category=category_name, products=all_products, non_book_categories=NON_BOOK_CATEGORIES, book_categories=BOOK_CATEGORIES)
 
 @app.context_processor
 def inject_common_variables():
