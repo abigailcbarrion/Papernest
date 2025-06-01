@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
   <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -46,6 +47,50 @@
           <a href="/category/reading-accessories" class="category-box">Reading Accessories</a>
           <a href="/category/supplies" class="category-box">Supplies</a>
         </div>
+      <!-- Popular Category -->
+<h1 class="popular-category-heading">Most Popular Categories</h1>
+
+
+<div class="popular-grid">
+  <div class="popular-card">
+    <div class="popular-image-container">
+      <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+    </div>
+    <div class="popular-content">
+      <div class="category-title"><b>Category1</b></div>
+      <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+    </div>
+  </div>
+  <div class="popular-card">
+    <div class="popular-image-container">
+      <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+    </div>
+    <div class="popular-content">
+      <div class="category-title"><b>Category2</b></div>
+      <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+    </div>
+  </div>
+  <div class="popular-card">
+    <div class="popular-image-container">
+      <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+    </div>
+    <div class="popular-content">
+      <div class="category-title"><b>Category3</b></div>
+      <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+    </div>
+  </div>
+  <div class="popular-card">
+    <div class="popular-image-container">
+      <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+    </div>
+    <div class="popular-content">
+      <div class="category-title"><b>Category4</b></div>
+      <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+</div>
+        
         <!-- Trending Section -->
         <div class="trending-wrapper">
           <div class="trending-content">
