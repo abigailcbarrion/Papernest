@@ -91,9 +91,13 @@ def register():
 def login():
     return handle_login()
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
+@app.route('/admin_dashboard', methods=['GET', 'POST'])
+def admin_dashboard():
     return render_template('components/admin_dashboard.html')
+
+@app.route('/admin_orders', methods=['GET', 'POST'])
+def admin_orders():
+    return render_template('components/admin_orders.html')
 
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):

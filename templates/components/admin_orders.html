@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>papernest - Dashboard</title>
+  <title>papernest - Orders</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
@@ -90,7 +90,7 @@ nav li.active a {
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #ccc;
+  background-color: #e0e0e0;
 }
 
 th, td {
@@ -106,9 +106,9 @@ th, td {
       <h1 class="logo">papernest</h1>
       <nav>
         <ul>
-          <li class="active"><a href="#">Dashboard</a></li>
+          <li><a href="#">Dashboard</a></li>
           <li><a href="#">Products</a></li>
-          <li><a href="#">Orders</a></li>
+          <li class="active"><a href="#">Orders</a></li>
           <li><a href="#">Users</a></li>
         </ul>
       </nav>
@@ -119,28 +119,24 @@ th, td {
         <div class="user-icon">👤</div>
       </header>
       <section class="content">
-        <h2>Dashboard</h2>
-        <div style="display: flex; gap: 24px; margin-top: 24px;">
-          <div style="flex:1; background: #e0e0e0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;">Total Products</h3>
-            <div style="font-size: 2.2rem; font-weight: bold; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;"></div>
-          </div>
-          <div style="flex:1; background: #e0e0e0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;">Total Orders</h3>
-            <div style="font-size: 2.2rem; font-weight: bold; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;"></div>
-          </div>
-          <div style="flex:1; background: #e0e0e0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;">Total Customers</h3>
-            <div style="font-size: 2.2rem; font-weight: bold; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;"></div>
-          </div>
-        </div>
+        <h2>Orders</h2>
           <div class="table-header">
+            <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Address</th>
+                <th>Category</th>
+                <th>Products</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </section>
     </main>
