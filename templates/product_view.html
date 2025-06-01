@@ -30,6 +30,7 @@
             padding: 40px;
             gap: 40px;
             justify-content: center;
+            border: 2px solid red;
         }
         .product-thumbnails img {
             width: 100px;
@@ -124,8 +125,8 @@
                         <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}">
                     </div>
                     <div class="product-info">
-                        <h1 class="product-title">{{ product["Book Name"] }}</h1>
-                        <p class="product-price">₱{{ product["Price (PHP)"] }}</p>
+                        <h1 class="product-title">The Lost Metal</h1>
+                        <p class="product-price">₱999.00</p>
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
                             <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
