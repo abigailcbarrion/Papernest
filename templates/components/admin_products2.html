@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>papernest - Registered Users</title>
+  <title>papernest - Non-Book Products</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
@@ -48,6 +48,10 @@ nav li.active {
   border-radius: 5px;
 }
 
+nav li.active a {
+  font-weight: bold;
+}
+
 .main-content {
   flex: 1;
   background-color: #f4f4f4;
@@ -72,6 +76,13 @@ nav li.active {
   padding: 20px;
 }
 
+.table-container {
+  background-color: #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
 .table-header {
   margin-bottom: 10px;
 }
@@ -79,7 +90,7 @@ nav li.active {
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #ccc;
+  background-color: #e0e0e0;
 }
 
 th, td {
@@ -95,10 +106,23 @@ th, td {
       <h1 class="logo">papernest</h1>
       <nav>
         <ul>
-          <li><a href="/admin_dashboard">Dashboard</a></li>
-          <li><a href="/admin_products">Products</a></li>
-          <li><a href="/admin_orders">Orders</a></li>
-          <li class="active"><a href="#">Users</a></li>
+          <li><a href="#">Dashboard</a></li>
+          <li class="active">
+            <a href="javascript:void(0);" onclick="toggleSubmenu(event)">Products ▼</a>
+            <ul id="products-submenu" style="display:none; list-style:none; padding-left:15px; margin:5px 0 0 0;">
+              <li><a href="/admin_products">Books</a></li>
+              <li><a href="/admin_products2">Non-Books</a></li>
+            </ul>
+            <script>
+              function toggleSubmenu(event) {
+                event.preventDefault();
+                var submenu = document.getElementById('products-submenu');
+                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+              }
+            </script>
+          </li></li>
+          <li><a href="#">Orders</a></li>
+          <li><a href="#">Users</a></li>
         </ul>
       </nav>
     </aside>
@@ -108,20 +132,15 @@ th, td {
         <div class="user-icon">👤</div>
       </header>
       <section class="content">
-        <h2>Registered Users</h2>
+        <h2>Non-Books</h2>
           <div class="table-header">
-          </div>
-          <table>
+            <table>
             <thead>
               <tr>
-                <th>UserID</th>
-                <th>Name</th>
-                <th>Birthdate</th>
-                <th>Gender</th>
-                <th>Phone Number</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Address</th>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
               </tr>
             </thead>
             <tbody>
@@ -129,6 +148,7 @@ th, td {
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </section>
     </main>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>papernest - Book Products</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+  margin: 0;
+  font-family: Gilroy, sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  background-color: #00bcd4;
+  color: white;
+  width: 200px;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 30px;
+  margin-bottom: 30px;
+  color:#e0e0e0
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  margin: 15px 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+nav li.active {
+  background-color: #ffc107;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+nav li.active a {
+  font-weight: bold;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 50px;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
+}
+
+.user-icon {
+  font-size: 20px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.table-container {
+  background-color: #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.table-header {
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #e0e0e0;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h1 class="logo">papernest</h1>
+      <nav>
+        <ul>
+          <li><a href="/admin_orders">Dashboard</a></li>
+            <li class="active">
+            <a href="javascript:void(0);" onclick="toggleSubmenu(event)">Products ▼</a>
+            <ul id="products-submenu" style="display:none; list-style:none; padding-left:15px; margin:5px 0 0 0;">
+              <li><a href="/admin_products">Books</a></li>
+              <li><a href="/admin_products2">Non-Books</a></li>
+            </ul>
+            <script>
+              function toggleSubmenu(event) {
+                event.preventDefault();
+                var submenu = document.getElementById('products-submenu');
+                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+              }
+            </script>
+          <li><a href="/admin_orders">Orders</a></li>
+          <li><a href="/admin_registeredUsers">Users</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div class="user-icon">👤</div>
+      </header>
+      <section class="content">
+        <h2>Books</h2>
+          <div class="table-header">
+            <table>
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>ISBN</th>
+                <th>Category</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>papernest - Book Products</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+  margin: 0;
+  font-family: Gilroy, sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  background-color: #00bcd4;
+  color: white;
+  width: 200px;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 30px;
+  margin-bottom: 30px;
+  color:#e0e0e0
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  margin: 15px 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+nav li.active {
+  background-color: #ffc107;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+nav li.active a {
+  font-weight: bold;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 50px;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
+}
+
+.user-icon {
+  font-size: 20px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.table-container {
+  background-color: #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.table-header {
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #e0e0e0;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h1 class="logo">papernest</h1>
+      <nav>
+        <ul>
+          <li><a href="#">Dashboard</a></li>
+          <li class="active"><a href="#">Products</a></li>
+          <li><a href="#">Orders</a></li>
+          <li><a href="#">Users</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div class="user-icon">👤</div>
+      </header>
+      <section class="content">
+        <h2>Books</h2>
+          <div class="table-header">
+            <table>
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>ISBN</th>
+                <th>Category</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
