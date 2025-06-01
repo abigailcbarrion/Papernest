@@ -60,6 +60,7 @@
 .product-image {
     height: 100%;
     width: auto;
+    max-width: 232px;
     object-fit: contain;
     display: block;
     margin-left: auto;
