@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
 from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
 from utilities.login import handle_login
-from utilities.product_view import get_product_view
 from utilities.load_items import get_nonbook_image_path, get_books_image_path, get_trending
 from utilities.storage import load_json
 import json
