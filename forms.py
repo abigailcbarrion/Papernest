@@ -38,3 +38,9 @@ class RegistrationForm(FlaskForm):
     barangay = SelectField('Barangay', choices=[], default="void", validators=[DataRequired()], render_kw={"id": "barangay", "class": "form-control"})
     postal_code = StringField('Postal Code', [DataRequired(), Length(min=4, max=10)], render_kw={"id": "postal_code", "class": "form-control", "readonly": True})
     register_button = SubmitField('Register', render_kw={"class": "btn-register"})
+
+class AdminLoginForm(FlaskForm):
+    username = StringField('Username', [DataRequired(), Length(min=4, max=25)], render_kw={"placeholder": "Username", "class": "form-control"})
+    password = PasswordField('Password', [DataRequired(), Length(min=6, max=35)], render_kw={"placeholder": "Password", "class": "form-control"})
+
+    login_button = SubmitField('Login', render_kw={"class": "btn btn-primary"})

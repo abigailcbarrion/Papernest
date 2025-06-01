@@ -122,11 +122,11 @@
                 </aside>
                 <div class="product-main-info">
                     <div class="product-image">
-                        <img src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Main Book">
+                        <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}">
                     </div>
                     <div class="product-info">
-                        <h1 class="product-title">Book name</h1>
-                        <p class="product-price">price</p>
+                        <h1 class="product-title">The Lost Metal</h1>
+                        <p class="product-price">₱999.00</p>
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
                             <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
@@ -147,30 +147,30 @@
             <section class="description-specs">
                 <div class="product-description">
                     <h2>Product Description</h2>
-                    <p>At the elite Catenan Academy, a young fugitive uncovers layered mysteries and world-changing secrets in this new fantasy series by internationally bestselling author James Islington</p>
+                    <p>{{ product["Product Description"] }}</p>
                 </div>
                 <div class="product-specifications">
                     <h2>Product Specifications</h2>
                     <table>
                         <tr>
                             <td><strong>ISBN</strong></td>
-                            <td></td>
+                            <td>{{ product["ISBN"] }}</td>
                         </tr>
                         <tr>
                             <td><strong>Publisher</strong></td>
-                            <td></td>
+                            <td>{{ product["Publisher"] }}</td>
                         </tr>
                         <tr>
                             <td><strong>Publication Date</strong></td>
-                            <td></td>
+                            <td>{{ product["Publication Date"] }}</td>
                         </tr>
                         <tr>
                             <td><strong>Author</strong></td>
-                            <td></td>
+                            <td>{{ product["Author"] }}</td>
                         </tr>
                         <tr>
                             <td><strong>Product Language</strong></td>
-                            <td></td>
+                            <td>{{ product["Product Language"] }}</td>
                         </tr>
                     </table>
                 </div>

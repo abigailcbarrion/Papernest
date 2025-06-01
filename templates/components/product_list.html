@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
+    <title>Product List</title>
+</head>
+<body>
+    {% include 'components/page_header.html' %}
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <a href="/books">Books</a> / <span>{{ category|title }}</span>
+        </div>
+
+        <div style="display: flex; gap: 32px;">
+            <!-- Sidebar Filters -->
+            <div class="sidebar" style="width:260px; min-width:200px; max-width:320px; padding:16px 12px; background:#fff; border:1px solid #fff; border-radius:5px; box-sizing:border-box;">
+                <strong>PRICE</strong>
+                <div>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="price" value="0-999.99">
+                        <span class="checkmark"></span>
+                        From ₱0 to ₱999.99
+                    </label><br>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="price" value="1000-1999.99">
+                        <span class="checkmark"></span>
+                        From ₱1,000 to ₱1,999.99
+                    </label><br>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="price" value="2000-above">
+                        <span class="checkmark"></span>
+                        From ₱2,000 and ABOVE
+                    </label>
+                </div>
+                <strong style="margin-top:16px; display:block;">Product Language</strong>
+                <div>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="language" value="english">
+                        <span class="checkmark"></span>
+                        English
+                    </label><br>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="language" value="filipino">
+                        <span class="checkmark"></span>
+                        Filipino
+                    </label><br>
+                </div>
+            </div>
+
+            <!-- Main Product List Content -->
+            <div style="flex:1;">
+                <div class="product-grid">
+                    {% for product in products %}
+                    <div class="product-card">
+                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                            <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
+                        </a>
+                        <div class="product-info">
+                            <h3 class="product-title">{{ product["Book Name"] }}</h3>
+                            <p class="product-author">by {{ product["Author"] }}</p>
+                            <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/page_footer.html' %}
+</body>
+</html>

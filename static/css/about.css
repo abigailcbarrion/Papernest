@@ -1,0 +1,79 @@
+.about-us-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 30px 20px;
+}
+
+.about-us-container h1 {
+    color: #FAC102; /* Yellow color */
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.about-text {
+    margin-bottom: 50px;
+}
+
+.about-images {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 60px;
+    margin-bottom: 80px;
+    margin-left: calc(-1 * (100vw - 100%) / 2); /* Stretch to screen edge */
+    margin-right: calc(-1 * (100vw - 100%) / 2);
+    width: 100vw; /* Full viewport width */
+}
+
+.image-placeholder {
+    background-color: #e0e0e0;
+    width: 100%;
+    height: 140px; /* Shorter height */
+    border-radius: 0;
+}
+
+.image-placeholder {
+    background-color: #e0e0e0; /* Light gray */
+    width: 100%;
+    height: 200px; /* Reduced height from 250px to 200px */
+    border-radius: 0; /* Remove border radius for full-bleed look */
+}
+
+.team-title {
+    color: #FAC102; /* Yellow color */
+    font-size: 28px;
+    margin: 40px 0 20px;
+    margin-top: 20px;
+}
+
+.team-members {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 40px auto;
+    margin-top: 80px;
+    margin-bottom: 100px;
+}
+
+.team-member {
+    flex: 0 0 auto;
+    width: 180px; /* Fixed width for consistent sizing */
+    text-align: center;
+}
+
+.member-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* This creates a perfect circle */
+    overflow: hidden;
+    margin: 0 auto 15px; /* Center the circles */
+    background-color: #FF3E96; /* Pink background as shown in example */
+}
+
+.member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

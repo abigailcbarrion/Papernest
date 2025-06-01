@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
 from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
 from utilities.login import handle_login
-from utilities.product_view import get_product_view
 from utilities.load_items import get_nonbook_image_path, get_books_image_path, get_trending
 from utilities.storage import load_json
 import json
@@ -83,6 +82,10 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return handle_login()
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    return render_template('components/admin_dashboard.html')
 
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):
@@ -184,6 +187,16 @@ def remove_from_wishlist(book_id):
 
     return redirect(url_for('wishlist'))
 
+@app.route('/about')
+def about():
+    # Add logic to load collections
+    return render_template('about_us.html')
+
+@app.route('/help')
+def help():
+    # Add logic to load sale items
+    return render_template('faqs.html')
+
 @app.route('/books')
 def books():
     books = load_json(BOOKS_FILE)
@@ -219,9 +232,59 @@ def sale():
     # Add logic to load sale items
     return render_template('sale.html')
 
-@app.route('/product_view')
-def product_view():
-    return get_product_view()
+@app.route('/product/<int:product_id>')
+def product_view(product_id):
+    books = load_json('data/books.json')
+    # Find the book with the matching Product ID
+    product = next((b for b in books if b.get('Product ID') == product_id), None)
+    if not product:
+        # Optionally, handle not found (404)
+        return "Product not found", 404
+    # Attach image path if needed
+    product['image_path'] = get_books_image_path(product)
+    similar_products = get_trending(curr_section='books')
+    for item in similar_products:
+        item['image_path'] = get_books_image_path(item)
+    return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
+
+@app.route('/category/<category_name>')
+def category_products(category_name):
+    books = load_json('data/books.json')
+    # Filter books by category (case-insensitive match)
+    filtered_books = [book for book in books if book.get("Category", "").lower().replace(" ", "-") == category_name.lower()]
+    # Attach image path
+    for book in filtered_books:
+        book['image_path'] = get_books_image_path(book)
+    return render_template('components/product_list.html', category=category_name, products=filtered_books)
+
+@app.context_processor
+def inject_common_variables():
+    # Create a default author as fallback
+    default_author = {
+        "name": "Featured Author", 
+        "bio": "Information about this author will be coming soon.",
+        "image_url": url_for('static', filename='images/placeholder.jpg'),
+        "source_url": "#",
+        "more_link": "#"
+    }
+    
+    try:
+        authors_path = os.path.join(app.root_path, 'data', 'featured_authors.json')
+        with open(authors_path, 'r', encoding='utf-8') as f:
+            authors_data = json.load(f)
+        
+        # Access the nested "featured_authors" key
+        if "featured_authors" in authors_data and authors_data["featured_authors"]:
+            # Get the first author from the list
+            featured_author = authors_data["featured_authors"][0]
+        else:
+            featured_author = default_author
+            
+    except Exception as e:
+        print(f"Error loading authors: {str(e)}")
+        featured_author = default_author
+    
+    return {'featured_author': featured_author}
 
 @app.context_processor
 def inject_forms():
