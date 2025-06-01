@@ -11,9 +11,16 @@
     {% include 'components/page_header.html' %}
 
     <div class="container">
-        <div class="breadcrumb">
-            <a href="/">Home</a> / <a href="/books">Books</a> / <span>{{ category|title }}</span>
-        </div>
+
+        {% if category in book_categories %}
+            <div class="breadcrumb">
+                <a href="/">Home</a> / <a href="/books">Books</a> / <span>{{ category|title }}</span>
+            </div>
+        {% elif category in non_book_categories %}
+            <div class="breadcrumb">
+                <a href="/">Home</a> / <a href="/non-books">Non-Books</a><span>{{ category|title }}</span>
+            </div>
+        {% endif %}
 
         <div style="display: flex; gap: 32px;">
             <!-- Sidebar Filters -->
@@ -52,7 +59,8 @@
             </div>
 
             <!-- Main Product List Content -->
-            <div style="flex:1;">
+            <div style="flex:1; margin-bottom: 20px;">
+                {% if category in book_categories %}
                 <div class="product-grid">
                     {% for product in products %}
                     <div class="product-card">
@@ -65,8 +73,23 @@
                             <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
                             <button class="btn-add-cart">Add to Cart</button>
                         </div>
+                    </div> 
+                    {% endfor %}
+                {% elif category in non_book_categories %}
+                    <div class="product-grid">
+                    {% for product in products %}
+                    <div class="product-card">
+                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                            <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
+                        </a>
+                        <div class="product-info">
+                            <h3 class="product-title">{{ product["Product Name"] }}</h3>
+                            <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
                     </div>
                     {% endfor %}
+                {% endif %}
                 </div>
             </div>
         </div>
