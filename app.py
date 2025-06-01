@@ -239,11 +239,6 @@ def admin_login():
     # Add logic to load sale items
     return render_template('adminlogin.html')
 
-@app.route('/admin_orders', methods=['GET', 'POST'])
-def admin_orders():
-    # Add logic to load sale items
-    return render_template('admin_orders.html')
-
 @app.route('/product/<int:product_id>')
 def product_view(product_id):
     books = load_json('data/books.json')
