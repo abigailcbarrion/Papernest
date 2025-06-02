@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -26,36 +28,63 @@
                     <a href="/category/academic-reference" class="category-box">Academic Reference</a>
                 </div>
             </div>
-                <div class="best-seller-container">
-                    <div class="best-seller-indicators">
-                        <h3 class="best-seller-label">Best Sellers</h3>
-                        <p class="best-seller-description">Discover our Best Selling Books!</p>
-                        <a href="/best-sellers" class="shop-now-hyperlink">Shop Now</a>
-                    </div>
-                    <div class="best-seller-img">
-                        <img src="{{ url_for('static', filename='images/best-seller-img/bs_img.jpg') }}" alt="best seller image">
-                    </div>
+            <div class="shop-now-section">
+                <div class="shop-now-image-container">
+                    <img src="{{ url_for('static', filename='images/.png') }}" alt="Art Materials" class="shop-now-image">
                 </div>
+                <div class="shop-now-content">
+                    <h1>BOOKS</h1>
+                    <p>Ignite your imagination with the finest books –<br>where every page opens a new world!</p>
+                    <a href="/shop-now" class="shop-now-link">SHOP NOW</a>
+                </div>
+            </div>
 
-                <div class="new-releases-container">
-                    <div class="new-releases-img">
-                        <img src="{{ url_for('static', filename='images/best-seller-img/bs_img.jpg') }}" alt="new releases image">
-                    </div>
-                    <div class="new-releases-indicators">
-                        <h3 class="new-releases-label">New Releases</h3>
-                        <p class="new-releases-description">Explore the Latest Books!</p>
-                        <a href="/new-releases" class="shop-now-hyperlink">Shop Now</a>
-                    </div>    
+            <h1 class="popular-category-heading">Most Popular Categories</h1>
+            <div class="popular-grid">
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
                 </div>
-
-                <h2 class="popular-categories-label">Most Popular Categories</h2>
-                <div class="popular-categories-carousel">
-                    {% include 'components/product_carousel.html' %}
+                <div class="popular-content">
+                <div class="category-title"><b>Category1</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
                 </div>
-                <div class="trending">
-                    <h3>What's Trending?</h3>
-                    {% include 'components/product_carousel.html' %}
+            </div>
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
                 </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category2</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+                </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category3</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+                </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category4</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+            </div>
+            <div class="trending-wrapper" style="margin-bottom: 20px;">
+            <div class="trending-content">
+                <h1>What's Trending?</h1>
+            </div>
+            {% include 'components/product_carousel.html'%}
+            </div>
         </div>
     </div>
     <footer>

@@ -111,7 +111,10 @@
                                 <h3 class="product-title">{{ product["Product Name"] }}</h3>
                             {% endif %}
                             <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
-                            <button class="btn-add-cart">Add to Cart</button>
+                            <div class="product-buttons">
+                                <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                                <button class="btn-add-cart">Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}

@@ -265,18 +265,34 @@ def admin_login():
 
 @app.route('/product/<int:product_id>')
 def product_view(product_id):
-    books = load_json('data/books.json')
-    # Find the book with the matching Product ID
+    books = load_json(BOOKS_FILE)
+    non_books = load_json(NON_BOOKS_FILE)
+    
+    # First, try to find the product in books
     product = next((b for b in books if b.get('Product ID') == product_id), None)
-    if not product:
-        # Optionally, handle not found (404)
-        return "Product not found", 404
-    # Attach image path if needed
-    product['image_path'] = get_books_image_path(product)
-    similar_products = get_trending(curr_section='books')
-    for item in similar_products:
-        item['image_path'] = get_books_image_path(item)
-    return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
+    
+    if product:
+        # It's a book
+        product['image_path'] = get_books_image_path(product)
+        product['back_image_path'] = get_books_image_path(product, image_key='Product Image Back')
+        similar_products = get_trending(curr_section='books')
+        for item in similar_products:
+            item['image_path'] = get_books_image_path(item)
+        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
+    
+    # If not found in books, try non-books
+    product = next((nb for nb in non_books if nb.get('Product ID') == product_id), None)
+    
+    if product:
+        # It's a non-book
+        product['image_path'] = get_nonbook_image_path(product)
+        product['back_image_path'] = get_nonbook_image_path(product, image_key='Product Image Back')
+        similar_products = get_trending(curr_section='non_books')
+        for item in similar_products:
+            item['image_path'] = get_nonbook_image_path(item)
+        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='non_books')
+    # Product not found in either collection
+    return "Product not found", 404
 
 @app.route('/category/<category_name>')
 def category_products(category_name):
@@ -314,10 +330,13 @@ def category_products(category_name):
     for non_book in filtered_non_books:
         non_book['image_path'] = get_nonbook_image_path(non_book)
 
-    print(f'Current Category: {category_name}')
+    if category_name.lower() in NON_BOOK_CATEGORIES:
+        page_type = 'non_books'
+    else:   
+        page_type = 'books'
 
     all_products = filtered_books + filtered_non_books
-    return render_template('components/product_list.html', category=category_name, products=all_products, non_book_categories=NON_BOOK_CATEGORIES, book_categories=BOOK_CATEGORIES)
+    return render_template('components/product_list.html', category=category_name, products=all_products, non_book_categories=NON_BOOK_CATEGORIES, book_categories=BOOK_CATEGORIES, page_type=page_type)
 
 @app.context_processor
 def inject_common_variables():
