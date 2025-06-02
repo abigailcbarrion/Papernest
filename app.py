@@ -79,8 +79,8 @@ def index():
     for item in trending_books:
         item['image_path'] = get_books_image_path(item)
     return render_template('index.html', 
-                          popular_items=trending_books,
-                          featured_author=featured_author, page_type='homepage')
+                        popular_items=trending_books,
+                        featured_author=featured_author, page_type='homepage')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -91,17 +91,42 @@ def register():
 def login():
     return handle_login()
 
-@app.route('/admin_dashboard', methods=['GET', 'POST'])
+@app.route('/admin_dashboard')
 def admin_dashboard():
-    return render_template('components/admin_dashboard.html')
+    # Load data to calculate totals
+    books = load_json(BOOKS_FILE)
+    non_books = load_json(NON_BOOKS_FILE)
+    users_data = load_json(USERS_FILE)
+    
+    # Calculate totals
+    total_products = len(books) + len(non_books)
+    total_users = len(users_data)
+    
+    return render_template('components/admin_dashboard.html', 
+                        total_products=total_products,
+                        total_users=total_users)
 
 @app.route('/admin_orders', methods=['GET', 'POST'])
 def admin_orders():
     return render_template('components/admin_orders.html')
 
-@app.route('/admin_products', methods=['GET', 'POST'])
-def admin_products():
-    return render_template('components/admin_products.html')
+@app.route('/admin_products')
+@app.route('/admin_products/<product_type>')
+def admin_products(product_type='books'):
+    if product_type.lower() == 'books':
+        products = load_json(BOOKS_FILE)
+        for product in products:
+            product['image_path'] = get_books_image_path(product)
+        return render_template('components/admin_products.html', products=products, product_type='Books')
+    
+    elif product_type.lower() == 'non-books':
+        products = load_json(NON_BOOKS_FILE)
+        for product in products:
+            product['image_path'] = get_nonbook_image_path(product)
+        return render_template('components/admin_products.html', products=products, product_type='Non-Books')
+    
+    else:
+        return "Invalid product type", 404
 
 @app.route('/admin_products2', methods=['GET', 'POST'])
 def admin_products2():
@@ -109,7 +134,15 @@ def admin_products2():
 
 @app.route('/admin_registeredUsers', methods=['GET', 'POST'])
 def admin_registeredUsers():
-    return render_template('components/admin_registeredUsers.html')
+    users_data = load_json(USERS_FILE)
+    
+    # Convert dictionary to list with user IDs
+    users_list = []
+    for user_id, user_info in users_data.items():
+        user_info['user_id'] = user_id
+        users_list.append(user_info)
+    
+    return render_template('components/admin_registeredUsers.html', users=users_list)
 
 @app.route('/get_cities/<province_code>', methods=['GET'])
 def get_cities(province_code):
