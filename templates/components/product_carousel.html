@@ -2,12 +2,12 @@
 <div class="product-carousel-container">
     <div class="product-carousel" id="bookCarousel">
         {% for item in popular_items %}
-          <a href="{% if page_type == 'books' or page_type == 'homepage' %}
+        <a href="{% if page_type == 'books' or page_type == 'homepage' %}
                     {{ url_for('product_view', product_id=item['Product ID']) }}
-                 {% elif page_type == 'non_books' %}
+                {% elif page_type == 'non_books' %}
                     {{ url_for('product_view', product_id=item['Product ID']) }}
-                 {% endif %}"
-           class="product-card-link">
+                {% endif %}"
+        class="product-card-link">
             <div class="product-card">
                 <div class="product-image-container">
                     {% if page_type == 'books' or page_type == 'homepage' %}

@@ -6,97 +6,97 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
-  margin: 0;
-  font-family: Gilroy, sans-serif;
-}
+      margin: 0;
+      font-family: Gilroy, sans-serif;
+    }
 
-.container {
-  display: flex;
-  height: 100vh;
-}
+    .container {
+      display: flex;
+      height: 100vh;
+    }
 
-.sidebar {
-  background-color: #00bcd4;
-  color: white;
-  width: 200px;
-  padding: 20px;
-}
+    .sidebar {
+      background-color: #00bcd4;
+      color: white;
+      width: 200px;
+      padding: 20px;
+    }
 
-.logo {
-  font-size: 30px;
-  margin-bottom: 30px;
-  color:#e0e0e0
-}
+    .logo {
+      font-size: 30px;
+      margin-bottom: 30px;
+      color:#e0e0e0
+    }
 
-nav ul {
-  list-style: none;
-  padding: 0;
-}
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
 
-nav li {
-  margin: 15px 0;
-}
+    nav li {
+      margin: 15px 0;
+    }
 
-nav a {
-  color: white;
-  text-decoration: none;
-}
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
 
-nav li.active {
-  background-color: #ffc107;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
+    nav li.active {
+      background-color: #ffc107;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
 
-nav li.active a {
-  font-weight: bold;
-}
+    nav li.active a {
+      font-weight: bold;
+    }
 
-.main-content {
-  flex: 1;
-  background-color: #f4f4f4;
-  display: flex;
-  flex-direction: column;
-}
+    .main-content {
+      flex: 1;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+    }
 
-.header {
-  height: 50px;
-  background-color: #e0e0e0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 20px;
-}
+    .header {
+      height: 50px;
+      background-color: #e0e0e0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 20px;
+    }
 
-.user-icon {
-  font-size: 20px;
-}
+    .user-icon {
+      font-size: 20px;
+    }
 
-.content {
-  padding: 20px;
-}
+    .content {
+      padding: 20px;
+    }
 
-.table-container {
-  background-color: #ddd;
-  padding: 20px;
-  border-radius: 5px;
-  margin-top: 10px;
-}
+    .table-container {
+      background-color: #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
 
-.table-header {
-  margin-bottom: 10px;
-}
+    .table-header {
+      margin-bottom: 10px;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #ccc;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ccc;
+    }
 
-th, td {
-  padding: 10px;
-  text-align: left;
-}
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
 
   </style>
 </head>
@@ -119,31 +119,29 @@ th, td {
         <div class="user-icon">👤</div>
       </header>
       <section class="content">
-        <h2>Dashboard</h2>
-        <div style="display: flex; gap: 24px; margin-top: 24px;">
-          <div style="flex:1; background: #e0e0e0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;">Total Products</h3>
-            <div style="font-size: 2.2rem; font-weight: bold; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;"></div>
+          <h2 style="color: #666; font-size: 2rem; margin-bottom: 40px;">Dashboard</h2>
+          <div style="display: flex; gap: 40px; margin-top: 24px; justify-content: center;">
+            <a href="/admin_products" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+              <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_products }}</div>
+                <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Products</h3>
+              </div>
+            </a>
+            <a href="/admin_orders" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+              <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">0</div>
+                <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Orders</h3>
+              </div>
+            </a>
+            <a href="/admin_registeredUsers" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+              <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_users }}</div>
+                <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Customers</h3>
+              </div>
+            </a>
           </div>
-          <div style="flex:1; background: #e0e0e0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;">Total Orders</h3>
-            <div style="font-size: 2.2rem; font-weight: bold; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;"></div>
-          </div>
-          <div style="flex:1; background: #e0e0e0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;">Total Customers</h3>
-            <div style="font-size: 2.2rem; font-weight: bold; color: #000; font-family: 'Gilroy-Bold', Gilroy, Arial, Helvetica, sans-serif;"></div>
-          </div>
-        </div>
-          <div class="table-header">
-            </thead>
-            <tbody>
-              <tr>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
   </div>
 </body>
 </html>

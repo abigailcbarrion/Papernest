@@ -17,7 +17,7 @@
     margin-bottom: 20px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 48px;
+    gap: 20px;
 }
 .product-image {
     display: block;
@@ -35,6 +35,26 @@
     transform: translateY(-50%);
 }
 
+/* Add this new style for product-title */
+.product-title {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+    color: #333 !important;
+    line-height: 1.4 !important;
+    height: 60 !important;
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: unset !important;
+    white-space: ellipsis !important;
+    word-wrap: break-word !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    text-align: center !important;
+}
+
+/* ...existing code... */
+
 .product-card {
     background: #fff;
     border: 1px solid #eee;
@@ -42,33 +62,71 @@
     padding: 16px;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    min-height: 370px; /* ensures enough space for info */
+    height: 420px; /* ensures enough space for info */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 .product-info {
     padding-top: 5px;
-    flex: 1 1 auto;
+    height: 140px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content:space-between;
+    margin-top: auto;
 }
 
 .btn-add-cart {
-    background: #ED1D7F;
-    color: #fff;
+    background-color: #11B8CE;
+    color: white;
     border: none;
-    max-height: 42.2px;
-    padding: 8px 16px;
+    padding: 6px 12px; /* Reduced from 8px 15px */
     border-radius: 4px;
     cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    flex-grow: 1;
 }
 .btn-add-cart:hover {
-    background: #c01565;
+    background-color: #ED1D7F;
 }
-
-/* Add these sidebar styles to product_list.css */
+.product-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px; /* Reduced from 15px */
+}
+.btn-wishlist {
+    background-color: transparent;
+    color: #ccc; /* Light gray by default */
+    border: none;
+    padding: 8px;
+    margin: 0;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: color 0.3s;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; /* Reduced from 36px */
+    height: 32px; /* Reduced from 36px */
+    border-radius: 50%;
+}
+.btn-wishlist:hover, .btn-wishlist:focus, .btn-wishlist.active {
+    color: #ED1D7F; /* Pink color on hover/active */
+    background-color: rgba(237, 29, 127, 0.1); /* Light background on hover */
+}
+.btn-wishlist:focus {
+    outline: 0;
+}
+.btn-wishlist.active {
+    color: #ED1D7F; /* Pink for active state */
+}
+.btn-wishlist.active i {
+    animation: heartBeat 0.3s;
+}
 
 .sidebar {
     width: 260px;
