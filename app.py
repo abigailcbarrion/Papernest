@@ -10,8 +10,7 @@ app = Flask(__name__,
             template_folder='templates')
 app.secret_key = 'your_secret_key'  # Required for session
 
-# ---------- File Paths ----------
-USERS_FILE = 'data/users.json'
+# ---------- File Paths ----------pip install requests
 BOOKS_FILE = 'data/books.json'
 
 # ---------- Helper Functions ----------
