@@ -151,7 +151,7 @@
                                 {{ product["Book Name"] }}
                             {% endif %}
                         </h1>
-                        <p class="product-price">₱999.00</p>
+                        <p class="product-price">₱{{ "%.2f"|format(product["Price (PHP)"]) }}</p>
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
                             <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
@@ -180,31 +180,37 @@
                         <table>
                             <tr>
                                 <td><strong>ISBN</strong></td>
-                                <td>{{ product["ISBN"] }}</td>
+                                <td>{{ product.get("ISBN", "N/A")}}</td>
                             </tr>
                             <tr>
                                 <td><strong>Publisher</strong></td>
-                                <td>{{ product["Publisher"] }}</td>
+                                <td>{{ product.get("Publisher", "N/A") }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Publication Date</strong></td>
-                                <td>{{ product["Publication Date"] }}</td>
+                                <td>{{ product.get("Publication Date", "N/A") }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Author</strong></td>
-                                <td>{{ product["Author"] }}</td>
+                                <td>{{ product.get("Author", "N/A") }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Product Language</strong></td>
-                                <td>{{ product["Product Language"] }}</td>
+                                <td>{{ product.get("Product Language", "N/A") }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Page Count</strong></td>
+                                <td>{{ product.get("Pages", "N/A") }}</td>
                             </tr>
                         </table>
                     {% else %}
                         <table>
-                            <tr><strong>Brand</strong>
+                            <tr>
+                                <td><strong>Brand</strong></td>
                                 <td>{{ product["Brand"] }}</td>
                             </tr>
                             <tr>
+                                <td><strong>Category</strong></td>
                                 <td>{{ product["Category"] }}</td>
                             </tr>
                         </table>

@@ -407,3 +407,27 @@ nav a, .dropdown {
     color: #11B8CE;
 }
 
+.error-message {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    animation: fadeIn 0.3s ease-in;
+}
+.error-message i {
+    color: #c33;
+    font-size: 16px;
+}
+.error-message span {
+    flex: 1;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
