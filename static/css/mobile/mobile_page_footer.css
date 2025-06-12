@@ -1,0 +1,538 @@
+/* Mobile Page Footer Styles */
+@media (max-width: 768px) {
+    /* Benefits Footer Section - Mobile */
+    .footer-benefits {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 15px;
+        background-color: #fff; /* Match desktop */
+        margin: 0;
+        border-top: 1px solid #e8e8e8; /* Match desktop border */
+    }
+    
+    .benefit-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .benefit-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    }
+    
+    .benefit-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: #545454; /* Match desktop icon color */
+        border-radius: 50%;
+        color: white;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    
+    .benefit-text {
+        flex: 1;
+    }
+    
+    .benefit-text h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #545454; /* Match desktop */
+        margin: 0 0 5px 0;
+        line-height: 1.2;
+    }
+    
+    .benefit-text p {
+        font-size: 12px;
+        color: #999; /* Match desktop */
+        margin: 0;
+        line-height: 1.4;
+    }
+    
+    .benefit-text p br {
+        display: none; /* Remove line breaks on mobile */
+    }
+    
+    /* Main Footer - Mobile */
+    footer {
+        background-color: #545454; /* Match desktop */
+        color: #fff;
+        padding: 30px 0 20px 0;
+        margin-top: 0;
+    }
+    
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        padding: 0 15px;
+        max-width: 100%;
+    }
+    
+    /* Footer Columns - Mobile */
+    .footer-column {
+        width: 100%;
+    }
+    
+    .footer-column h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff; /* Match desktop white */
+        margin: 0 0 15px 0;
+        text-transform: none; /* Remove uppercase to match desktop */
+        letter-spacing: normal; /* Remove letter spacing */
+    }
+    
+    /* Footer Logo - Mobile */
+    .footer-logo {
+        font-family: 'Gilroy', sans-serif; /* Match desktop font */
+        font-size: 28px;
+        font-weight: bold;
+        color: #fff; /* Match desktop white */
+        margin-bottom: 15px;
+        text-transform: none; /* Remove lowercase transformation */
+    }
+    
+    .footer-column p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #fff; /* Match desktop white */
+        margin: 0 0 10px 0;
+    }
+    
+    .footer-column p br {
+        display: none; /* Remove line breaks on mobile */
+    }
+    
+    .footer-column a {
+        color: #fff; /* Match desktop white */
+        text-decoration: none;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.2s ease;
+    }
+    
+    .footer-column a:hover {
+        text-decoration: underline; /* Match desktop hover effect */
+        color: #fff; /* Keep white on hover */
+    }
+    
+    .footer-column a i {
+        font-size: 16px;
+        color: #fff; /* Match text color */
+    }
+    
+    /* Footer Lists - Mobile */
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .footer-column ul li {
+        margin-bottom: 10px;
+    }
+    
+    .footer-column ul li a {
+        color: #fff; /* Match desktop white */
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s ease;
+        display: block;
+        padding: 5px 0;
+    }
+    
+    .footer-column ul li a:hover {
+        text-decoration: underline; /* Match desktop hover effect */
+        color: #fff; /* Keep white on hover */
+        padding-left: 0; /* Remove padding animation */
+    }
+    
+    /* Payment Methods - Mobile */
+    .payment-method {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        border-left: none; /* Remove colored border */
+    }
+    
+    .payment-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: transparent; /* Remove background */
+        border-radius: 8px;
+        color: #fff; /* White icons */
+        font-size: 24px; /* Match desktop size */
+        flex-shrink: 0;
+    }
+    
+    .payment-text {
+        flex: 1;
+    }
+    
+    .payment-text p {
+        font-size: 13px;
+        color: #fff; /* Match desktop white */
+        margin: 0 0 5px 0;
+        line-height: 1.3;
+    }
+    
+    .payment-text p:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Social Media - Mobile */
+    .social-icons {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    
+    .social-icons a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background-color: #545454; /* Match desktop white background */
+        border-radius: 50%;
+        color: #fff; /* Match desktop gray text */
+        font-size: 18px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .social-icons a:hover {
+        background-color: #FAC102; /* Match desktop yellow hover */
+        color: #fff;
+        transform: translateY(-2px);
+    }
+    
+    /* Remove specific social media colors - use desktop theme */
+    .social-icons a[aria-label="Facebook"]:hover,
+    .social-icons a[aria-label="Instagram"]:hover,
+    .social-icons a[aria-label="Twitter"]:hover {
+        background-color: #FAC102; /* All use same yellow */
+        color: #fff;
+    }
+}
+
+/* Very small screens (≤400px) */
+@media (max-width: 400px) {
+    .footer-benefits {
+        padding: 15px 10px;
+        gap: 12px;
+    }
+    
+    .benefit-box {
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .benefit-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        background: #545454; /* Keep desktop color */
+    }
+    
+    .benefit-text h3 {
+        font-size: 13px;
+        color: #545454; /* Keep desktop color */
+    }
+    
+    .benefit-text p {
+        font-size: 11px;
+        color: #999; /* Keep desktop color */
+    }
+    
+    .footer-content {
+        gap: 20px;
+        padding: 0 10px;
+    }
+    
+    .footer-logo {
+        font-size: 24px;
+        color: #fff; /* Keep white */
+    }
+    
+    .footer-column h3 {
+        font-size: 15px;
+        color: #fff; /* Keep white */
+    }
+    
+    .footer-column p,
+    .footer-column a,
+    .footer-column ul li a {
+        font-size: 13px;
+        color: #fff; /* Keep white */
+    }
+    
+    .payment-method {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .payment-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 20px; /* Adjusted */
+        color: #fff;
+        background: transparent;
+    }
+    
+    .payment-text p {
+        font-size: 12px;
+        color: #fff;
+    }
+    
+    .social-icons {
+        gap: 12px;
+    }
+    
+    .social-icons a {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        background-color: #545454;
+        color: #fff;
+    }
+    
+    .social-icons a:hover {
+        background-color: #FAC102;
+        color: #fff;
+    }
+}
+
+/* Small screens (401px - 600px) */
+@media (min-width: 401px) and (max-width: 600px) {
+    .footer-benefits {
+        padding: 20px 12px;
+    }
+    
+    .benefit-box {
+        padding: 15px;
+    }
+    
+    .footer-content {
+        padding: 0 12px;
+    }
+    
+    .benefit-icon {
+        background: #545454; /* Keep desktop color */
+    }
+    
+    .benefit-text h3 {
+        color: #545454; /* Keep desktop color */
+    }
+    
+    .benefit-text p {
+        color: #999; /* Keep desktop color */
+    }
+}
+
+/* Medium mobile screens (601px - 768px) */
+@media (min-width: 601px) and (max-width: 768px) {
+    .footer-benefits {
+        padding: 25px 20px;
+        gap: 18px;
+    }
+    
+    .benefit-box {
+        padding: 18px;
+        gap: 18px;
+    }
+    
+    .benefit-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+        background: #545454; /* Keep desktop color */
+    }
+    
+    .benefit-text h3 {
+        font-size: 15px;
+        color: #545454; /* Keep desktop color */
+    }
+    
+    .benefit-text p {
+        font-size: 13px;
+        color: #999; /* Keep desktop color */
+    }
+    
+    .footer-content {
+        gap: 30px;
+        padding: 0 20px;
+    }
+    
+    .footer-logo {
+        font-size: 32px;
+        color: #fff; /* Keep white */
+    }
+    
+    .footer-column h3 {
+        font-size: 17px;
+        color: #fff; /* Keep white */
+    }
+    
+    .footer-column p,
+    .footer-column a {
+        font-size: 15px;
+        color: #fff; /* Keep white */
+    }
+    
+    .footer-column ul li a {
+        font-size: 14px;
+        color: #fff; /* Keep white */
+    }
+    
+    .payment-method {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .payment-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 24px; /* Match desktop */
+        color: #fff;
+        background: transparent;
+    }
+    
+    .payment-text p {
+        font-size: 14px;
+        color: #fff;
+    }
+    
+    .social-icons a {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        background-color: #545454;
+        color: #fff;
+    }
+    
+    .social-icons a:hover {
+        background-color: #FAC102;
+        color: #fff;
+    }
+}
+
+/* Touch interactions */
+@media (hover: none) and (pointer: coarse) {
+    .benefit-box:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .benefit-box:active {
+        transform: scale(0.98);
+    }
+    
+    .footer-column a:hover {
+        color: #fff; /* Keep white */
+        text-decoration: none;
+    }
+    
+    .footer-column a:active {
+        text-decoration: underline;
+        color: #fff;
+    }
+    
+    .footer-column ul li a:hover {
+        color: #fff; /* Keep white */
+        padding-left: 0;
+        text-decoration: none;
+    }
+    
+    .footer-column ul li a:active {
+        text-decoration: underline;
+        color: #fff;
+    }
+    
+    .social-icons a:hover {
+        background-color: #545454;
+        color: #ffff;
+        transform: none;
+    }
+    
+    .social-icons a:active {
+        background-color: #FAC102;
+        color: #fff;
+        transform: scale(0.95);
+    }
+}
+
+/* Dark mode support - Updated to match desktop theme */
+@media (max-width: 768px) and (prefers-color-scheme: dark) {
+    .footer-benefits {
+        background: #fff; /* Keep light background like desktop */
+    }
+    
+    .benefit-box {
+        background: white;
+        border: 1px solid #e8e8e8;
+    }
+    
+    .benefit-text h3 {
+        color: #545454; /* Keep desktop colors */
+    }
+    
+    .benefit-text p {
+        color: #999; /* Keep desktop colors */
+    }
+    
+    footer {
+        background-color: #545454; /* Keep desktop color */
+    }
+    
+    .footer-column p,
+    .footer-column a,
+    .footer-column ul li a {
+        color: #fff; /* Keep white text */
+    }
+    
+    .social-icons a {
+        background-color: #545454;
+        color: #fff;
+    }
+    
+    .social-icons a:hover {
+        background-color: #FAC102;
+        color: #fff;
+    }
+}
+
+/* Reduced motion */
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+    .benefit-box,
+    .footer-column a,
+    .footer-column ul li a,
+    .social-icons a {
+        transition: none;
+    }
+    
+    .benefit-box:hover,
+    .social-icons a:hover {
+        transform: none;
+    }
+}

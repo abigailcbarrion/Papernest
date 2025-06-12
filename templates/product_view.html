@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collections</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_product_view.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -152,7 +153,7 @@
                             {% endif %}
                         </h1>
                         <p class="product-price">₱{{ "%.2f"|format(product["Price (PHP)"]) }}</p>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <div class="quantity-controls" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
                             <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
                             <button type="button" id="increase-qty" style="width:32px;height:32px;font-size:20px;">+</button>
