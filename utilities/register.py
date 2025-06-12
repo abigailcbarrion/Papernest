@@ -1,8 +1,7 @@
 from forms import RegistrationForm
 from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
 from flask import render_template, request, redirect, url_for, jsonify
-from database_connection.connector import get_users_db  # Fixed import path
-import sqlite3
+from database_connection.connector import get_users_db 
 
 def save_user_to_db(user_data):
     """Save new user to SQLite database"""
@@ -104,6 +103,7 @@ def setup_form_choices(form):
         form.province.choices = [("void", "--Select the province--")]
         form.city.choices = [("void", "--Select the city--")]
         form.barangay.choices = [("void", "--Select the barangay--")]
+        
 def get_city_name_by_code(province_code, city_code):
     """Get city name from city code"""
     if not city_code or city_code == "void":
