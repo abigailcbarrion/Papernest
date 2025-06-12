@@ -34,8 +34,8 @@
                 </div>
 
                 <div class="search-bar-container">
-                    <form class="search-bar" action="/search" method="GET">
-                        <input type="text" name="query" placeholder="Search for books..." />
+                    <form class="search-bar" action="{{ url_for('search') }}" method="GET">
+                        <input type="text" name="query" placeholder="Search for products..." value="{{ request.args.get('query', '') }}" />
                         <button type="submit">Search</button>
                     </form>
                 </div>
