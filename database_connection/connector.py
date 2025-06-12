@@ -5,6 +5,7 @@ from flask import current_app
 def get_db_connection(db_name):
     """Get database connection for specified database"""
     db_path = os.path.join(current_app.root_path, 'data', db_name)
+    print(f"Database path: {os.path.abspath(db_path)}")
     return sqlite3.connect(db_path)
 
 def get_users_db():
