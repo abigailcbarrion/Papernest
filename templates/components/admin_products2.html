@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>papernest - Orders</title>
+  <title>papernest - Non-Book Products</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
@@ -106,10 +106,23 @@ th, td {
       <h1 class="logo">papernest</h1>
       <nav>
         <ul>
-          <li><a href="/admin_dashboard">Dashboard</a></li>
-          <li><a href="/admin_products">Products</a></li>
-          <li class="active"><a href="#">Orders</a></li>
-          <li><a href="/admin_registeredUsers">Users</a></li>
+          <li><a href="#">Dashboard</a></li>
+          <li class="active">
+            <a href="javascript:void(0);" onclick="toggleSubmenu(event)">Products ▼</a>
+            <ul id="products-submenu" style="display:none; list-style:none; padding-left:15px; margin:5px 0 0 0;">
+              <li><a href="/admin_products">Books</a></li>
+              <li><a href="/admin_products2">Non-Books</a></li>
+            </ul>
+            <script>
+              function toggleSubmenu(event) {
+                event.preventDefault();
+                var submenu = document.getElementById('products-submenu');
+                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+              }
+            </script>
+          </li></li>
+          <li><a href="#">Orders</a></li>
+          <li><a href="#">Users</a></li>
         </ul>
       </nav>
     </aside>
@@ -119,16 +132,15 @@ th, td {
         <div class="user-icon">👤</div>
       </header>
       <section class="content">
-        <h2>Orders</h2>
+        <h2>Non-Books</h2>
           <div class="table-header">
             <table>
             <thead>
               <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Address</th>
+                <th>Product ID</th>
+                <th>Product Name</th>
                 <th>Category</th>
-                <th>Products</th>
+                <th>Price</th>
               </tr>
             </thead>
             <tbody>

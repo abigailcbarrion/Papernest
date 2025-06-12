@@ -11,85 +11,113 @@
     {% include 'components/page_header.html' %}
 
     <div class="container">
-
+        <!-- Breadcrumb -->
         {% if category in book_categories %}
             <div class="breadcrumb">
                 <a href="/">Home</a> / <a href="/books">Books</a> / <span>{{ category|title }}</span>
             </div>
         {% elif category in non_book_categories %}
             <div class="breadcrumb">
-                <a href="/">Home</a> / <a href="/non-books">Non-Books</a><span>{{ category|title }}</span>
+                <a href="/">Home</a> / <a href="/non_books">Non-Books</a> / <span>{{ category|title }}</span>
             </div>
         {% endif %}
 
+        <!-- Main flex container for sidebar and content -->
         <div style="display: flex; gap: 32px;">
-            <!-- Sidebar Filters -->
-            <div class="sidebar" style="width:260px; min-width:200px; max-width:320px; padding:16px 12px; background:#fff; border:1px solid #fff; border-radius:5px; box-sizing:border-box;">
-                <strong>PRICE</strong>
-                <div>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="price" value="0-999.99">
-                        <span class="checkmark"></span>
-                        From ₱0 to ₱999.99
-                    </label><br>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="price" value="1000-1999.99">
-                        <span class="checkmark"></span>
-                        From ₱1,000 to ₱1,999.99
-                    </label><br>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="price" value="2000-above">
-                        <span class="checkmark"></span>
-                        From ₱2,000 and ABOVE
-                    </label>
-                </div>
-                <strong style="margin-top:16px; display:block;">Product Language</strong>
-                <div>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="language" value="english">
-                        <span class="checkmark"></span>
-                        English
-                    </label><br>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="language" value="filipino">
-                        <span class="checkmark"></span>
-                        Filipino
-                    </label><br>
-                </div>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                {% if category in book_categories %}
+                    <strong>PRICE</strong>
+                    <div>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="price" value="0-999.99">
+                            <span class="checkmark"></span>
+                            From ₱0 to ₱999.99
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="price" value="1000-1999.99">
+                            <span class="checkmark"></span>
+                            From ₱1,000 to ₱1,999.99
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="price" value="2000-above">
+                            <span class="checkmark"></span>
+                            From ₱2,000 and ABOVE
+                        </label>
+                    </div>
+                    <strong style="margin-top:16px; display:block;">Product Language</strong>
+                    <div>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="language" value="english">
+                            <span class="checkmark"></span>
+                            English
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="language" value="filipino">
+                            <span class="checkmark"></span>
+                            Filipino
+                        </label>
+                    </div>
+
+                {% elif category in non_book_categories %}
+                    <h3 class="sidebar-title">Non-Books</h3>
+                    <hr>
+                    <div class="sidebar-section">
+                        <h2 class="sidebar-category">Categories</h2>
+                        <ul class="sidebar-sub-info">
+                            <li><a href="/category/art-supplies">Drawing</a></li>
+                            <li><a href="/category/calendars-and-planners">Painting</a></li>
+                            <li><a href="/category/notebooks-and-journals">Support</a></li>
+                        </ul>
+                    </div>
+                    <strong>PRICE</strong>
+                    <div>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="price" value="0-499.99">
+                            <span class="checkmark"></span>
+                            From ₱0 to ₱499.99
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="price" value="500-999.99">
+                            <span class="checkmark"></span>
+                            From ₱500 to ₱999.99
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="price" value="1000-above">
+                            <span class="checkmark"></span>
+                            From ₱1,000 and ABOVE
+                        </label>
+                    </div>
+                {% endif %}
             </div>
 
-            <!-- Main Product List Content -->
-            <div style="flex:1; margin-bottom: 20px;">
-                {% if category in book_categories %}
+            <!-- Main Product Content -->
+            <div style="flex: 1;">
                 <div class="product-grid">
                     {% for product in products %}
                     <div class="product-card">
                         <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
-                            <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
+                            {% if category in book_categories %}
+                                <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
+                            {% else %}
+                                <img src="{{ product.image_path }}" alt="{{ product['Product Name'] }}" class="product-image">
+                            {% endif %}
                         </a>
                         <div class="product-info">
-                            <h3 class="product-title">{{ product["Book Name"] }}</h3>
-                            <p class="product-author">by {{ product["Author"] }}</p>
+                            {% if category in book_categories %}
+                                <h3 class="product-title">{{ product["Book Name"] }}</h3>
+                                <p class="product-author">by {{ product["Author"] }}</p>
+                            {% else %}
+                                <h3 class="product-title">{{ product["Product Name"] }}</h3>
+                            {% endif %}
                             <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
-                            <button class="btn-add-cart">Add to Cart</button>
-                        </div>
-                    </div> 
-                    {% endfor %}
-                {% elif category in non_book_categories %}
-                    <div class="product-grid">
-                    {% for product in products %}
-                    <div class="product-card">
-                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
-                            <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
-                        </a>
-                        <div class="product-info">
-                            <h3 class="product-title">{{ product["Product Name"] }}</h3>
-                            <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
-                            <button class="btn-add-cart">Add to Cart</button>
+                            <div class="product-buttons">
+                                <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                                <button class="btn-add-cart">Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
-                {% endif %}
                 </div>
             </div>
         </div>

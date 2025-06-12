@@ -35,8 +35,10 @@
             width: 100px;
             height: 100px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
+            border: 2px solid #ccc;
             display: block;
+            cursor: pointer;
+            transition: border-color 0.3s;
         }
         .product-main-info {
             display: grid;
@@ -48,12 +50,20 @@
             height: 350px;
             border: 1px solid #ccc;
         }
-        .product-info {
-            max-width: 400px;
-            border-radius: 10px;
-            padding: 24px 32px 24px 24px;
-            position: relative;
-            background: #fff;
+        .product-thumbnails img:hover {
+            border-color: #11b8ce;
+        }
+
+        .product-thumbnails img.active {
+            border-color: #11b8ce;
+            border-width: 3px;
+        }
+
+        .product-image img {
+            width: 320px;
+            height: 350px;
+            border: 1px solid #ccc;
+            transition: opacity 0.3s;
         }
         .product-title {
             font-size: 40px;
@@ -116,16 +126,32 @@
         <main class="product-page">
             <section class="product-container">
                 <aside class="product-thumbnails">
-                    <img src="book.jpg" alt="Thumbnail 1">
-                    <img src="book.jpg" alt="Thumbnail 2">
+                    <img src="{{ product.image_path }}" 
+                        alt="Front Image" 
+                        class="thumbnail active" 
+                        onclick="changeMainImage(this)">
+                    {% if product.back_image_path %}
+                    <img src="{{ product.back_image_path }}" 
+                        alt="Back Image" 
+                        class="thumbnail" 
+                        onclick="changeMainImage(this)">
+                    {% endif %}
                 </aside>
                 <div class="product-main-info">
                     <div class="product-image">
-                        <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}">
+                        <img id="main-product-image" 
+                            src="{{ product.image_path }}" 
+                            alt="Product Image">
                     </div>
                     <div class="product-info">
-                        <h1 class="product-title">{{ product["Book Name"] }}</h1>
-                        <p class="product-price">₱{{ product["Price (PHP)"] }}</p>
+                        <h1 class="product-title">
+                            {% if page_type == 'non_books' %}
+                                {{ product["Product Name"] }}
+                            {% else %}
+                                {{ product["Book Name"] }}
+                            {% endif %}
+                        </h1>
+                        <p class="product-price">₱999.00</p>
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
                             <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
@@ -150,28 +176,39 @@
                 </div>
                 <div class="product-specifications">
                     <h2>Product Specifications</h2>
-                    <table>
-                        <tr>
-                            <td><strong>ISBN</strong></td>
-                            <td>{{ product["ISBN"] }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Publisher</strong></td>
-                            <td>{{ product["Publisher"] }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Publication Date</strong></td>
-                            <td>{{ product["Publication Date"] }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Author</strong></td>
-                            <td>{{ product["Author"] }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Product Language</strong></td>
-                            <td>{{ product["Product Language"] }}</td>
-                        </tr>
-                    </table>
+                    {% if page_type == 'books' %}
+                        <table>
+                            <tr>
+                                <td><strong>ISBN</strong></td>
+                                <td>{{ product["ISBN"] }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Publisher</strong></td>
+                                <td>{{ product["Publisher"] }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Publication Date</strong></td>
+                                <td>{{ product["Publication Date"] }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Author</strong></td>
+                                <td>{{ product["Author"] }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product Language</strong></td>
+                                <td>{{ product["Product Language"] }}</td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <table>
+                            <tr><strong>Brand</strong>
+                                <td>{{ product["Brand"] }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ product["Category"] }}</td>
+                            </tr>
+                        </table>
+                    {% endif %}
                 </div>
             </section>
             <section class="similar-products">
@@ -195,6 +232,19 @@
                 qtyInput.value = val + 1;
             };
         });
+
+        function changeMainImage(thumbnail) {
+            // Update main image source
+            document.getElementById('main-product-image').src = thumbnail.src;
+            
+            // Remove active class from all thumbnails
+            document.querySelectorAll('.thumbnail').forEach(img => {
+                img.classList.remove('active');
+            });
+            
+            // Add active class to clicked thumbnail
+            thumbnail.classList.add('active');
+        }
     </script>
     <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>

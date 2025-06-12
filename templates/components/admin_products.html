@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>papernest - {{ product_type }}</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Gilroy, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background-color: #00bcd4;
+      color: white;
+      width: 200px;
+      padding: 20px;
+    }
+
+    .logo {
+      font-size: 30px;
+      margin-bottom: 30px;
+      color: #e0e0e0;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav li {
+      margin: 15px 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav li.active {
+      background-color: #ffc107;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    nav li.active a {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .main-content {
+      flex: 1;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      height: 50px;
+      background-color: #e0e0e0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 20px;
+    }
+
+    .user-icon {
+      font-size: 20px;
+    }
+
+    .content {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .table-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: #333;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .product-title {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .price {
+      font-weight: 600;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h1 class="logo">papernest</h1>
+      <nav>
+        <ul>
+          <li><a href="/admin_dashboard">Dashboard</a></li>
+          <li class="active">
+            <a href="javascript:void(0);" onclick="toggleSubmenu(event)">Products ▼</a>
+            <ul id="products-submenu" style="display:block; list-style:none; padding-left:15px; margin:5px 0 0 0;">
+              <li><a href="/admin_products/books" style="{% if product_type == 'Books' %}font-weight:bold;{% endif %}">Books</a></li>
+              <li><a href="/admin_products/non-books" style="{% if product_type == 'Non-Books' %}font-weight:bold;{% endif %}">Non-Books</a></li>
+            </ul>
+          </li>
+          <li><a href="/admin_orders">Orders</a></li>
+          <li><a href="/admin_registeredUsers">Users</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div class="user-icon">👤</div>
+      </header>
+      <section class="content">
+        <h2>{{ product_type }}</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                {% if product_type == 'Books' %}
+                  <th>Author</th>
+                  <th>ISBN</th>
+                {% else %}
+                  <th>Brand</th>
+                {% endif %}
+                <th>Category</th>
+                <th>Price (PHP)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+                <td>{{ product['Product ID'] }}</td>
+                <td class="product-title">
+                  {% if product_type == 'Books' %}
+                    {{ product['Book Name'] }}
+                  {% else %}
+                    {{ product['Product Name'] }}
+                  {% endif %}
+                </td>
+                {% if product_type == 'Books' %}
+                  <td>{{ product['Author'] }}</td>
+                  <td>{{ product['ISBN'] }}</td>
+                {% else %}
+                  <td>{{ product.get('Brand', 'N/A') }}</td>
+                {% endif %}
+                <td>{{ product['Category'] }}</td>
+                <td class="price">₱{{ product['Price (PHP)'] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function toggleSubmenu(event) {
+      event.preventDefault();
+      var submenu = document.getElementById('products-submenu');
+      submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>

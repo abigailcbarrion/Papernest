@@ -246,6 +246,7 @@
                                 </form>
                                 {% endif %}
                             </div>
+                        
                         </div>
                         {% endfor %}
                     </div>
@@ -253,14 +254,41 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
+       </div> <!-- End of .collections-layout -->
+
+        <!-- Carousel Section -->
+        {% include 'components/product_carousel.html' %}
+
+        <!-- Products Container Section -->
+        <div class="products-container">
+            <div class="product-showcase" id="bookShowcase">
+                {% for book in popular_books %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="{{ url_for('static', filename='images/' + book.image) }}" alt="{{ book.title }}" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">{{ book.title }}</h3>
+                        <p class="product-author">by {{ book.author }}</p>
+                        <div class="product-price">${{ book.price }}</div>
+                        <div class="product-buttons">
+                            <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- End of Products Container -->
+
+    </div> <!-- End of .page-wrapper -->
 
     <!-- Footer -->
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
 
-    <!-- Footer Script -->
     <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@
         .card-info button { background: #007bff; color: #fff; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px 2px; }
         .card-info button:hover { background: #0056b3; }
         .product-display { margin-bottom: 40px; }
-        .product-display img { border-radius: 4px; margin-bottom: 10px; width: 100%; height: 450px; object-fit: fill; display: block; }
+        .product-display img { border-radius: 4px; margin-bottom: 10px; width: 110%; height: 450px; object-fit: fill; display: block; }
         footer { background: #545454; padding: 20px; color: #fff; }
         @media screen and (max-width: 768px) {
             .collections-layout { flex-direction: column; padding: 0 16px; }
@@ -177,7 +177,7 @@
                 </div>
                 {% endfor %}
                 <div class="product-display">
-                    <img src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Women Empowerment" />
+                    <img id="rotating-image" src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Women Empowerment" />
                     <div class="card-info">
                         {% if session.get('user') %}
                         <form method="POST" action="{{ url_for('add_to_cart') }}">
@@ -191,7 +191,20 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="product-carousel-wrapper">
+                <script>
+                    const images = [
+                        "{{ url_for('static', filename='images/carousel/slide3.png') }}",
+                        "{{ url_for('static', filename='images/carousel/slide2.png') }}",
+                        "{{ url_for('static', filename='images/carousel/slide1.png') }}"
+                    ];
+                    let idx = 0;
+                    setInterval(() => {
+                        idx = (idx + 2) % images.length;
+                        document.getElementById('rotating-image').src = images[idx];
+                    }, 2000);
+                </script>
+                </div>
+                <div class="product-carousel">
                     {% include 'components/product_carousel.html' %}
                 </div>
             </div>
