@@ -1,18 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegistrationForm
 from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
-from utilities.login import handle_login, load_users_from_db  # Changed from load_users
+from utilities.login import handle_login, load_users_from_db 
 from utilities.load_items import (
     get_nonbook_image_path, get_books_image_path, get_trending,
     load_books, load_nonbooks, get_nonbook_by_id
 )
 from utilities.storage import get_featured_author
-import os
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__, 
             static_folder='static',
             template_folder='templates')
-app.secret_key = '631539ff18360356'  
+app.secret_key = '631539ff18360356' 
+csrf = CSRFProtect(app) 
 
 BOOK_CATEGORIES = ['fiction', 'non-fiction', 'science-and-technology', 'self-help-and-personal-development', 'children\'s-books', 'academic-reference-development']
 NON_BOOK_CATEGORIES = ["art-supplies", "calendars-and-planners", "notebooks-and-journals", "novelties", "reading-accessories", "supplies"]
@@ -52,6 +53,18 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return handle_register()
+
+@app.route('/get_cities/<province_code>')
+def get_cities(province_code):
+    return jsonify(get_cities_json(province_code))
+
+@app.route('/get_barangays/<city_code>')
+def get_barangays(city_code):
+    return jsonify(get_barangays_json(city_code))
+
+@app.route('/get_postal_code')
+def get_postal_code():
+    return get_postal_code_json()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -102,18 +115,6 @@ def admin_registeredUsers():
     
     return render_template('components/admin_registeredUsers.html', users=users_data)
 
-@app.route('/get_cities/<province_code>', methods=['GET'])
-def get_cities(province_code):
-    return get_cities_json(province_code) 
-
-@app.route('/get_barangays/<city_code>', methods=['GET'])
-def get_barangays(city_code):
-    return get_barangays_json(city_code)
-
-@app.route('/get_postal_code', methods=['GET'])
-def get_postal_code():
-    return get_postal_code_json()
-
 @app.route('/account')
 def account():
     if 'user' not in session:
@@ -135,14 +136,13 @@ def add_to_cart():
 
     book_id = int(request.form['book_id'])
     
-    # Ensure session['cart'] exists
     if 'cart' not in session:
         session['cart'] = []
     
-    if book_id not in session['cart']:  # Avoid duplicates
+    if book_id not in session['cart']:  
         session['cart'].append(book_id)
 
-    session.modified = True  # Update session
+    session.modified = True  
     return redirect(url_for('index'))
 
 
@@ -153,14 +153,13 @@ def add_to_wishlist():
 
     book_id = int(request.form['book_id'])
 
-    # Ensure session['wishlist'] exists
     if 'wishlist' not in session:
         session['wishlist'] = []
 
-    if book_id not in session['wishlist']:  # Avoid duplicates
+    if book_id not in session['wishlist']:  
         session['wishlist'].append(book_id)
 
-    session.modified = True  # Update session
+    session.modified = True 
     return redirect(url_for('index'))
 
 
@@ -335,9 +334,21 @@ def inject_common_variables():
 
 @app.context_processor
 def inject_forms():
+    login_form = LoginForm()
+    registration_form = RegistrationForm()
+    
+    # Add prefixes to avoid ID conflicts
+    login_form.username.id = 'login_username'
+    login_form.password.id = 'login_password'
+    login_form.csrf_token.id = 'login_csrf_token'
+    
+    registration_form.username.id = 'register_username'
+    registration_form.password.id = 'register_password'
+    registration_form.csrf_token.id = 'register_csrf_token'
+    
     return {
-        'login_form': LoginForm(),
-        'registration_form': RegistrationForm()
+        'login_form': login_form,
+        'registration_form': registration_form
     }
 
 # ---------- Main ----------
