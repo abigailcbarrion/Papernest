@@ -1,6 +1,7 @@
 import os
+import sqlite3
 from flask import url_for, current_app
-from .storage import load_json
+from database_connection.connector import get_books_db, get_nonbooks_db
 import random
 
 NON_BOOK_CATEGORY_FOLDER_MAP = {
@@ -35,65 +36,256 @@ BOOK_CATEGORY_FOLDER_MAP = {
     "Science and Technology": "science-technology_images",
     "Academic and Reference Development": "academics-book_images",
     "Self-Help and Personal Development": "self-help-book_images"
-}   
+}
 
-def get_nonbook_image_path(item, image_key="Product Image Front"):
-    filename = item.get(image_key)
-    category = item.get("Category", "Other")
-    folder = NON_BOOK_CATEGORY_FOLDER_MAP.get(category, "novelties_images")  # fallback to a default folder if not found
+def load_books():
+    # get books from database
+    try:
+        with get_books_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM books")
+        rows = cursor.fetchall()
+        
+        books = []
+        for row in rows:
+            book = {
+                'Product ID': row['product_id'],
+                'Book Name': row['book_name'],
+                'Author': row['author'],
+                'Price (PHP)': row['price_php'],
+                'Product Description': row['product_description'],
+                'ISBN': row['isbn'],                           
+                'Publisher': row['publisher'],                 
+                'Publication Date': row['publication_date'],   
+                'Product Language': row['product_language'],   
+                'Pages': row['no_of_pages'],           
+                'Category': row['category'],
+                'Product Image Front': row['product_image_front'],
+                'Product Image Back': row['product_image_back']
+            }
+            books.append(book)
+        
+        conn.close()
+        return books
+    except:
+        return []
 
-    static_folder = os.path.join(current_app.root_path, 'static')
-    rel_base = f'images/Nonbooks_Images/{folder}'
-    for ext in ['jpg', 'png', 'webp', 'jpeg', 'JPG']:
-        rel_path = f'{rel_base}/{filename}.{ext}'
-        abs_path = os.path.join(static_folder, rel_path)
-        if os.path.exists(abs_path):
-            return url_for('static', filename=rel_path)
-    # fallback
-    return url_for('static', filename='images/placeholder.jpg')
+def load_nonbooks():
+    """Load all non-books from database"""
+    try:
+        with get_nonbooks_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM non_books")
+        rows = cursor.fetchall()
+        
+        nonbooks = []
+        for row in rows:
+            item = {
+                'Product ID': row['product_id'],
+                'Product Name': row['product_name'],
+                'Brand': row['brand'],
+                'Price (PHP)': row['price_php'],
+                'Product Description': row['product_description'],
+                'Quantity': row['quantity'],
+                'Category': row['category'],
+                'Product Image Front': row['product_image_front'],
+                'Product Image Back': row['product_image_back']
+            }
+            nonbooks.append(item)
+        
+        conn.close()
+        return nonbooks
+    except:
+        return []
 
+def get_nonbook_by_id(product_id):
+    """Get specific non-book by Product ID"""
+    try:
+        db_path = os.path.join(current_app.root_path, 'data', 'non_books.db')
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM non_books WHERE product_id = ?", (product_id,))
+        row = cursor.fetchone()
+        
+        if row:
+            item = {
+                'Product ID': row['product_id'],
+                'Product Name': row['product_name'],
+                'Brand': row['brand'],
+                'Price (PHP)': row['price_php'],
+                'Product Description': row['product_description'],
+                'Quantity': row['quantity'],
+                'Category': row['category'],
+                'Product Image Front': row['product_image_front'],
+                'Product Image Back': row['product_image_back']
+            }
+            conn.close()
+            return item
+        
+        conn.close()
+        return None
+    except:
+        return None
 
-def get_books_image_path(item, image_key="Product Image Front"):
-    filename = item.get(image_key)
-    if not filename:
-        print(f"[DEBUG] No image filename found for item: {item}")
-        return url_for('static', filename='images/placeholder.jpg')
+def get_nonbooks_by_category(category):
+    """Get non-books by category"""
+    try:
+        with get_nonbooks_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM non_books WHERE category = ?", (category,))
+        rows = cursor.fetchall()
+        
+        nonbooks = []
+        for row in rows:
+            item = {
+                'Product ID': row['product_id'],
+                'Product Name': row['product_name'],
+                'Brand': row['brand'],
+                'Price (PHP)': row['price_php'],
+                'Product Description': row['product_description'],
+                'Quantity': row['quantity'],
+                'Category': row['category'],
+                'Product Image Front': row['product_image_front'],
+                'Product Image Back': row['product_image_back']
+            }
+            nonbooks.append(item)
+        
+        conn.close()
+        return nonbooks
+    except:
+        return []
 
-    category = item.get("Category", "Other").replace("&", "and").replace("-", " ").strip()
-    possible_folders = []
+def search_nonbooks(query):
+    """Search non-books by name, brand, or description"""
+    try:
+        with get_nonbooks_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT * FROM non_books 
+            WHERE product_name LIKE ? OR brand LIKE ? OR product_description LIKE ?
+            ORDER BY product_id
+        """, (f'%{query}%', f'%{query}%', f'%{query}%'))
+        
+        rows = cursor.fetchall()
+        
+        nonbooks = []
+        for row in rows:
+            item = {
+                'Product ID': row['product_id'],
+                'Product Name': row['product_name'],
+                'Brand': row['brand'],
+                'Price (PHP)': row['price_php'],
+                'Product Description': row['product_description'],
+                'Quantity': row['quantity'],
+                'Category': row['category'],
+                'Product Image Front': row['product_image_front'],
+                'Product Image Back': row['product_image_back']
+            }
+            nonbooks.append(item)
+        
+        conn.close()
+        return nonbooks
+    except:
+        return []
 
-    # Try mapped category folder first
-    folder = BOOK_CATEGORY_FOLDER_MAP.get(category)
-    if folder:
-        possible_folders.append(f'images/Books_Images/{folder}')
-    # Try all mapped folders (in case category is wrong/missing)
-    possible_folders.extend([f'images/Books_Images/{f}' for f in BOOK_CATEGORY_FOLDER_MAP.values() if f not in possible_folders])
-    # Try root Books_Images
-    possible_folders.append('images/Books_Images')
-
-    static_folder = os.path.join(current_app.root_path, 'static')
-    extensions = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG', 'WEBP']
-
-    tried_paths = []
-    for folder in possible_folders:
-        for ext in extensions:
-            rel_path = f'{folder}/{filename}.{ext}'
+def get_nonbook_image_path(product_id, image_key="Product Image Front"):
+    """Get non-book image path using database query"""
+    try:
+        with get_nonbooks_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+        
+        # Query specific fields we need
+        cursor.execute("SELECT product_image_front, product_image_back, category FROM non_books WHERE product_id = ?", (product_id,))
+        row = cursor.fetchone()
+        
+        if not row:
+            conn.close()
+            return url_for('static', filename='images/placeholder.jpg')
+        
+        # Get filename and category from database
+        filename = row['product_image_front'] if image_key == "Product Image Front" else row['product_image_back']
+        category = row['category']
+        
+        conn.close()
+        
+        if not filename:
+            return url_for('static', filename='images/placeholder.jpg')
+        
+        # Get folder mapping
+        folder = NON_BOOK_CATEGORY_FOLDER_MAP.get(category, "novelties_images")
+        
+        # Check if image exists
+        static_folder = os.path.join(current_app.root_path, 'static')
+        rel_base = f'images/Nonbooks_Images/{folder}'
+        
+        for ext in ['jpg', 'png', 'webp', 'jpeg', 'JPG']:
+            rel_path = f'{rel_base}/{filename}.{ext}'
             abs_path = os.path.join(static_folder, rel_path)
             if os.path.exists(abs_path):
                 return url_for('static', filename=rel_path)
-    # fallback
-    print(f"[DEBUG] No valid image found for item: '{item.get('Book Name', filename)}'. Tried paths:")
-    for path in tried_paths:
-        print(f" - {path}")
-    return url_for('static', filename='images/placeholder.jpg')
+        
+        return url_for('static', filename='images/placeholder.jpg')
+        
+    except:
+        return url_for('static', filename='images/placeholder.jpg')
 
+def get_books_image_path(product_id, image_key="Product Image Front"):
+    try:
+        with get_books_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+        
+        # Query specific fields we need
+        cursor.execute("SELECT product_image_front, product_image_back, category FROM books WHERE product_id = ?", (product_id,))
+        row = cursor.fetchone()
+        
+        if not row:
+            conn.close()
+            return url_for('static', filename='images/placeholder.jpg')
+        
+        # Get filename and category from database
+        filename = row['product_image_front'] if image_key == "Product Image Front" else row['product_image_back']
+        category = row['category']
+        
+        conn.close()
+        
+        if not filename:
+            return url_for('static', filename='images/placeholder.jpg')
+        
+        # Get folder mapping
+        folder = BOOK_CATEGORY_FOLDER_MAP.get(category, "fiction_images")
+        
+        # Check if image exists
+        static_folder = os.path.join(current_app.root_path, 'static')
+        extensions = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG', 'WEBP']
+        
+        for ext in extensions:
+            rel_path = f'images/Books_Images/{folder}/{filename}.{ext}'
+            abs_path = os.path.join(static_folder, rel_path)
+            if os.path.exists(abs_path):
+                return url_for('static', filename=rel_path)
+        
+        return url_for('static', filename='images/placeholder.jpg')
+        
+    except:
+        return url_for('static', filename='images/placeholder.jpg')
 
-def get_trending(curr_section = "books"):
-
+def get_trending(curr_section="books"):
     if curr_section == "books" or curr_section == "homepage":
-        items = load_json('data/books.json')
+        items = load_books()
     elif curr_section == "non_books":
-        items = load_json('data/non_books.json')
+        items = load_nonbooks()
     else:
         return []
     

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/billing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        {% include 'components/billing_header.html' %}
+        <div class="main-content">
+        <div class="container">
+            <div class="checkout-wrapper">
+                <!-- Payment Methods (right) -->
+                <div class="left-side">
+                    <div class="billing-container">
+                        <h3>Payment Details</h3>
+                        <div class="payment-method">
+                            <label>
+                                <input type="radio" name="payment" checked>
+                                <span class="icon-label">
+                                    <div class="icon-box">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    Debit or Credit Card
+                                </span>
+                            </label>
+                        </div>
+                        <div class="payment-method">
+                            <label>
+                                <input type="radio" name="payment">
+                                <span class="icon-label">
+                                    <div class="icon-box">
+                                        <i class="fas fa-mobile"></i>
+                                    </div>
+                                    <div class="payment-desc">
+                                        <div>Digital Wallet</div>
+                                        <div class="wallet-desc">PayMaya, GCash, GrabPay, ShopeePay, WeChatPay, QR Pay, others</div>
+                                    </div>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="payment-method">
+                            <label>
+                                <input type="radio" name="payment">
+                                <span class="icon-label">
+                                    <div class="icon-box">
+                                        <i class="fas fa-house"></i>
+                                    </div>
+                                    Cash on Delivery
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="placeOrderBtn">
+                        <a href="/order" class="btn-placeOrder">PLACE ORDER</a>
+                    </div>
+                </div>
+                <!-- Order Summary (left) -->
+                <div class="order-summary">
+                    <table class="table-cart-summary">
+                        <tr>
+                            <th>ORDER SUMMARY</th>
+                        </tr>
+                        <tr class="cart-item-row">
+                            <td>
+                                <div class="cart-item">
+                                    <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Item Image" class="item-image">
+                                    <div class="prod-details">
+                                        <span class="prod-name">Product Name</span>
+                                        <div class="prod-row">
+                                            <span class="prod-quantity">Quantity: 1</span>
+                                            <span class="prod-price">₱00.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cart-summary">
+                                    <p>Subtotal</p>
+                                    <p class="subtotal-price">₱0.00</p>
+                                </div>
+                                <div class="cart-summary cart-summary-total">
+                                    <p><b>Order Total</b></p>
+                                    <p class="total-price"><b>₱0.00</b></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+     <footer>
+        {% include 'components/page_footer.html' %}
+    </footer>
+</body>
+</html>

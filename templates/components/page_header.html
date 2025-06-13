@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
-</html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_page_header.css') }}">
 </head>
 <body>
+    <!-- Top Utility Bar
     <div class="container">
-        <!-- Top Utility Bar -->
         <div class="top-bar">
             <div class="shipping-info">Free shipping for minimum order of Php799.</div>
             <div class="utility-links">
-               
                 <a href="/about">About Us</a>
-                <a href="/help">FAQs </a>
+                <a href="/help">FAQs</a>
                 <div class="currency-toggle">
                     <select>
                         <option selected>PHP</option>
@@ -26,26 +24,23 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Header-Nav-Wrapper (full width) -->
+    </div> -->
+
+    <!-- Header Section -->
     <div class="header-nav-wrapper">
-        <!-- Header Section -->
         <div class="header-container">
             <div class="header">
-                <!-- Logo -->
                 <div class="logo">
                     <a href="{{ url_for('index') }}">papernest</a>
                 </div>
 
-                <!-- Search Bar and Links -->
                 <div class="search-bar-container">
-                    <form class="search-bar" action="/search" method="GET">
-                        <input type="text" name="query" placeholder="Search for books..." />
+                    <form class="search-bar" action="{{ url_for('search') }}" method="GET">
+                        <input type="text" name="query" placeholder="Search for products..." value="{{ request.args.get('query', '') }}" />
                         <button type="submit">Search</button>
                     </form>
                 </div>
 
-                <!-- Links -->
                 <div class="user-links">
                     {% if session.get('user') %}
                         <a href="/account"><i class="fas fa-user"></i> Account</a>
@@ -53,14 +48,25 @@
                         <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
                     {% else %}
                         <div class="login-dropdown">
-                            <a href="javascript:void(0)" class="dropbtn" id="loginToggle"><i class="fas fa-user"></i> Login/Register</a>
+                            <a href="javascript:void(0)" class="dropbtn" id="loginToggle">
+                                <i class="fas fa-user"></i> Login/Register
+                            </a>
                             <div class="login-dropdown-content" id="loginDropdown">
+                                <button class="mobile-close-btn" id="mobileCloseBtn" type="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+
                                 <h2 class="login-header">Login</h2>
                                 <div class="message-rectangle">
                                     <p class="rectangle-text">Welcome to our new website!</p>
                                 </div>
-                                <!-- Use Flask-WTF to render the login form -->
-                                <form method="POST" action="{{ url_for('login') }}">
+                                
+                                <div class="error-message" id="loginError" style="display: none;">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="errorText">Invalid username or password. Please try again.</span>
+                                </div>
+                                
+                                <form id="loginForm" method="POST">
                                     {{ login_form.hidden_tag() }}
                                     <div class="form-login-container">
                                         <div class="input-group">
@@ -95,54 +101,139 @@
             </div>
         </div>
 
-        <!-- Navigation Bar (already full width) -->
-        <nav>
-        <div class="dropdown">
-            <a href="/books" class="dropbtn">BOOKS</a>
-            <div class="dropdown-content">
-                <a href="/category/fiction">FICTION</a>
-                <a href="/category/non-fiction">NON-FICTION</a>
-                <a href="/category/science-and-technology">SCIENCE & TECHNOLOGY</a>
-                <a href="/category/self-help-and-personal-development">SELF-HELP & PERSONAL DEVELOPMENT</a>
-                <a href="/category/children's-books">CHILDREN'S BOOKS</a>
-                <a href="/category/academic-reference-development">ACADEMIC & REFERENCE</a>
+        <!-- Desktop Navigation Bar -->
+        <nav class="desktop-nav">
+            <div class="dropdown">
+                <a href="/books" class="dropbtn">BOOKS</a>
+                <div class="dropdown-content">
+                    <a href="/category/fiction">FICTION</a>
+                    <a href="/category/non-fiction">NON-FICTION</a>
+                    <a href="/category/science-and-technology">SCIENCE & TECHNOLOGY</a>
+                    <a href="/category/self-help-and-personal-development">SELF-HELP & PERSONAL DEVELOPMENT</a>
+                    <a href="/category/children's-books">CHILDREN'S BOOKS</a>
+                    <a href="/category/academic-reference-development">ACADEMIC & REFERENCE</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/non_books" class="dropbtn">NON BOOKS</a>
-            <div class="dropdown-content">
-                <!-- Fallback if dynamic loading fails -->
-                <a href="/category/art-supplies">ART SUPPLIES</a>
-                <a href="/category/calendars-and-planners">CALENDARS AND PLANNERS</a>
-                <a href="/category/notebooks-and-journals">NOTEBOOKS AND JOURNALS</a>
-                <a href="/category/novelties">NOVELTIES</a>
-                <a href="/category/reading-accessories">READING ACCESSORIES</a>
-                <a href="/category/supplies">SUPPLIES</a>
+            <div class="dropdown">
+                <a href="/non_books" class="dropbtn">NON BOOKS</a>
+                <div class="dropdown-content">
+                    <a href="/category/calendars-and-planners">CALENDARS AND PLANNERS</a>
+                    <a href="/category/notebooks-and-journals">NOTEBOOKS AND JOURNALS</a>
+                    <a href="/category/novelties">NOVELTIES</a>
+                    <a href="/category/reading-accessories">READING ACCESSORIES</a>
+                    <a href="/category/supplies">SUPPLIES</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/bestsellers" class="dropbtn">BESTSELLERS</a>
-            <div class="dropdown-content">
-                <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
+            <div class="dropdown">
+                <a href="/bestsellers" class="dropbtn">BESTSELLERS</a>
+                <div class="dropdown-content">
+                    <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/collections" class="dropbtn">COLLECTIONS</a>
-            <div class="dropdown-content">
-                <a href="/rainy_day_reads">RAINY DAY READS</a>
-                <a href="/women_empowerment">WOMEN EMPOWERMENT</a>
-                <a href="/mindfullness_and_mental_health">MINDFULNESS AND MENTAL HEALTH</a>
-                <a href="/staff_picks">STAFF PICKS</a>
+            <div class="dropdown">
+                <a href="/collections" class="dropbtn">COLLECTIONS</a>
+                <div class="dropdown-content">
+                    <a href="/rainy_day_reads">RAINY DAY READS</a>
+                    <a href="/women_empowerment">WOMEN EMPOWERMENT</a>
+                    <a href="/mindfullness_and_mental_health">MINDFULNESS AND MENTAL HEALTH</a>
+                    <a href="/staff_picks">STAFF PICKS</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/sale" class="dropbtn">SALE</a>
-            <div class="dropdown-content">
-                <a href="/fav_reads_under_500">FAV READS UNDER 500</a>
+            <div class="dropdown">
+                <a href="/sale" class="dropbtn">SALE</a>
+                <div class="dropdown-content">
+                    <a href="/fav_reads_under_500">FAV READS UNDER 500</a>
+                </div>
             </div>
-        </div>
         </nav>
-    </div>
-</body>
 
-<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+        <!-- Mobile Navigation Toggle -->
+        <button class="mobile-nav-toggle" id="mobileNavToggle">
+            <i class="fas fa-bars"></i> <span>Menu</span>
+        </button>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="mobile-nav-header">
+                <h3>Navigation</h3>
+                <button class="mobile-nav-close" id="mobileNavClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mobile-nav-content">
+                <a href="/" class="mobile-nav-item">
+                    <i class="fas fa-home"></i> HOME
+                </a>
+                
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-btn" data-target="books-dropdown">
+                        <i class="fas fa-book"></i> BOOKS <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="mobile-dropdown-content" id="books-dropdown">
+                        <a href="/books">All Books</a>
+                        <a href="/category/fiction">Fiction</a>
+                        <a href="/category/non-fiction">Non-Fiction</a>
+                        <a href="/category/science-and-technology">Science & Technology</a>
+                        <a href="/category/self-help-and-personal-development">Self-Help & Personal Development</a>
+                        <a href="/category/children's-books">Children's Books</a>
+                        <a href="/category/academic-reference-development">Academic & Reference</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-btn" data-target="nonbooks-dropdown">
+                        <i class="fas fa-palette"></i> NON BOOKS <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="mobile-dropdown-content" id="nonbooks-dropdown">
+                        <a href="/category/calendars-and-planners">CALENDARS AND PLANNERS</a>
+                        <a href="/category/notebooks-and-journals">NOTEBOOKS AND JOURNALS</a>
+                        <a href="/category/novelties">NOVELTIES</a>
+                        <a href="/category/reading-accessories">READING ACCESSORIES</a>
+                        <a href="/category/supplies">SUPPLIES</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-btn" data-target="bestsellers-dropdown">
+                        <i class="fas fa-star"></i> BESTSELLERS <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="mobile-dropdown-content" id="bestsellers-dropdown">
+                        <a href="/bestsellers">All Bestsellers</a>
+                        <a href="/bestsellers">Bestsellers of the Month</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-btn" data-target="collections-dropdown">
+                        <i class="fas fa-layer-group"></i> COLLECTIONS <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="mobile-dropdown-content" id="collections-dropdown">
+                        <a href="/collections">All Collections</a>
+                        <a href="/rainy_day_reads">Rainy Day Reads</a>
+                        <a href="/women_empowerment">Women Empowerment</a>
+                        <a href="/mindfullness_and_mental_health">Mindfulness and Mental Health</a>
+                        <a href="/staff_picks">Staff Picks</a>
+                    </div>
+                </div>
+                
+                <div class="mobile-dropdown">
+                    <button class="mobile-dropdown-btn" data-target="sale-dropdown">
+                        <i class="fas fa-tag"></i> SALE <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="mobile-dropdown-content" id="sale-dropdown">
+                        <a href="/sale">All Sale Items</a>
+                        <a href="/fav_reads_under_500">Fav Reads Under 500</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/header.js') }}"></script>
+</body>
+</html>

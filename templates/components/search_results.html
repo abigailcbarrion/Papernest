@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
+    <title>Search Results - {{ query }}</title>
+</head>
+<body>
+    {% include 'components/page_header.html' %}
+
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <span>Search Results for "{{ query }}"</span>
+        </div>
+
+        <!-- Search Results Header -->
+        <div style="margin: 20px 0;">
+            <h2>Search Results for "{{ query }}"</h2>
+            <p style="color: #666;">Found {{ total_results }} result{{ 's' if total_results != 1 else '' }}</p>
+        </div>
+
+        <!-- Main flex container for sidebar and content -->
+        <div style="display: flex; gap: 32px;">
+            <!-- Sidebar with Filters -->
+            <div class="sidebar">
+                <form method="GET" action="{{ url_for('search') }}" id="filterForm">
+                    <input type="hidden" name="query" value="{{ query }}">
+                    
+                    <strong>PRICE</strong>
+                    <div>
+                        <label class="custom-radio">
+                            <input type="radio" name="price" value="" 
+                                {% if not request.args.get('price') %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            All Prices
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="price" value="0-999.99" 
+                                {% if request.args.get('price') == '0-999.99' %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            From ₱0 to ₱999.99
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="price" value="1000-1999.99" 
+                                {% if request.args.get('price') == '1000-1999.99' %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            From ₱1,000 to ₱1,999.99
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="price" value="2000-above" 
+                                {% if request.args.get('price') == '2000-above' %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            From ₱2,000 and ABOVE
+                        </label>
+                    </div>
+                    
+                    <strong style="margin-top:16px; display:block;">Product Language</strong>
+                    <div>
+                        <label class="custom-radio">
+                            <input type="radio" name="language" value="" 
+                                {% if not request.args.get('language') %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            All Languages
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="language" value="english" 
+                                {% if request.args.get('language') == 'english' %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            English
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="language" value="filipino" 
+                                {% if request.args.get('language') == 'filipino' %}checked{% endif %}
+                                onchange="submitForm()">
+                            <span class="checkmark"></span>
+                            Filipino
+                        </label>
+                    </div>
+
+                    <!-- Clear Filters Button -->
+                    <button type="button" onclick="clearFilters()" class="clear-filters-btn">Clear Filters</button>
+                </form>
+            </div>
+
+            <!-- Main Search Results Content -->
+            <div style="flex: 1;">
+                <!-- Results Count -->
+                <div class="results-count">
+                    Showing {{ products|length }} of {{ total_results }} results
+                </div>
+                
+                {% if products|length > 0 %}
+                <div class="product-grid">
+                    <!-- Replace the product display section (lines 103-138) with this debug version: -->
+                    {% for product in products %}
+                    <div class="product-card">
+                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                            {% if product.get('Book Name') %}
+                                <!-- It's a book -->
+                                <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
+                            {% else %}
+                                <!-- It's a non-book -->
+                                <img src="{{ product.image_path }}" alt="{{ product.get('Product Name', 'Unknown Product') }}" class="product-image">
+                            {% endif %}
+                        </a>
+                        <div class="product-info">
+                            {% if product.get('Book Name') %}
+                                <!-- Book display -->
+                                <h3 class="product-title">{{ product["Book Name"] }}</h3>
+                                <p class="product-author">by {{ product.get("Author", "Unknown Author") }}</p>
+                                <p class="product-category">{{ product.get("Category", "") }}</p>
+                            {% else %}
+                                <!-- Non-book display -->
+                                <h3 class="product-title">{{ product.get("Product Name", "Unknown Product") }}</h3>
+                                <p class="product-category">{{ product.get("Category", "") }}</p>
+                            {% endif %}
+                            <div class="product-price">₱{{ product.get("Price (PHP)", "0") }}</div>
+                            <div class="product-buttons">
+                                <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                                <button class="btn-add-cart">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <!-- No Results Message -->
+                <div class="no-results">
+                    <h3>No products found</h3>
+                    <p>Sorry, we couldn't find any products matching "{{ query }}".</p>
+                    <p>Try:</p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Checking your spelling</li>
+                        <li>Using different keywords</li>
+                        <li>Searching for more general terms</li>
+                        <li>Browsing our <a href="/books">Books</a> or <a href="/non_books">Non-Books</a> sections</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function submitForm() {
+            // Small delay to ensure radio button state is updated
+            setTimeout(function() {
+                document.getElementById('filterForm').submit();
+            }, 100);
+        }
+        
+        function clearFilters() {
+            window.location.href = "{{ url_for('search') }}?query={{ query }}";
+        }
+    </script>
+
+    {% include 'components/page_footer.html' %}
+</body>
+</html>

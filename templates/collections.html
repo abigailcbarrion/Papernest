@@ -1,6 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+    <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Gilroy, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .breadcrumb {
+            margin: 20px 0 20px 100px;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            text-decoration: none;
+            color: #555;
+        }
+
+        .breadcrumb span {
+            color: #555;
+        }
+
+        .category-heading {
+            color: #ED1D7F;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .popular-category {
+            color: #11B8CE;
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .collections-layout {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 32px;
+            padding: 0 40px;
+            align-items: flex-start;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            width: 260px;
+            min-width: 200px;
+            max-width: 320px;
+            padding: 16px 12px;
+            background-color: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .collections-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-card {
+            margin-bottom: 24px;
+        }
+
+        .product-card img {
+            border-radius: 4px;
+            margin-bottom: 4px;
+            width: 100%;
+            height: 450px;
+            object-fit: fill;
+            display: block;
+        }
+
+        .card-info {
+            font-size: 11px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #545454;
+            text-align: left;
+        }
+
+        @media screen and (max-width: 768px) {
+            .collections-layout {
+                flex-direction: column;
+                padding: 0 16px;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .product-card img {
+                height: auto;
+            }
+        }
+=======
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Collections</title>
@@ -38,11 +164,50 @@
         .custom-checkbox .checkmark:after { content: ""; position: absolute; display: none; }
         .custom-checkbox input:checked ~ .checkmark:after { display: block; }
         .custom-checkbox .checkmark:after { left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
     </style>
 </head>
 <body>
     <div class="page-wrapper">
         {% include 'components/page_header.html' %}
+<<<<<<< HEAD
+
+        <div class="breadcrumb" style="margin-left: 100px;">
+            <a href="/">Home</a> / <span>Collections</span>
+        </div>
+
+        <div class="collections-layout">
+            <div class="sidebar">
+                <h3>Filter by:</h3>
+                <ul>
+                    <li><strong>PRICE</strong></li>
+                    <ul>
+                        <li><a href="#">From ₱0 to ₱999.99</a></li>
+                        <li><a href="#">From ₱1,000 to ₱1,999.99</a></li>
+                        <li><a href="#">From ₱2,000 and ABOVE</a></li>
+                    </ul>
+                    <li><strong>CATEGORIES</strong></li>
+                    <ul>
+                        <li><a href="#">Summer Collection</a></li>
+                        <li><a href="#">Mental Health</a></li>
+                        <li><a href="#">Staff Picks</a></li>
+                    </ul>
+                    <li><strong>BRAND</strong></li>
+                    <ul>
+                        <li><a href="#">Brand A</a></li>
+                        <li><a href="#">Brand B</a></li>
+                        <li><a href="#">Brand C</a></li>
+                    </ul>
+                    <li><strong>RATING</strong></li>
+                    <ul>
+                        <li><a href="#">★★★★★</a></li>
+                        <li><a href="#">★★★★☆</a></li>
+                        <li><a href="#">★★★☆☆</a></li>
+                    </ul>
+                </ul>
+            </div>
+
+=======
         <div class="breadcrumb" style="margin-left: 100px;">
             <a href="/">Home</a> / <span>Collections</span>
         </div>
@@ -149,11 +314,16 @@
                 </form>
             </div>
             <!-- Main Content -->
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
             <div class="collections-content">
                 {% for section in collection_sections %}
                 <div class="collection-section">
                     <div class="section-banner">
+<<<<<<< HEAD
+                        <img src="{{ section.banner }}" alt="{{ section.title }} banner">
+=======
                         <img src="{{ section.banner }}" alt="{{ section.title }} banner" />
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
                     </div>
                     <div class="product-grid">
                         {% for item in section.items %}
@@ -163,11 +333,23 @@
                                 {% if session.get('user') %}
                                 <form method="POST" action="{{ url_for('add_to_cart') }}">
                                     <input type="hidden" name="nonbook_id" value="{{ item.id }}">
+<<<<<<< HEAD
+                                    <button type="submit">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('add_to_wishlist') }}">
+                                    <input type="hidden" name="nonbook_id" value="{{ item.id }}">
+                                    <button type="submit">
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </button>
+=======
                                     <button type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                                 </form>
                                 <form method="POST" action="{{ url_for('add_to_wishlist') }}">
                                     <input type="hidden" name="nonbook_id" value="{{ item.id }}">
                                     <button type="submit"><i class="fas fa-heart"></i> Wishlist</button>
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
                                 </form>
                                 {% endif %}
                             </div>
@@ -176,21 +358,49 @@
                     </div>
                 </div>
                 {% endfor %}
+<<<<<<< HEAD
+
+                <div class="product-card">
+                    <img src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Women Empowerment">
+=======
                 <div class="product-display">
                     <img id="rotating-image" src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Women Empowerment" />
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
                     <div class="card-info">
                         {% if session.get('user') %}
                         <form method="POST" action="{{ url_for('add_to_cart') }}">
                             <input type="hidden" name="nonbook_id" value="static_sample">
+<<<<<<< HEAD
+                            <button type="submit">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('add_to_wishlist') }}">
+                            <input type="hidden" name="nonbook_id" value="static_sample">
+                            <button type="submit">
+                                <i class="fas fa-heart"></i> Wishlist
+                            </button>
+=======
                             <button type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                         </form>
                         <form method="POST" action="{{ url_for('add_to_wishlist') }}">
                             <input type="hidden" name="nonbook_id" value="static_sample">
                             <button type="submit"><i class="fas fa-heart"></i> Wishlist</button>
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
                         </form>
                         {% endif %}
                     </div>
                 </div>
+<<<<<<< HEAD
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        {% include 'components/page_footer.html' %}
+    </footer>
+
+=======
                 <script>
                     const images = [
                         "{{ url_for('static', filename='images/carousel/slide3.png') }}",
@@ -213,6 +423,7 @@
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
     <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>
 </html>

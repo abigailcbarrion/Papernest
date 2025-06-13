@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/checkout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        {% include 'components/checkout_header.html' %}
+      <div class="main-content">
+      <div class="container"> 
+        <div class="checkout-wrapper">
+          <!-- Left side: Shipping Info -->
+           <div class="left-side">
+            <div class="shipping-container">
+              <h3>Shipping Details</h3>
+              <h5>Shipping Address</h5>
+              <div class="address-container">
+                <p class="name">Name</p>
+                <p class="address">Street Add., City, Province, Country, Postal Code</p>
+                <p class="contact">ContactNo.</p>
+              </div>
+            </div>
+            <div class="shipping-container">
+              <h3>Shipping Method</h3>
+              <label><input type="radio" name="shipping" checked> Standard Shipping (₱0.00)</label><br>
+              <label><input type="radio" name="shipping"> Store Pickup (₱0.00)</label>
+            </div>
+              <div id="billingBtn">
+                <a href="/billing" class="btn-billing">PROCEED TO BILLING</a>
+              </div>
+          </div>
+          <!-- Right side: Order Summary -->
+           <div class="order-summary">
+            <table class="table-cart-summary">
+              <tr>
+                <th>ORDER SUMMARY</th>
+              </tr>
+              <tr class="cart-item-row">
+                <td>
+                  <div class="cart-item">
+                    <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Item Image" class="item-image">
+                    <div class="prod-details">
+                      <span class="prod-name">Product Name</span>
+                      <div class="prod-row">
+                        <span class="prod-quantity">Quantity: 1</span>
+                        <span class="prod-price">₱00.00</span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+    <footer>
+        {% include 'components/page_footer.html' %}
+    </footer>
+</body>
+</html>
