@@ -21,7 +21,6 @@ def get_user_country():
         print("Request Exception:", e)
         return 'Unknown'
 
-
 # Fetch all provinces
 def fetch_provinces():
     try:

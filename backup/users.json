@@ -1,0 +1,50 @@
+{
+    "user1": {
+        "username": "abby",
+        "password": "A12345678",
+        "first_name": "Abby",
+        "last_name": "Dela Cruz",
+        "title": "Ms.",
+        "birth_date": "1995-01-01",
+        "gender": "Female",
+        "phone_number": "09171234567",
+        "email": "abby@example.com",
+        "country": "PH",
+        "province": "BAT",
+        "city": "TANAUAN",
+        "barangay": "Barangay 1",
+        "postal_code": "4232"
+    },
+    "user2": {
+        "username": "anotheruser",
+        "password": "password",
+        "first_name": "Juan",
+        "last_name": "Dela Cruz",
+        "title": "Mr.",
+        "birth_date": "1990-05-10",
+        "gender": "Male",
+        "phone_number": "09170000000",
+        "email": "juan@example.com",
+        "country": "PH",
+        "province": "NCR",
+        "city": "MANILA",
+        "barangay": "Barangay 2",
+        "postal_code": "1000"
+    },
+    "user3": {
+        "username": "admin",
+        "password": "password",
+        "first_name": "Juan",
+        "last_name": "Dela Cruz",
+        "title": "Mr.",
+        "birth_date": "1990-05-10",
+        "gender": "Male",
+        "phone_number": "09170000000",
+        "email": "admin@example.com",
+        "country": "PH",
+        "province": "NCR",
+        "city": "MANILA",
+        "barangay": "Barangay 2",
+        "postal_code": "1000"
+    }
+}

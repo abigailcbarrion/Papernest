@@ -1,0 +1,56 @@
+/*popular_category.css*/
+.popular-category-heading{
+    color: #11B8CE;
+    text-align: center;
+    margin: 80px 0 80px 0;
+}
+.popular-grid{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 80px 0 80px;
+    overflow: visible;
+}
+.popular-card{
+    background-color: #ED1D7F;
+    color: #FFFFFF;
+    text-align: center;
+    font-family: 'Gilroy', sans-serif;
+    min-width: 250px;
+    flex: 0 0 250px; /* Fixed width, no grow, no shrink */
+    height: 320px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+.popular-image-container{
+    height: 250px;  /* Increased from 250px */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+.popular-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+.popular-content{
+    padding: 10px;
+    text-align: center;
+}
+.browse-link{
+    color: #FFFFFF;
+    font-size: 14px;
+    display: inline-block;
+    margin: 6px 0 10px 0;
+    text-decoration: underline;
+    transition: background-color 0.3s, color 0.3s;
+}  
+.popular-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,1.0);
+}

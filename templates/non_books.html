@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
     <title>Non-Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
@@ -85,12 +86,87 @@
             overflow-x: hidden;
         }
     </style>
+=======
+  <title>Non-Books</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .shop-now-section{
+      background-color: #11B8CE;
+      width: 100vw;
+      flex: 0 0 100vw; 
+      margin-left: calc(-50vw + 50%);
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 40px 0;
+      overflow: hidden;
+    }
+    .shop-now-image-container{
+      height: 100%;
+      width: 100%;
+      display: flex;
+      object-fit: contain;
+      align-items: center;
+      padding: 0 50px;
+    }
+    .shop-now-image{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .shop-now-content{
+      color: #FFFFFF;
+      text-align: right;
+      padding: 0 50px;
+    }
+    .shop-now-content h1{
+      color: #FFFFFF;
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .shop-now-link{
+      color: #FFFFFF;
+      text-decoration: underline;
+      display: inline-block;
+      margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body{
+      overflow-x: hidden;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-bottom: 40px;
+    }
+    .sidebar-div {
+      grid-row: span 4 / span 4;
+      margin-left: 0px;
+    }
+    .products-div {
+      grid-column: span 4 / span 4;
+      grid-row: span 5 / span 5;
+      margin-right: 0px;
+    }
+  </style>
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
 </head>
 <body>
-    <div class="page-wrapper">
-        {% include 'components/page_header.html' %}
-      <div class="main-content">
+  <div class="page-wrapper">
+    {% include 'components/page_header.html' %}
+    <div class="main-content">
       <div class="container">
+<<<<<<< HEAD
     
      <!-- Breadcrumb Navigation -->
     <div class="breadcrumb">
@@ -160,3 +236,89 @@
   
 </html>
 cdnjs.cloudflare.com
+=======
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+          <a href="/">Home</a> / <span>Non-Books</span>
+        </div>
+        <h2 class="category-heading">SHOP BY CATEGORY</h2>
+        <div class="categories-grid">
+          <a href="/category/art-supplies" class="category-box">Art Supplies</a>
+          <a href="/category/calendars-and-planners" class="category-box">Calendars and Planners</a>
+          <a href="/category/notebooks-and-journals" class="category-box">Notebooks and Journals</a>
+          <a href="/category/novelties" class="category-box">Novelties</a>
+          <a href="/category/reading-accessories" class="category-box">Reading Accessories</a>
+          <a href="/category/supplies" class="category-box">Supplies</a>
+        </div>
+        <!-- Shop Now -->
+        <div class="shop-now-section">
+            <div class="shop-now-image-container">
+                <img src="{{ url_for('static', filename='images/.png') }}" alt="Art Materials" class="shop-now-image">
+            </div>
+            <div class="shop-now-content">
+                <h1>Art Materials</h1>
+                <p>Unleash your creativity with the finest art supplies –<br>where your inspiration takes shape!</p>
+                <a href="/shop-now" class="shop-now-link">SHOP NOW</a>
+            </div>
+        </div>
+
+        <!-- Popular Category -->
+        <h1 class="popular-category-heading">Most Popular Categories</h1>
+        <div class="popular-grid">
+          <div class="popular-card">
+            <div class="popular-image-container">
+              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+            </div>
+            <div class="popular-content">
+              <div class="category-title"><b>Category1</b></div>
+              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+            </div>
+          </div>
+          <div class="popular-card">
+            <div class="popular-image-container">
+              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+            </div>
+            <div class="popular-content">
+              <div class="category-title"><b>Category2</b></div>
+              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+            </div>
+          </div>
+          <div class="popular-card">
+            <div class="popular-image-container">
+              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+            </div>
+            <div class="popular-content">
+              <div class="category-title"><b>Category3</b></div>
+              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+            </div>
+          </div>
+          <div class="popular-card">
+            <div class="popular-image-container">
+              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+            </div>
+            <div class="popular-content">
+              <div class="category-title"><b>Category4</b></div>
+              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+            </div>
+          </div>
+          <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+        </div>
+                
+        <!-- Trending Section -->
+        <div class="trending-wrapper" style="margin-bottom: 20px;">
+          <div class="trending-content">
+            <h1>What's Trending?</h1>
+          </div>
+          {% include 'components/product_carousel.html'%}
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <footer>
+    {% include 'components/page_footer.html' %}
+  </footer>
+  <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+</body>
+</html>
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528

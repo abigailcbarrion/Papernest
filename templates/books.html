@@ -1,59 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="page-wrapper">
         {% include 'components/page_header.html' %}
-      <div class="main-content">
-      <div class="container">
-          <!-- Main Content -->
-            <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb">
-        <a href="/">Home</a> / <span>Books</span>
-      </div>
-  
-      <!-- Main Content -->
-      <h2 class="category-heading">SHOP BY CATEGORY</h2>
-      
-      <div class="categories-grid">
-        <a href="/category/fiction" class="category-box">Fiction</a>
-        <a href="/category/non-fiction" class="category-box">Non-Fiction</a>
-        <a href="/category/science-technology" class="category-box">Science & Technology</a>
-        <a href="/category/self-help-development" class="category-box">Self-help & Development</a>
-        <a href="/category/childrens" class="category-box">Children's</a>
-        <a href="/category/academic-reference" class="category-box">Academic Reference</a>
-      
+        <div class="main-content">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/">Home</a> / <span>Books</span>
+                </div>
+
+                <h2 class="category-heading">SHOP BY CATEGORY</h2>
+                <div class="categories-grid">
+                    <a href="/category/fiction" class="category-box">Fiction</a>
+                    <a href="/category/non-fiction" class="category-box">Non-Fiction</a>
+                    <a href="/category/science-technology" class="category-box">Science & Technology</a>
+                    <a href="/category/self-help-development" class="category-box">Self-help & Development</a>
+                    <a href="/category/childrens" class="category-box">Children's</a>
+                    <a href="/category/academic-reference" class="category-box">Academic Reference</a>
+                </div>
+            </div>
+            <div class="shop-now-section">
+                <div class="shop-now-image-container">
+                    <img src="{{ url_for('static', filename='images/.png') }}" alt="Art Materials" class="shop-now-image">
+                </div>
+                <div class="shop-now-content">
+                    <h1>BOOKS</h1>
+                    <p>Ignite your imagination with the finest books –<br>where every page opens a new world!</p>
+                    <a href="/shop-now" class="shop-now-link">SHOP NOW</a>
+                </div>
+            </div>
+
+            <h1 class="popular-category-heading">Most Popular Categories</h1>
+            <div class="popular-grid">
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+                </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category1</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+                </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category2</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+                </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category3</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <div class="popular-card">
+                <div class="popular-image-container">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
+                </div>
+                <div class="popular-content">
+                <div class="category-title"><b>Category4</b></div>
+                <a href="/browse-all" class="browse-link">BROWSE ALL</a>
+                </div>
+            </div>
+            <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+            </div>
+            <div class="trending-wrapper" style="margin-bottom: 20px;">
+            <div class="trending-content">
+                <h1>What's Trending?</h1>
+            </div>
+            {% include 'components/product_carousel.html'%}
+            </div>
+        </div>
     </div>
-          <h2>Available Books</h2>
-          <ul>
-              {% for book in books %}
-                  <li>
-                      <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
-                      {% if session.get('user') %}
-                          <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
-                              <input type="hidden" name="book_id" value="{{ book.id }}">
-                              <button type="submit">Add to Cart</button>
-                          </form>
-  
-                          <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
-                              <input type="hidden" name="book_id" value="{{ book.id }}">
-                              <button type="submit">Add to Wishlist</button>
-                          </form>
-                      {% endif %}
-                  </li>
-              {% endfor %}
-          </ul>
-      </div>
-    </div>
-  </div>
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
-  </body>
-  
+</body>
 </html>

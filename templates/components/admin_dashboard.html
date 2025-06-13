@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>papernest - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Gilroy, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background-color: #00bcd4;
+      color: white;
+      width: 200px;
+      padding: 20px;
+    }
+
+    .logo {
+      font-size: 30px;
+      margin-bottom: 30px;
+      color:#e0e0e0
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav li {
+      margin: 15px 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav li.active {
+      background-color: #ffc107;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    nav li.active a {
+      font-weight: bold;
+    }
+
+    .main-content {
+      flex: 1;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      height: 50px;
+      background-color: #e0e0e0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 20px;
+    }
+
+    .user-icon {
+      font-size: 20px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .table-container {
+      background-color: #ddd;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .table-header {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ccc;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h1 class="logo">papernest</h1>
+      <nav>
+        <ul>
+          <li class="active"><a href="#">Dashboard</a></li>
+          <li><a href="/admin_products">Products</a></li>
+          <li><a href="/admin_orders">Orders</a></li>
+          <li><a href="/admin_registeredUsers">Users</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div class="user-icon">👤</div>
+      </header>
+      <section class="content">
+          <h2 style="color: #666; font-size: 2rem; margin-bottom: 40px;">Dashboard</h2>
+          <div style="display: flex; gap: 40px; margin-top: 24px; justify-content: center;">
+            <a href="/admin_products" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+              <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_products }}</div>
+                <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Products</h3>
+              </div>
+            </a>
+            <a href="/admin_orders" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+              <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">0</div>
+                <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Orders</h3>
+              </div>
+            </a>
+            <a href="/admin_registeredUsers" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+              <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_users }}</div>
+                <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Customers</h3>
+              </div>
+            </a>
+          </div>
+        </section>
+      </main>
+  </div>
+</body>
+</html>

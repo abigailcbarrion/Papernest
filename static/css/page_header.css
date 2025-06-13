@@ -64,10 +64,12 @@
 }
 /* Container for header content */
 .header-container {
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-left: 5vw;
+    padding-right: 5vw;
     max-width: 1500px;
     margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .header {
     display: flex; 
@@ -78,7 +80,7 @@
 }
 
 /* Logo */
-.logo {
+.logo a {
     font-family: 'Gilroy', sans-serif;
     font-weight: bold;
     font-size: 48px;
@@ -107,7 +109,7 @@
     border-radius: 5px 0 0 5px;
     outline: none;
     width: 100%; /* Elongate the search bar */
-    min-width: 400px; /* Minimum width */
+    min-width: 120px; /* Minimum width */
 }
 
 .search-bar button {
@@ -132,7 +134,7 @@
 }
     
 .user-links a {
-    margin-right: 50px; /* Add 50px margin between each link */
+    margin-right: 24px; /* Add 50px margin between each link */
     white-space: nowrap;
 }
 
@@ -405,3 +407,27 @@ nav a, .dropdown {
     color: #11B8CE;
 }
 
+.error-message {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    animation: fadeIn 0.3s ease-in;
+}
+.error-message i {
+    color: #c33;
+    font-size: 16px;
+}
+.error-message span {
+    flex: 1;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-</html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +8,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
 </head>
 <body>
+    <!-- Top Utility Bar -->
     <div class="container">
-        <!-- Top Utility Bar -->
         <div class="top-bar">
             <div class="shipping-info">Free shipping for minimum order of Php799.</div>
             <div class="utility-links">
-                <a href="/discount-card">Discount Card</a>
-                <a href="/about">About Us </a>
-                <a href="/help">Help </a>
+                <a href="/about">About Us</a>
+                <a href="/help">FAQs</a>
                 <div class="currency-toggle">
                     <select>
                         <option selected>PHP</option>
@@ -27,18 +24,15 @@
             </div>
         </div>
     </div>
-        
-    <!-- Header-Nav-Wrapper (full width) -->
+
+    <!-- Header Section -->
     <div class="header-nav-wrapper">
-        <!-- Header Section -->
         <div class="header-container">
             <div class="header">
-                <!-- Logo -->
                 <div class="logo">
-                    papernest
+                    <a href="{{ url_for('index') }}">papernest</a>
                 </div>
 
-                <!-- Search Bar and Links -->
                 <div class="search-bar-container">
                     <form class="search-bar" action="/search" method="GET">
                         <input type="text" name="query" placeholder="Search for books..." />
@@ -46,7 +40,6 @@
                     </form>
                 </div>
 
-                <!-- Links -->
                 <div class="user-links">
                     {% if session.get('user') %}
                         <a href="/account"><i class="fas fa-user"></i> Account</a>
@@ -54,14 +47,21 @@
                         <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
                     {% else %}
                         <div class="login-dropdown">
-                            <a href="javascript:void(0)" class="dropbtn" id="loginToggle"><i class="fas fa-user"></i> Login/Register</a>
+                            <a href="javascript:void(0)" class="dropbtn" id="loginToggle">
+                                <i class="fas fa-user"></i> Login/Register
+                            </a>
                             <div class="login-dropdown-content" id="loginDropdown">
                                 <h2 class="login-header">Login</h2>
                                 <div class="message-rectangle">
                                     <p class="rectangle-text">Welcome to our new website!</p>
                                 </div>
-                                <!-- Use Flask-WTF to render the login form -->
-                                <form method="POST" action="{{ url_for('login') }}">
+                                
+                                <div class="error-message" id="loginError" style="display: none;">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="errorText">Invalid username or password. Please try again.</span>
+                                </div>
+                                
+                                <form id="loginForm" method="POST">
                                     {{ login_form.hidden_tag() }}
                                     <div class="form-login-container">
                                         <div class="input-group">
@@ -96,55 +96,92 @@
             </div>
         </div>
 
-        <!-- Navigation Bar (already full width) -->
+        <!-- Navigation Bar -->
         <nav>
-        <div class="dropdown">
-            <a href="/books" class="dropbtn">BOOKS</a>
-            <div class="dropdown-content">
-                <a href="/books/fiction">FICTION</a>
-                <a href="/books/non-fiction">NON-FICTION</a>
-                <a href="/books/science-technology">SCIENCE & TECHNOLOGY</a>
-                <a href="/books/self-help-development">SELF-HELP & PERSONAL DEVELOPMENT</a>
-                <a href="/books/childrens">CHILDREN'S BOOKS</a>
-                <a href="/books/academic-reference">ACADEMIC & REFERENCE</a>
+            <div class="dropdown">
+                <a href="/books" class="dropbtn">BOOKS</a>
+                <div class="dropdown-content">
+                    <a href="/category/fiction">FICTION</a>
+                    <a href="/category/non-fiction">NON-FICTION</a>
+                    <a href="/category/science-and-technology">SCIENCE & TECHNOLOGY</a>
+                    <a href="/category/self-help-and-personal-development">SELF-HELP & PERSONAL DEVELOPMENT</a>
+                    <a href="/category/children's-books">CHILDREN'S BOOKS</a>
+                    <a href="/category/academic-reference-development">ACADEMIC & REFERENCE</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/non_books" class="dropbtn">NON BOOKS</a>
-            <div class="dropdown-content">
-                <a href="/art_supplies">ART SUPPLIES</a>
-                <a href="/calendars_and_planners">CALENDARS AND PLANNERS</a>
-                <a href="/notebooks_and_journals">NOTEBOOKS & JOURNALS</a>
-                <a href="/novelties">NOVELTIES</a>
-                <a href="/reading_accessories">READING ACCESSORIES</a>
-                <a href="/supplies">SUPPLIES</a>
+            <div class="dropdown">
+                <a href="/non_books" class="dropbtn">NON BOOKS</a>
+                <div class="dropdown-content">
+                    <a href="/category/art-supplies">ART SUPPLIES</a>
+                    <a href="/category/calendars-and-planners">CALENDARS AND PLANNERS</a>
+                    <a href="/category/notebooks-and-journals">NOTEBOOKS AND JOURNALS</a>
+                    <a href="/category/novelties">NOVELTIES</a>
+                    <a href="/category/reading-accessories">READING ACCESSORIES</a>
+                    <a href="/category/supplies">SUPPLIES</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/bestsellers_and_new_releases" class="dropbtn">BESTSELLERS AND NEW RELEASES</a>
-            <div class="dropdown-content">
-                <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
-                <a href="/newest_reads">NEWEST READS</a>
-                <a href="/trending_books_from_booktok">TRENDING BOOKS FROM BOOKTOK</a>
+            <div class="dropdown">
+                <a href="/bestsellers" class="dropbtn">BESTSELLERS</a>
+                <div class="dropdown-content">
+                    <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/collections" class="dropbtn">COLLECTIONS</a>
-            <div class="dropdown-content">
-                <a href="/rainy_day_reads">RAINY DAY READS</a>
-                <a href="/women_empowerment">WOMEN EMPOWERMENT</a>
-                <a href="/mindfullness_and_mental_health">MINDFULNESS AND MENTAL HEALTH</a>
-                <a href="/staff_picks">STAFF PICKS</a>
+            <div class="dropdown">
+                <a href="/collections" class="dropbtn">COLLECTIONS</a>
+                <div class="dropdown-content">
+                    <a href="/rainy_day_reads">RAINY DAY READS</a>
+                    <a href="/women_empowerment">WOMEN EMPOWERMENT</a>
+                    <a href="/mindfullness_and_mental_health">MINDFULNESS AND MENTAL HEALTH</a>
+                    <a href="/staff_picks">STAFF PICKS</a>
+                </div>
             </div>
-        </div>
-        <div class="dropdown">
-            <a href="/sale" class="dropbtn">SALE</a>
-            <div class="dropdown-content">
-                <a href="/fav_reads_under_500">FAV READS UNDER 500</a>
+            <div class="dropdown">
+                <a href="/sale" class="dropbtn">SALE</a>
+                <div class="dropdown-content">
+                    <a href="/fav_reads_under_500">FAV READS UNDER 500</a>
+                </div>
             </div>
-        </div>
         </nav>
     </div>
-</body>
 
-<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('loginError');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    loginError.style.display = 'none';
+                    
+                    const formData = new FormData(loginForm);
+                    
+                    fetch('{{ url_for("login") }}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            document.getElementById('errorText').textContent = data.message;
+                            loginError.style.display = 'flex';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('errorText').textContent = 'An error occurred. Please try again.';
+                        loginError.style.display = 'flex';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

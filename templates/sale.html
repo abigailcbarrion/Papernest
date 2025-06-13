@@ -94,6 +94,17 @@
             background-color: #545454;
             text-align: left;
         }
+<<<<<<< HEAD
+=======
+        .custom-checkbox { position: relative; padding-left: 28px; cursor: pointer; font-size: 15px; user-select: none; display: inline-block; line-height: 22px;  }
+        .custom-checkbox input[type="checkbox"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+        .custom-checkbox .checkmark { position: absolute; left: 0; top: 0; height: 15px; width: 15px; background: #eee; border: 1.5px solid #bbb; border-radius: 4px; transition: background 0.2s; }
+        .custom-checkbox:hover .checkmark { background: #ccc; }
+        .custom-checkbox input:checked ~ .checkmark { background: #11B8CE; border-color: #11B8CE; }
+        .custom-checkbox .checkmark:after { content: ""; position: absolute; display: none; }
+        .custom-checkbox input:checked ~ .checkmark:after { display: block; }
+        .custom-checkbox .checkmark:after { left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
     </style>
 </head>
 <body>
@@ -105,6 +116,7 @@
         </div> 
 
         <div class="collections-layout">
+<<<<<<< HEAD
             <div class="sidebar">
                 <h3>Filter by:</h3>
                 <ul>
@@ -133,6 +145,107 @@
                         <li><a href="#">★★★☆☆</a></li>
                     </ul>
                 </ul>
+=======
+             <div class="sidebar">
+                <h3>Filter by:</h3>
+                <form>
+                    <div>
+                        <strong>PRICE</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="price" value="0-999.99">
+                                <span class="checkmark"></span>
+                                From ₱0 to ₱999.99
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="price" value="1000-1999.99">
+                                <span class="checkmark"></span>
+                                From ₱1,000 to ₱1,999.99
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="price" value="2000-above">
+                                <span class="checkmark"></span>
+                                From ₱2,000 and ABOVE
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <strong>CATEGORIES</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="category" value="summer">
+                                <span class="checkmark"></span>
+                                Summer Collection
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="category" value="mental_health">
+                                <span class="checkmark"></span>
+                                Mental Health
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="category" value="staff_picks">
+                                <span class="checkmark"></span>
+                                Staff Picks
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <strong>BOOK CATEGORIES</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="fiction">
+                                <span class="checkmark"></span>
+                                Fiction
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="non_fiction">
+                                <span class="checkmark"></span>
+                                Non-fiction
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="science_technology">
+                                <span class="checkmark"></span>
+                                Science & Technology
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="children">
+                                <span class="checkmark"></span>
+                                Children's Books
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="self_help">
+                                <span class="checkmark"></span>
+                                Self Help & Personal Development
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="book_category" value="academics">
+                                <span class="checkmark"></span>
+                                Academics & References
+                            </label>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <strong>Product Language</strong>
+                        <div>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="language" value="english">
+                                <span class="checkmark"></span>
+                                English
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="language" value="filipino">
+                                <span class="checkmark"></span>
+                                Filipino
+                            </label><br>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="language" value="spanish">
+                                <span class="checkmark"></span>
+                                Spanish
+                            </label>
+                        </div>
+                    </div>
+                </form>
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
             </div>
 
             <!-- Main Collection Content -->
@@ -167,6 +280,10 @@
                                 </form>
                                 {% endif %}
                             </div>
+<<<<<<< HEAD
+=======
+                        
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
                         </div>
                         {% endfor %}
                     </div>
@@ -174,14 +291,49 @@
                 {% endfor %}
             </div>
         </div>
+<<<<<<< HEAD
     </div>
+=======
+       </div> <!-- End of .collections-layout -->
+
+        <!-- Carousel Section -->
+        {% include 'components/product_carousel.html' %}
+
+        <!-- Products Container Section -->
+        <div class="products-container">
+            <div class="product-showcase" id="bookShowcase">
+                {% for book in popular_books %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="{{ url_for('static', filename='images/' + book.image) }}" alt="{{ book.title }}" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">{{ book.title }}</h3>
+                        <p class="product-author">by {{ book.author }}</p>
+                        <div class="product-price">${{ book.price }}</div>
+                        <div class="product-buttons">
+                            <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- End of Products Container -->
+
+    </div> <!-- End of .page-wrapper -->
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
 
     <!-- Footer -->
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
 
+<<<<<<< HEAD
     <!-- Footer Script -->
+=======
+>>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
     <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .breadcrumb {
+            margin: 20px 0 20px 100px;
+            font-size: 14px;
+        }
+        .breadcrumb a {
+            text-decoration: none;
+            color: #555;
+            display: inline-block;
+            margin-left: 3%;
+        }
+        .breadcrumb span {
+            color: #555;
+        }
+        .product-container {
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            justify-content: center;
+        }
+        .product-thumbnails img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border: 2px solid #ccc;
+            display: block;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .product-main-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .product-image img {
+            width: 320px;
+            height: 350px;
+            border: 1px solid #ccc;
+        }
+        .product-thumbnails img:hover {
+            border-color: #11b8ce;
+        }
+
+        .product-thumbnails img.active {
+            border-color: #11b8ce;
+            border-width: 3px;
+        }
+
+        .product-image img {
+            width: 320px;
+            height: 350px;
+            border: 1px solid #ccc;
+            transition: opacity 0.3s;
+        }
+        .product-title {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .product-price {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .add-to-cart {
+            background-color: #11b8ce;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .product-note {
+            font-size: 16px;
+            color: #777;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .description-specs {
+            display: flex;
+            gap: 40px;
+            padding: 0 40px 40px;
+        }
+        .product-description,
+        .product-specifications {
+            flex: 1;
+            padding: 20px;
+            background-color: #fac102;
+            border: 1px solid #ddd;
+        }
+        .product-specifications table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .product-specifications td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+        .product-specifications tr:last-child td {
+            border-bottom: none;
+        }
+        .similar-products {
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        {% include 'components/page_header.html' %}
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <span>Sale</span>
+        </div>
+        <main class="product-page">
+            <section class="product-container">
+                <aside class="product-thumbnails">
+                    <img src="{{ product.image_path }}" 
+                        alt="Front Image" 
+                        class="thumbnail active" 
+                        onclick="changeMainImage(this)">
+                    {% if product.back_image_path %}
+                    <img src="{{ product.back_image_path }}" 
+                        alt="Back Image" 
+                        class="thumbnail" 
+                        onclick="changeMainImage(this)">
+                    {% endif %}
+                </aside>
+                <div class="product-main-info">
+                    <div class="product-image">
+                        <img id="main-product-image" 
+                            src="{{ product.image_path }}" 
+                            alt="Product Image">
+                    </div>
+                    <div class="product-info">
+                        <h1 class="product-title">
+                            {% if page_type == 'non_books' %}
+                                {{ product["Product Name"] }}
+                            {% else %}
+                                {{ product["Book Name"] }}
+                            {% endif %}
+                        </h1>
+                        <p class="product-price">₱{{ "%.2f"|format(product["Price (PHP)"]) }}</p>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
+                            <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
+                            <button type="button" id="increase-qty" style="width:32px;height:32px;font-size:20px;">+</button>
+                        </div>
+                        <button class="add-to-cart">ADD TO CART</button>
+                        <div class="product-note">
+                            <i class="fa-solid fa-id-card"></i>
+                            <span>Membership Discount: Cardholders enjoy additional 5% off on D-Coded items.</span>
+                        </div>
+                        <div class="product-note">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                            <span>Delivery estimate: within 2-3 days for Metro Manila areas and 5-7 days for Provincial areas.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="description-specs">
+                <div class="product-description">
+                    <h2>Product Description</h2>
+                    <p>{{ product["Product Description"] }}</p>
+                </div>
+                <div class="product-specifications">
+                    <h2>Product Specifications</h2>
+                    {% if page_type == 'books' %}
+                        <table>
+                            <tr>
+                                <td><strong>ISBN</strong></td>
+                                <td>{{ product.get("ISBN", "N/A")}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Publisher</strong></td>
+                                <td>{{ product.get("Publisher", "N/A") }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Publication Date</strong></td>
+                                <td>{{ product.get("Publication Date", "N/A") }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Author</strong></td>
+                                <td>{{ product.get("Author", "N/A") }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product Language</strong></td>
+                                <td>{{ product.get("Product Language", "N/A") }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Page Count</strong></td>
+                                <td>{{ product.get("Pages", "N/A") }}</td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <table>
+                            <tr>
+                                <td><strong>Brand</strong></td>
+                                <td>{{ product["Brand"] }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Category</strong></td>
+                                <td>{{ product["Category"] }}</td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                </div>
+            </section>
+            <section class="similar-products">
+                <h2>Similar Products</h2>
+                {% include 'components/product_carousel.html' %}
+            </section>
+        </main>
+        <footer>
+            {% include 'components/page_footer.html' %}
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qtyInput = document.getElementById('product-qty');
+            document.getElementById('decrease-qty').onclick = function() {
+                let val = parseInt(qtyInput.value, 10);
+                if(val > 1) qtyInput.value = val - 1;
+            };
+            document.getElementById('increase-qty').onclick = function() {
+                let val = parseInt(qtyInput.value, 10);
+                qtyInput.value = val + 1;
+            };
+        });
+
+        function changeMainImage(thumbnail) {
+            // Update main image source
+            document.getElementById('main-product-image').src = thumbnail.src;
+            
+            // Remove active class from all thumbnails
+            document.querySelectorAll('.thumbnail').forEach(img => {
+                img.classList.remove('active');
+            });
+            
+            // Add active class to clicked thumbnail
+            thumbnail.classList.add('active');
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+</body>
+</html>

@@ -1,4 +1,3 @@
-@import url("base.css");
 @import url("breadcrumb.css");
 @import url("categories.css");
 @import url("account.css");
@@ -7,6 +6,8 @@
 @import url("product_carousel.css");
 @import url("carousel.css");
 @import url("featured_author.css");
+@import url("about.css");
+
 
 
 /* Font import */

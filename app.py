@@ -1,175 +1,118 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, RegistrationForm
-from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
-import json
+from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
+from utilities.login import handle_login, load_users_from_db  # Changed from load_users
+from utilities.load_items import (
+    get_nonbook_image_path, get_books_image_path, get_trending,
+    load_books, load_nonbooks, get_nonbook_by_id
+)
+from utilities.storage import get_featured_author
 import os
-import random
 
 app = Flask(__name__, 
             static_folder='static',
             template_folder='templates')
-app.secret_key = 'your_secret_key'  # Required for session
+app.secret_key = '631539ff18360356'  
 
 # ---------- File Paths ----------pip install requests
 BOOKS_FILE = 'data/books.json'
 
-# ---------- Helper Functions ----------
-def load_json(filepath):
-    if not os.path.exists(filepath):
-        return []
-    with open(filepath, 'r') as f:
-        return json.load(f)
+def extract_primary_category(category):
+    if ' - ' in category:
+        return category.split(' - ')[0]
+    return category
 
-def save_json(filepath, data):
-    with open(filepath, 'w') as f:
-        json.dump(data, f, indent=4)
-
-def load_users():
-    return load_json(USERS_FILE)
-
-def save_users(users):
-    save_json(USERS_FILE, users)
-
-def load_books():
-    return load_json(BOOKS_FILE)
-
-# ---------- Routes ----------
-@app.route('/')
-@app.route('/homepage')
-def index():
-    # Load data from JSON files
-    json_path = os.path.join(app.root_path, 'data', 'books.json')
-    authors_path = os.path.join(app.root_path, 'data', 'featured_authors.json')
-    
-    with open(json_path, 'r') as f:
-        books_data = json.load(f)
-    
-    # Create a default author as fallback
-    default_author = {
-        "name": "Featured Author", 
+def get_default_author():
+    return {
+        "name": "Featured Author",
         "bio": "Information about this author will be coming soon.",
         "image_url": url_for('static', filename='images/placeholder.jpg'),
         "source_url": "#",
         "more_link": "#"
     }
+
+# ---------- Routes ----------
+@app.route('/')
+@app.route('/homepage')
+def index():
+    # Load featured author from database
+    featured_author = get_featured_author() or get_default_author()
     
-    try:
-        with open(authors_path, 'r') as f:
-            authors_data = json.load(f)
-        
-        # Access the nested "featured_authors" key
-        if "featured_authors" in authors_data and authors_data["featured_authors"]:
-            # Get the first author from the list
-            featured_author = authors_data["featured_authors"][0]
-        else:
-            featured_author = default_author
-            
-    except Exception as e:
-        print(f"Error loading authors: {str(e)}")
-        featured_author = default_author
+    # Loading trending items
+    trending_books = get_trending(curr_section='homepage')
+    for item in trending_books:
+        item['image_path'] = get_books_image_path(item['Product ID'])
     
     return render_template('index.html', 
-                          popular_books=books_data,
-                          featured_author=featured_author)
+                        popular_items=trending_books,
+                        featured_author=featured_author, 
+                        page_type='homepage')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm(request.form)
-
-    # Dynamically populate the choices for the dropdowns
-    user_country = get_user_country()
-    provinces = fetch_provinces()
-    form.country.choices = [("void", "--Select country--"), (user_country, user_country)]
-    form.country.default = "void"
-    form.process()
-    print("User country:", user_country)
-    #sort the provinces in alphabetical order
-    form.province.choices = [("void", "--Select the province--")] + sorted(
-    [(province['code'], province['name']) for province in provinces],
-    key=lambda x: x[1].lower())
-    form.city.choices = [("void", "--Select the city--")]  
-    form.barangay.choices = [("void", "--Select the barangay--")]  
-    if request.method == 'POST' and form.validate():
-        # Fetch the postal code based on the selected city
-        city_code = form.city.data
-        postal_code = None
-        if city_code:
-            cities = fetch_cities(form.province.data)  # Fetch cities for the selected province
-            for city in cities:
-                if city[0] == city_code:  # Match the city code
-                    postal_code = city[2]  # Get the postal code
-                    break
-            form.postal_code.data = postal_code
-
-        users = load_users()
-        username = form.username.data
-        password = form.password.data
-
-        # Check if user already exists
-        for user in users:
-            if user['username'] == username:
-                return "Username already exists. Try another one."
-
-        new_user = {
-            "id": len(users) + 1,
-            "username": username,
-            "password": password,
-            "postal_code": postal_code  # Save the postal code
-        }
-        users.append(new_user)
-        save_users(users)
-        return redirect(url_for('login'))
-
-    return render_template('register.html', registration_form=form)
-
-@app.route('/get_cities/<province_code>', methods=['GET'])
-def get_cities(province_code):
-    cities = fetch_cities(province_code)  # Fetch cities for the selected province
-    return {"cities": cities}  # Return cities as JSON
-
-@app.route('/get_barangays/<city_code>', methods=['GET'])
-def get_barangays(city_code):
-    barangays = fetch_barangays(city_code)  # Fetch barangays using the updated function
-    return {"barangays": barangays}  # Return barangays as JSON
-
-@app.route('/get_postal_code', methods=['GET'])
-def get_postal_code():
-    country_code = "PH"
-    city = request.args.get('city')
-    print(f"Postal code lookup: city='{city}', country_code='{country_code}'")  # Debug
-    if not (country_code and city):
-        return jsonify({'postal_code': ''})
-    postal_code = fetch_postal_code(city, country_code)
-    return jsonify({'postal_code': postal_code})
+    return handle_register()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
-        users = load_users()
-        username = form.username.data
-        password = form.password.data
-        session.setdefault('cart', [])
-        session.setdefault('wishlist', [])
+    return handle_login()
 
-        print(f"Input Username: {username}, Input Password: {password}")  # Debugging
-        print(f"Users: {users}")  # Debugging
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    # Load data to calculate totals
+    books = load_books()
+    non_books = load_nonbooks()
+    users_data = load_users_from_db()
+    
+    # Calculate totals
+    total_products = len(books) + len(non_books)
+    total_users = len(users_data)
+    
+    return render_template('components/admin_dashboard.html', 
+                        total_products=total_products,
+                        total_users=total_users)
 
-        # Validate username and password against the JSON file
-        for user in users:
-            if user['username'] == username:
-                if user['password'] == password:
-                    # Successful login
-                    session['user'] = user
-                    session.setdefault('cart', [])
-                    session.setdefault('wishlist', [])
-                    return redirect(url_for('index'))
-                else:
-                    # Password mismatch
-                    return "Invalid password. Please try again."
+@app.route('/admin_orders', methods=['GET', 'POST'])
+def admin_orders():
+    return render_template('components/admin_orders.html')
 
-        return "Invalid credentials. Try again."
-    return render_template('login.html', form=form)
+@app.route('/admin_products')
+@app.route('/admin_products/<product_type>')
+def admin_products(product_type='books'):
+    if product_type.lower() == 'books':
+        products = load_books()
+        for product in products:
+            product['image_path'] = get_books_image_path(product['Product ID'])
+        return render_template('components/admin_products.html', products=products, product_type='Books')
+    elif product_type.lower() == 'non-books':
+        products = load_nonbooks()
+        for product in products:
+            product['image_path'] = get_nonbook_image_path(product['Product ID'])
+        return render_template('components/admin_products.html', products=products, product_type='Non-Books')
+    else:
+        return "Invalid product type", 404
+
+@app.route('/admin_products2', methods=['GET', 'POST'])
+def admin_products2():
+    return render_template('components/admin_products2.html')
+
+@app.route('/admin_registeredUsers', methods=['GET', 'POST'])
+def admin_registeredUsers():
+    users_data = load_users_from_db()
+    
+    return render_template('components/admin_registeredUsers.html', users=users_data)
+
+@app.route('/get_cities/<province_code>', methods=['GET'])
+def get_cities(province_code):
+    return get_cities_json(province_code) 
+
+@app.route('/get_barangays/<city_code>', methods=['GET'])
+def get_barangays(city_code):
+    return get_barangays_json(city_code)
+
+@app.route('/get_postal_code', methods=['GET'])
+def get_postal_code():
+    return get_postal_code_json()
 
 @app.route('/account')
 def account():
@@ -227,7 +170,7 @@ def cart():
         return redirect(url_for('login'))
     
     books = load_books()
-    cart_books = [book for book in books if book['id'] in session.get('cart', [])]
+    cart_books = [book for book in books if book['Product ID'] in session.get('cart', [])]
     return render_template('cart.html', cart_books=cart_books)
 
 @app.route('/wishlist')
@@ -236,7 +179,7 @@ def wishlist():
         return redirect(url_for('login'))
 
     books = load_books()
-    wishlist_books = [book for book in books if book['id'] in session.get('wishlist', [])]
+    wishlist_books = [book for book in books if book['Product ID'] in session.get('wishlist', [])]
     return render_template('wishlist.html', wishlist_books=wishlist_books)
 
 @app.route('/remove_from_cart/<int:book_id>')
@@ -259,30 +202,136 @@ def remove_from_wishlist(book_id):
 
     return redirect(url_for('wishlist'))
 
+@app.route('/about')
+def about():
+    # Add logic to load collections
+    return render_template('about_us.html')
+
+@app.route('/help')
+def help():
+    # Add logic to load sale items
+    return render_template('faqs.html')
+
 @app.route('/books')
 def books():
-    books = load_books()
-    return render_template('books.html', books=books)
+    trending_books = get_trending(curr_section='books')
+
+    # getting the trending books images
+    for item in trending_books:
+        item['image_path'] = get_books_image_path(item['Product ID'])
+    return render_template('books.html', popular_items=trending_books, page_type='books')
 
 @app.route('/non_books')
 def non_books():
-    # Add logic to load non-book items
-    return render_template('non_books.html')
+    trending_non_books = get_trending(curr_section='non_books')
 
-@app.route('/bestsellers_and_new_releases')
-def bestsellers_and_new_releases():
-    # Add logic to load bestsellers
-    return render_template('bestsellers_and_new_releases.html')
+    # getting trending non-books images
+    for item in trending_non_books:
+        item['image_path'] = get_nonbook_image_path(item['Product ID'])
+    return render_template('non_books.html', popular_items=trending_non_books, page_type='non_books')
+
+@app.route('/bestsellers')
+def bestsellers():
+    # Load any data you need for the template
+    collection_sections = []  # Fill this with your data
+    return render_template('bestsellers.html', collection_sections=collection_sections)
 
 @app.route('/collections')
 def collections():
     # Add logic to load collections
     return render_template('collections.html')
 
+
 @app.route('/sale')
 def sale():
     # Add logic to load sale items
     return render_template('sale.html')
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    # Add logic to load sale items
+    return render_template('adminlogin.html')
+
+@app.route('/product/<int:product_id>')
+def product_view(product_id):
+    books = load_books()
+    non_books = load_nonbooks()
+    
+    # First, try to find the product in books
+    product = next((b for b in books if b.get('Product ID') == product_id), None)
+    
+    if product:
+        # It's a book
+        product['image_path'] = get_books_image_path(product_id)
+        product['back_image_path'] = get_books_image_path(product_id, image_key='Product Image Back')
+        similar_products = get_trending(curr_section='books')
+        for item in similar_products:
+            item['image_path'] = get_books_image_path(item['Product ID'])
+        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
+    
+    # If not found in books, try non-books
+    product = next((nb for nb in non_books if nb.get('Product ID') == product_id), None)
+    
+    if product:
+        # It's a non-book
+        product['image_path'] = get_nonbook_image_path(product_id)
+        product['back_image_path'] = get_nonbook_image_path(product_id, image_key='Product Image Back')
+        similar_products = get_trending(curr_section='non_books')
+        for item in similar_products:
+            item['image_path'] = get_nonbook_image_path(item['Product ID'])
+        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='non_books')
+    # Product not found in either collection
+    return "Product not found", 404
+
+@app.route('/category/<category_name>')
+def category_products(category_name):
+    books = load_books()
+    non_books = load_nonbooks()
+
+    # Map URL category names to actual category names
+    category_mapping = {
+        "art-supplies": "Art Supplies",
+        "calendars-and-planners": "Calendars and Planners",
+        "notebooks-and-journals": "Notebooks & Journals", 
+        "novelties": "Novelties",
+        "reading-accessories": "Reading Accessories",
+        "supplies": "Supplies"
+    }
+
+    # Get the actual category name from the URL
+    actual_category = category_mapping.get(category_name.lower(), category_name)
+
+    # Filter books by category (case-insensitive match)
+    filtered_books = [book for book in books if book.get("Category", "").lower().replace(" ", "-") == category_name.lower()]
+    # Attach image path
+    for book in filtered_books: 
+        book['image_path'] = get_books_image_path(book['Product ID'])
+
+    # Filter non-books by primary category
+    filtered_non_books = []
+    for non_book in non_books:
+        category = non_book.get("Category", "")
+        primary_category = extract_primary_category(category)
+        
+        if primary_category == actual_category:
+            filtered_non_books.append(non_book)
+
+    for non_book in filtered_non_books:
+        non_book['image_path'] = get_nonbook_image_path(non_book['Product ID'])
+
+    if category_name.lower() in NON_BOOK_CATEGORIES:
+        page_type = 'non_books'
+    else:   
+        page_type = 'books'
+
+    all_products = filtered_books + filtered_non_books
+    return render_template('components/product_list.html', category=category_name, products=all_products, non_book_categories=NON_BOOK_CATEGORIES, book_categories=BOOK_CATEGORIES, page_type=page_type)
+
+@app.context_processor
+def inject_common_variables():
+    # Load featured author from database
+    featured_author = get_featured_author() or get_default_author()
+    return {'featured_author': featured_author}
 
 @app.context_processor
 def inject_forms():

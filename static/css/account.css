@@ -42,15 +42,13 @@
     border-radius: 10px;
     background: #fff;
     padding: 30px 40px;
-    margin-left: 30px; /* keep as is */
-    margin-top: 40px; /* Match .account-nav margin-top */
-    margin-bottom: 30px;
+    margin: 40px 40px 40px 40px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    display: inline-block;
-    vertical-align: top;
-    min-width: 1300px;   /* increase this value as needed */
-    width: 700px;       /* or set a fixed width if you want */
-    max-width: 100%;    /* prevents overflow */
+    display: block;
+    min-width: 0;
+    box-sizing: border-box;
+    width: 1200px;       /* or set a fixed width if you want */
+    max-width: 1298px;    /* prevents overflow */
 }
 
 .account-container h2,
@@ -59,6 +57,50 @@
     padding-top: 0;
     font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: bold;
+}
+
+.orders-container {
+    border: 2px solid #d3d3d3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 30px 40px;
+    margin: 40px 40px 40px 40px; /* Increased top margin to move it down */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: block;
+    min-width: 0;
+    box-sizing: border-box;
+    width: 1200px;       /* or set a fixed width if you want */
+    max-width: 1298px;    /* prevents overflow */
+    margin-top: 40px;     /* Extra move downwards */
+}
+
+.orders-container h2 {
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.discount-cards-container {
+    border: 2px solid #d3d3d3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 30px 40px;
+    margin: 40px 40px 40px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: block;
+    min-width: 0;
+    box-sizing: border-box;
+    width: 1200px;       /* or set a fixed width if you want */
+    max-width: 1298px;   /* prevents overflow */
+    margin-top: 40px;    /* Extra move downwards */
+}
+
+.discount-cards-container h2 {
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .account-actions .button.logout {
@@ -146,8 +188,9 @@
     font-weight: normal;
     width: auto;           /* Let them size naturally */
     box-sizing: border-box;
-    margin: 4px 0 4px 0;   /* Top and bottom margin for spacing */
-    padding: 6px 10px;     /* Padding inside for space on all sides */
+    margin: 0;   /* Top and bottom margin for spacing */
+    margin-left: 10px;
+    padding: 0;     /* Padding inside for space on all sides */
 }
 
 .add-address-link {
@@ -212,7 +255,6 @@
     align-items: flex-start;
 }
 
-/* Example header CSS */
 .container,
 .header-nav-wrapper {
     width: 100%;
@@ -226,3 +268,11 @@
     margin: 0 auto;
     width: 100%;
 }
+
+.address-row p{
+    font-size: 11px;
+    margin: 0;
+    margin-left: 10px;
+}
+
+

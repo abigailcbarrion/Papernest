@@ -17,20 +17,20 @@
             <h4 class="active">Dashboard</h4>
             <h4>My Orders</h4>
             <h4>Discount Cards</h4>
-            <h4><a href="{{ url_for('logout') }}">Logout</h4>
+            <h4><a href="{{ url_for('logout') }}">Logout</a></h4>
         </div>
         <div class="account-container">
             <h2>Dashboard</h2>
             <h3>Account Information</h3>
             <div class="profile-box">
                 <h4>My Profile</h4>
-                <h4>Title</h4>
-                <h4>First Name</h4>
-                <h4>Last Name</h4>
-                <h4>Birth Date</h4>
-                <h4>Gender</h4>
-                <h4>Phone Number</h4>
-                <h4>Email</h4>
+                <h4>Title: {{ user.get("title", "").title() }}</h4>
+                <h4>First Name: {{ user.get("first_name", "").title() }}</h4>
+                <h4>Last Name: {{ user.get("last_name", "").title() }}</h4>
+                <h4>Birth Date: {{ user.get("birth_date", "") }}</h4>
+                <h4>Gender: {{ user.get("gender", "").title() }}</h4>
+                <h4>Phone Number: {{ user.get("phone_number", "") }}</h4>
+                <h4>Email: {{ user.get("email", "") }}</h4>
             </div>
             <div class="edit-actions">
                 <h4 class="edit-details-box">EDIT DETAILS</h4>
@@ -42,20 +42,41 @@
             </div>
             <div class="address-row-group" style="display: flex; gap: 32px;">
                 <div class="address-row">
-                    <h5>No shipping address configured.</h5>
+                    <h5>Shipping Address:</h5>
+                    <p class="address-row-details">
+                        {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
+                        Postal Code: {{ user.get("postal_code", "") }}
+                    </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
                 <div class="address-row">
-                    <h5>No billing address configured.</h5>
+                    <h5>Billing Address:</h5>
+                    <p class="address-row-details">
+                        {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
+                        Postal Code: {{ user.get("postal_code", "") }}
+                    </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
             </div>
+        </div>
+        <div class="orders-container" style="display: none;">
+            <h2>My Orders</h2>
+            <!-- Orders content will be here -->
+        </div>
+        <div class="discount-cards-container" style="display: none;">
+            <h2>Discount Cards</h2>
+            <p>To add or replace discount card number, please use the text box below. For any questions, please contact us.</p>
+            <h4>Validate Discount Card</h4>
+            <!-- Text box here, PlaceHolder: Enter the card number without spaces and branch code-->
+            <!-- Button Here "Validate Number"-->
         </div>
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navItems = document.querySelectorAll('.account-nav h4');
         const accountContainer = document.querySelector('.account-container');
+        const ordersContainer = document.querySelector('.orders-container');
+        const discountCardsContainer = document.querySelector('.discount-cards-container');
 
         navItems.forEach(function(item) {
             item.addEventListener('click', function() {
@@ -63,14 +84,28 @@
                 this.classList.add('active');
                 if (this.textContent.trim() === 'Dashboard') {
                     accountContainer.style.display = 'block';
+                    if (ordersContainer) ordersContainer.style.display = 'none';
+                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
+                } else if (this.textContent.trim() === 'My Orders') {
+                    accountContainer.style.display = 'none';
+                    if (ordersContainer) ordersContainer.style.display = 'block';
+                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
+                } else if (this.textContent.trim() === 'Discount Cards') {
+                    accountContainer.style.display = 'none';
+                    if (ordersContainer) ordersContainer.style.display = 'none';
+                    if (discountCardsContainer) discountCardsContainer.style.display = 'block';
                 } else {
                     accountContainer.style.display = 'none';
+                    if (ordersContainer) ordersContainer.style.display = 'none';
+                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
                 }
             });
         });
 
         // Show account container by default
         accountContainer.style.display = 'block';
+        if (ordersContainer) ordersContainer.style.display = 'none';
+        if (discountCardsContainer) discountCardsContainer.style.display = 'none';
     });
     </script>
     {% include 'components/page_footer.html' %}
