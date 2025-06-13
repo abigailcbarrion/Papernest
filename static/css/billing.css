@@ -1,0 +1,131 @@
+ .checkout-wrapper {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      margin-top: 50px;
+      gap: 20px;
+    }
+    .left-side {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .billing-container {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+    .billing-container h3 {
+        font-family: 'Gilroy', sans-serif;
+        font-weight: bold;
+        font-size: 24px;
+        margin-top: 2px;
+    }
+    .btn-placeOrder {
+      display: block;
+      text-align: center;
+      background-color: #ffffff;
+      color: #FFD74F;
+      border: 1.5px solid #FFD74F;
+      border-radius: 0%;
+      padding: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+      width: 200px;
+      box-sizing: border-box;
+      margin-top: 10px;
+    }
+    .btn-placeOrder:hover {
+      background-color: #FFD74F;
+      color: #ffffff;
+    }
+    .order-summary {
+      background: #fff;
+    }
+    .cart-item {
+      display: flex;
+      align-items: flex-start; 
+      gap: 10px;
+    }
+    .item-image {
+      width: 75px;
+      height: 85px;
+      object-fit: contain;
+      border: 2px solid #ddd;   
+    }
+    .prod-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      width: 100%;
+    }
+    .prod-name {
+      font-family: 'Gilroy', sans-serif;
+      font-weight: bold;
+      font-size: 14px;
+      margin: 0 0 50px 0;
+      text-align: left;
+    }
+    .prod-row {
+      display: flex;
+      flex-direction: row;
+      gap: 130px; 
+      align-items: center;
+    }
+    .prod-quantity {
+      font-size: 14px;
+      color: #888;
+    }
+    .prod-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #222;
+    } 
+    .cart-summary, .subtotal-price {
+      display: flex;
+      flex-direction: row;
+      gap: 120px; 
+      align-items: center;
+    }
+    .cart-summary-total p, .total-price {
+      font-size: 19px;
+      display: flex;
+      flex-direction: row;
+      gap: 120px; 
+      align-items: center;
+    }
+    .payment-method {
+      margin-bottom: 15px;
+    }
+    .payment-method label {
+      display: flex;
+      align-items: center;
+      font-family: 'Gilroy', sans-serif;
+      font-size: 16px;
+      gap: 10px;
+    }
+    .icon-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 0%;
+      border: 2px solid #FFD74F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wallet-desc {
+      font-family: 'Gilroy', sans-serif;
+      font-size: 13px;
+      color: #555;
+    }
+    .payment-desc {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 2px;
+    }
