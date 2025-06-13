@@ -232,13 +232,13 @@
                                 <p class="product-name">{{ item.name }}</p>
                                 <span class="product-price">${{ item.price }}</span>
                                 {% if session.get('user') %}
-                                <form method="POST" action="{{ url_for('add_to_cart') }}">
+                                <form method="POST" action="{{ url_for('cart.add_to_cart_route') }}">
                                     <input type="hidden" name="nonbook_id" value="{{ item.id }}">
                                     <button type="submit">
                                         <i class="fas fa-cart-plus"></i> Add to Cart
                                     </button>
                                 </form>
-                                <form method="POST" action="{{ url_for('add_to_wishlist') }}">
+                                <form method="POST" action="{{ url_for('cart.add_to_wishlist_route') }}">
                                     <input type="hidden" name="nonbook_id" value="{{ item.id }}">
                                     <button type="submit">
                                         <i class="fas fa-heart"></i> Wishlist

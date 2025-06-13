@@ -4,9 +4,9 @@
     <div class="product-carousel" id="bookCarousel">
         {% for item in popular_items %}
         <a href="{% if page_type == 'books' or page_type == 'homepage' %}
-                    {{ url_for('product_view', product_id=item['Product ID']) }}
+                    {{ url_for('product.product_view', product_id=item['Product ID']) }}
                 {% elif page_type == 'non_books' %}
-                    {{ url_for('product_view', product_id=item['Product ID']) }}
+                    {{ url_for('product.product_view', product_id=item['Product ID']) }}
                 {% endif %}"
         class="product-card-link">
             <div class="product-card">

@@ -30,11 +30,11 @@
         <div class="header-container">
             <div class="header">
                 <div class="logo">
-                    <a href="{{ url_for('index') }}">papernest</a>
+                    <a href="{{ url_for('main.index') }}">papernest</a>
                 </div>
 
                 <div class="search-bar-container">
-                    <form class="search-bar" action="{{ url_for('search') }}" method="GET">
+                    <form class="search-bar" action="{{ url_for('product.search') }}" method="GET">
                         <input type="text" name="query" placeholder="Search for products..." value="{{ request.args.get('query', '') }}" />
                         <button type="submit">Search</button>
                     </form>
@@ -65,24 +65,24 @@
                                     <span id="errorText">Invalid username or password. Please try again.</span>
                                 </div>
                                 
-                                <form id="loginForm" method="POST">
+                                <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}">
                                     {{ login_form.hidden_tag() }}
                                     <div class="form-login-container">
                                         <div class="input-group">
-                                            {{ login_form.username.label }}
-                                            {{ login_form.username }}
+                                            {{ login_form.username.label(class="form-label") }}
+                                            {{ login_form.username(class="form-input") }}
                                         </div>
                                         <div class="input-group password-group">
-                                            {{ login_form.password.label }}
+                                            {{ login_form.password.label(class="form-label") }}
                                             <div class="password-wrapper">
-                                                {{ login_form.password }}
+                                                {{ login_form.password(class="form-input") }}
                                                 <span class="toggle-password" id="toggleLoginPassword">
                                                     <i class="fas fa-eye"></i>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="button-group">
-                                            {{ login_form.login_button }}
+                                            {{ login_form.login_button(class="login-btn") }}
                                         </div>
                                         <a href="/forgot-password" class="forgot-password-link">Forgot Password?</a>
                                         <hr class="divider">
