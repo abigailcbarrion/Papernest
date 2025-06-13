@@ -16,8 +16,8 @@ app = Flask(__name__,
 app.secret_key = '631539ff18360356' 
 csrf = CSRFProtect(app) 
 
-BOOK_CATEGORIES = ['fiction', 'non-fiction', 'science-and-technology', 'self-help-and-personal-development', 'children\'s-books', 'academic-reference-development']
-NON_BOOK_CATEGORIES = ["art-supplies", "calendars-and-planners", "notebooks-and-journals", "novelties", "reading-accessories", "supplies"]
+# ---------- File Paths ----------pip install requests
+BOOKS_FILE = 'data/books.json'
 
 def extract_primary_category(category):
     if ' - ' in category:

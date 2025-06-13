@@ -38,6 +38,10 @@ th, td{
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 2;
+<<<<<<< HEAD
+=======
+    line-clamp: 2;
+>>>>>>> dec7d75698d5af03fe38ad84c6231e3453a39d37
     -webkit-box-orient: vertical;
     margin: 0;
 }
