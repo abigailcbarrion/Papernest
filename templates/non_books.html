@@ -104,45 +104,8 @@
             </div>
         </div>
 
-        <!-- Popular Category -->
-        <h1 class="popular-category-heading">Most Popular Categories</h1>
-        <div class="popular-grid">
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category1</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category2</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category3</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category4</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
+        {% include 'components/popular.html' %}
+        
           <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
         </div>
                 
