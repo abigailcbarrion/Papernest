@@ -17,6 +17,7 @@
             <h4 class="active">Dashboard</h4>
             <h4>My Orders</h4>
             <h4>Discount Cards</h4>
+            <h4>My Wishlist</h4>
             <h4><a href="{{ url_for('logout') }}">Logout</a></h4>
         </div>
         <div class="account-container">
@@ -61,6 +62,7 @@
         </div>
         <div class="orders-container" style="display: none;">
             <h2>My Orders</h2>
+            <p>You don't have any orders yet.</p>
             <!-- Orders content will be here -->
         </div>
         <div class="discount-cards-container" style="display: none;">
@@ -70,6 +72,12 @@
             <!-- Text box here, PlaceHolder: Enter the card number without spaces and branch code-->
             <!-- Button Here "Validate Number"-->
         </div>
+        <div class="my-wishlist-container" style="display: none;">
+            <h2>My Wishlist</h2>
+            <p>Your wishlist is empty. Find your next great read! Go back to homepage and start browsing.</p>
+            <!-- Go back to homepage and start browsing is hyperlink-->
+            <!-- Wishlist content will be here -->
+        </div>
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -77,6 +85,7 @@
         const accountContainer = document.querySelector('.account-container');
         const ordersContainer = document.querySelector('.orders-container');
         const discountCardsContainer = document.querySelector('.discount-cards-container');
+        const wishlistContainer = document.querySelector('.my-wishlist-container'); // Add this line
 
         navItems.forEach(function(item) {
             item.addEventListener('click', function() {
@@ -86,19 +95,28 @@
                     accountContainer.style.display = 'block';
                     if (ordersContainer) ordersContainer.style.display = 'none';
                     if (discountCardsContainer) discountCardsContainer.style.display = 'none';
+                    if (wishlistContainer) wishlistContainer.style.display = 'none';
                 } else if (this.textContent.trim() === 'My Orders') {
                     accountContainer.style.display = 'none';
                     if (ordersContainer) ordersContainer.style.display = 'block';
                     if (discountCardsContainer) discountCardsContainer.style.display = 'none';
+                    if (wishlistContainer) wishlistContainer.style.display = 'none';
                 } else if (this.textContent.trim() === 'Discount Cards') {
                     accountContainer.style.display = 'none';
                     if (ordersContainer) ordersContainer.style.display = 'none';
                     if (discountCardsContainer) discountCardsContainer.style.display = 'block';
+                    if (wishlistContainer) wishlistContainer.style.display = 'none';
+                } else if (this.textContent.trim() === 'My Wishlist') {
+                    accountContainer.style.display = 'none';
+                    if (ordersContainer) ordersContainer.style.display = 'none';
+                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
+                    if (wishlistContainer) wishlistContainer.style.display = 'block';
                 } else {
                     accountContainer.style.display = 'none';
                     if (ordersContainer) ordersContainer.style.display = 'none';
                     if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                }
+                    if (wishlistContainer) wishlistContainer.style.display = 'none';
+                } 
             });
         });
 
@@ -106,6 +124,7 @@
         accountContainer.style.display = 'block';
         if (ordersContainer) ordersContainer.style.display = 'none';
         if (discountCardsContainer) discountCardsContainer.style.display = 'none';
+        if (wishlistContainer) wishlistContainer.style.display = 'none';
     });
     </script>
     {% include 'components/page_footer.html' %}

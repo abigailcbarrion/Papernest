@@ -275,4 +275,25 @@
     margin-left: 10px;
 }
 
+.my-wishlist-container {
+    border: 2px solid #d3d3d3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 30px 40px;
+    margin: 40px 40px 40px 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    min-width: 0;
+    box-sizing: border-box;
+    width: 1200px;
+    max-width: 1298px;
+    margin-top: 40px;
+}
+
+.my-wishlist-container h2 {
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-top: 0;
+    padding-top: 0;
+}
+
 
