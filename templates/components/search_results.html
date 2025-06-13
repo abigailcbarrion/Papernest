@@ -26,7 +26,7 @@
         <div style="display: flex; gap: 32px;">
             <!-- Sidebar with Filters -->
             <div class="sidebar">
-                <form method="GET" action="{{ url_for('search') }}" id="filterForm">
+                <form method="GET" action="{{ url_for('product.search') }}" id="filterForm">
                     <input type="hidden" name="query" value="{{ query }}">
                     
                     <strong>PRICE</strong>
@@ -103,7 +103,7 @@
                     <!-- Replace the product display section (lines 103-138) with this debug version: -->
                     {% for product in products %}
                     <div class="product-card">
-                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                        <a href="{{ url_for('product.product_view', product_id=product['Product ID']) }}">
                             {% if product.get('Book Name') %}
                                 <!-- It's a book -->
                                 <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
@@ -159,7 +159,7 @@
         }
         
         function clearFilters() {
-            window.location.href = "{{ url_for('search') }}?query={{ query }}";
+            window.location.href = "{{ url_for('product.search') }}?query={{ query }}";
         }
     </script>
 

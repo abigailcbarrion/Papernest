@@ -1,5 +1,5 @@
 from forms import RegistrationForm
-from api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
+from api.api import get_user_country, fetch_provinces, fetch_cities, fetch_barangays, fetch_postal_code
 from flask import render_template, request, redirect, url_for, jsonify
 from database_connection.connector import get_users_db 
 

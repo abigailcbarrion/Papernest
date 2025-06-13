@@ -10,15 +10,14 @@
 <body>
     <div class="page-wrapper">
         {% include 'components/page_header.html' %}
-      <div class="main-content">
-      <div class="container">
+    <div class="main-content">
+    <div class="container" style="margin-bottom: 20px;">
 
-
-     <!-- Breadcrumb Navigation -->
+    <!-- Breadcrumb Navigation -->
     <div class="breadcrumb">
         <a href="/">Home</a></span>
     </div>
-   
+
     <h2>Your Shopping Cart</h2>
     <div class="cart-section">
         <div class="cart-left">
@@ -98,7 +97,7 @@
                             </div>
                         </div>
                     </td>
-                 </tr>
+                </tr>
             </table>
         </div>
     </div>
@@ -115,8 +114,12 @@
         icon.classList.toggle("fa-chevron-down");
         icon.classList.toggle("fa-chevron-up");
     }
+    function CheckoutBtn(){
+        var checkoutBtn = document.getElementById("CheckoutBtn");
+        window.location.href = "/billing";
+    }
 </script>
         {% include 'components/page_footer.html' %}
 </body>
 </html>
-cdnjs.cloudflare.com
+

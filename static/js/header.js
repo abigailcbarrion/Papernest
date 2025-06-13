@@ -10,26 +10,25 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(loginForm);
             
-            fetch('{{ url_for("login") }}', {
+            fetch('/login', {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    document.getElementById('errorText').textContent = data.message;
-                    loginError.style.display = 'flex';
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                return response.json();
+            })
+            .then(data => {
+                // Handle success
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('errorText').textContent = 'An error occurred. Please try again.';
-                loginError.style.display = 'flex';
             });
         });
     }

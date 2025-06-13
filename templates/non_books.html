@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<<<<<<< HEAD
     <title>Non-Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
@@ -86,7 +85,6 @@
             overflow-x: hidden;
         }
     </style>
-=======
   <title>Non-Books</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
@@ -159,84 +157,12 @@
       margin-right: 0px;
     }
   </style>
->>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
 </head>
 <body>
   <div class="page-wrapper">
     {% include 'components/page_header.html' %}
     <div class="main-content">
       <div class="container">
-<<<<<<< HEAD
-    
-     <!-- Breadcrumb Navigation -->
-    <div class="breadcrumb">
-        <a href="/">Home</a> / <span>Non-Books</span>
-    </div>
-  
-      <!-- Main Content -->
-      <h2 class="category-heading">SHOP BY CATEGORY</h2>
-      <div class="categories-grid">
-        <a href="/category/art-supplies" class="category-box">Art Supplies</a>
-        <a href="/category/calendars-and-planners" class="category-box">Calendars and Planners</a>
-        <a href="/category/notebooks-and-journals" class="category-box">Notebooks and Journals</a>
-        <a href="/category/novelties" class="category-box">Novelties</a>
-        <a href="/category/reading-accessories" class="category-box">Reading Accessories</a>
-        <a href="/category/supplies" class="category-box">Supplies</a>
-      </div>
-
-      <div class="art-mats-wrapper">
-        <div class="art-mats-image">
-            <img src="{{ url_for('static', filename='images/partition/nonbooks.png') }}" alt="Art Materials" class="partition-img">
-        </div>
-        <div class="art-mats-content">
-            <h1>Art Materials</h1>
-            <p>Unleash your creativity with the finest art supplies –<br>where your inspiration takes shape!</p>
-            <a href="/shop-now" class="shop-link">SHOP NOW</a>
-        </div>
-    </div>
-
-      <h1 class="popular-category">Most Popular Categories</h1>
-      <div class="trending-wrapper">
-        <div class="trending-content">
-            <h1>What's Trending?</h1>
-        </div>
-
-            {% include 'components/product_carousel.html'%}
-      </div>
-
-    </div>
-</div> 
-
-          <ul>
-              {% for book in books %}
-                  <li>
-                      <strong>{{ book.title }}</strong> by {{ book.author }} — ${{ book.price }}
-                      {% if session.get('user') %}
-                          <form method="POST" action="{{ url_for('add_to_cart') }}" style="display:inline;">
-                              <input type="hidden" name="book_id" value="{{ book.id }}">
-                              <button type="submit">Add to Cart</button>
-                          </form>
-  
-                          <form method="POST" action="{{ url_for('add_to_wishlist') }}" style="display:inline;">
-                              <input type="hidden" name="book_id" value="{{ book.id }}">
-                              <button type="submit">Add to Wishlist</button>
-                          </form>
-                      {% endif %}
-                  </li>
-              {% endfor %}
-          </ul>
-      </div>
-    </div>
-  </div>
-    <footer>
-        {% include 'components/page_footer.html' %}
-    </footer>
-        <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
-  </body>
-  
-</html>
-cdnjs.cloudflare.com
-=======
         <!-- Breadcrumb Navigation -->
         <div class="breadcrumb">
           <a href="/">Home</a> / <span>Non-Books</span>
@@ -262,45 +188,8 @@ cdnjs.cloudflare.com
             </div>
         </div>
 
-        <!-- Popular Category -->
-        <h1 class="popular-category-heading">Most Popular Categories</h1>
-        <div class="popular-grid">
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category1</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category2</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category3</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category4</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
+        {% include 'components/popular.html' %}
+        
           <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
         </div>
                 
@@ -321,4 +210,3 @@ cdnjs.cloudflare.com
   <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>
 </html>
->>>>>>> 9a8df0a297f9f49c28964df5d0277c2397de2528
