@@ -132,18 +132,18 @@ def logout():
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
-    if 'user' not in session:
-        return redirect(url_for('login'))
+    # if 'user' not in session:
+    #     return redirect(url_for('login'))
 
-    book_id = int(request.form['book_id'])
+    # book_id = int(request.form['book_id'])
     
-    if 'cart' not in session:
-        session['cart'] = []
+    # if 'cart' not in session:
+    #     session['cart'] = []
     
-    if book_id not in session['cart']:  
-        session['cart'].append(book_id)
+    # if book_id not in session['cart']:  
+    #     session['cart'].append(book_id)
 
-    session.modified = True  
+    # session.modified = True  
     return redirect(url_for('index'))
 
 
@@ -166,8 +166,8 @@ def add_to_wishlist():
 
 @app.route('/cart')
 def cart():
-    if 'user' not in session:
-        return redirect(url_for('login'))
+    # if 'user' not in session:
+    #     return redirect(url_for('login'))
     
     books = load_books()
     cart_books = [book for book in books if book['Product ID'] in session.get('cart', [])]
@@ -184,11 +184,11 @@ def wishlist():
 
 @app.route('/remove_from_cart/<int:book_id>')
 def remove_from_cart(book_id):
-    if 'user' not in session:
-        return redirect(url_for('login'))
+    # if 'user' not in session:
+    #     return redirect(url_for('login'))
 
-    if 'cart' in session and book_id in session['cart']:
-        session['cart'].remove(book_id)
+    # if 'cart' in session and book_id in session['cart']:
+    #     session['cart'].remove(book_id)
 
     return redirect(url_for('cart'))
 
@@ -443,4 +443,4 @@ def inject_forms():
 
 # ---------- Main ----------
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)  # Change port if neede
+    app.run(debug=True, host='0.0.0.0', port=5000)  
