@@ -1,0 +1,367 @@
+/* Mobile Featured Author Styles */
+@media (max-width: 768px) {
+    /* Featured Author Section - Mobile */
+    .featured-author-section {
+        background-color: #11B8CE; /* Match desktop */
+        width: 100%;
+        padding: 30px 0; /* Reduced padding for mobile */
+        color: white;
+        margin: 0; /* Remove any margin */
+    }
+    
+    .featured-author-container {
+        display: flex;
+        flex-direction: column; /* Stack vertically on mobile */
+        align-items: center;
+        gap: 25px; /* Reduced gap for mobile */
+        padding: 0 15px; /* Mobile-friendly padding */
+        max-width: 100%;
+        min-height: auto; /* Remove fixed height on mobile */
+        margin: 0;
+        border: none;
+        outline: none;
+        text-align: center; /* Center align text on mobile */
+    }
+    
+    .featured-author-image-container {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 180px; /* Smaller for mobile */
+        height: 180px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2); /* Match desktop */
+        order: 1; /* Image first on mobile */
+    }
+    
+    .featured-author-image {
+        width: 180px; /* Smaller for mobile */
+        height: 180px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: none;
+    }
+    
+    .featured-author-content {
+        flex-grow: 1;
+        width: 100%;
+        order: 2; /* Content second on mobile */
+    }
+    
+    .featured-author-title {
+        font-size: 22px; /* Smaller for mobile */
+        margin: 0 0 8px 0;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .featured-author-name {
+        font-size: 18px; /* Smaller for mobile */
+        margin: 0 0 15px 0;
+        font-weight: normal;
+        color: rgba(255, 255, 255, 0.9); /* Match desktop */
+    }
+    
+    .featured-author-bio {
+        line-height: 1.6; /* Match desktop */
+        margin-bottom: 15px;
+        font-size: 14px; /* Explicit mobile font size */
+        color: white;
+        text-align: center; /* Center align on mobile */
+    }
+    
+    .featured-author-source {
+        font-size: 13px; /* Smaller for mobile */
+        color: rgba(255, 255, 255, 0.8); /* Match desktop */
+        font-style: italic;
+        text-align: center;
+    }
+    
+    .featured-author-link {
+        display: inline-block;
+        margin-top: 15px; /* Slightly more margin on mobile */
+        color: white; /* Match desktop */
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 14px;
+        border-bottom: 2px solid white; /* Match desktop */
+        padding-bottom: 2px;
+        transition: all 0.3s ease;
+    }
+    
+    .featured-author-link:hover {
+        color: #f5f5f5; /* Match desktop */
+        border-bottom-color: #f5f5f5;
+    }
+}
+
+/* Very small screens (≤400px) */
+@media (max-width: 400px) {
+    .featured-author-section {
+        padding: 25px 0; /* Even less padding for very small screens */
+    }
+    
+    .featured-author-container {
+        gap: 20px;
+        padding: 0 10px; /* Minimal padding for very small screens */
+    }
+    
+    .featured-author-image-container {
+        width: 150px; /* Even smaller for very small screens */
+        height: 150px;
+    }
+    
+    .featured-author-image {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .featured-author-title {
+        font-size: 20px;
+        margin: 0 0 6px 0;
+    }
+    
+    .featured-author-name {
+        font-size: 16px;
+        margin: 0 0 12px 0;
+    }
+    
+    .featured-author-bio {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+    
+    .featured-author-source {
+        font-size: 12px;
+    }
+    
+    .featured-author-link {
+        font-size: 13px;
+        margin-top: 12px;
+    }
+}
+
+/* Small screens (401px - 600px) */
+@media (min-width: 401px) and (max-width: 600px) {
+    .featured-author-section {
+        padding: 28px 0;
+    }
+    
+    .featured-author-container {
+        gap: 22px;
+        padding: 0 12px;
+    }
+    
+    .featured-author-image-container {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .featured-author-image {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .featured-author-title {
+        font-size: 21px;
+        margin: 0 0 7px 0;
+    }
+    
+    .featured-author-name {
+        font-size: 17px;
+        margin: 0 0 13px 0;
+    }
+    
+    .featured-author-bio {
+        font-size: 13.5px;
+        margin-bottom: 13px;
+    }
+    
+    .featured-author-source {
+        font-size: 12.5px;
+    }
+}
+
+/* Larger mobile screens (601px - 768px) */
+@media (min-width: 601px) and (max-width: 768px) {
+    .featured-author-section {
+        padding: 35px 0;
+    }
+    
+    .featured-author-container {
+        gap: 30px;
+        padding: 0 20px;
+    }
+    
+    .featured-author-image-container {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .featured-author-image {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .featured-author-title {
+        font-size: 24px;
+        margin: 0 0 10px 0;
+    }
+    
+    .featured-author-name {
+        font-size: 19px;
+        margin: 0 0 16px 0;
+    }
+    
+    .featured-author-bio {
+        font-size: 15px;
+        margin-bottom: 16px;
+        line-height: 1.65;
+    }
+    
+    .featured-author-source {
+        font-size: 14px;
+    }
+    
+    .featured-author-link {
+        font-size: 14px;
+        margin-top: 16px;
+    }
+}
+
+/* Touch interactions - Remove hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .featured-author-link:hover {
+        color: white; /* Keep original color */
+        border-bottom-color: white;
+    }
+    
+    .featured-author-link:active {
+        color: #f5f5f5; /* Apply hover effect on touch */
+        border-bottom-color: #f5f5f5;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .featured-author-section {
+        padding: 20px 0; /* Less padding in landscape */
+    }
+    
+    .featured-author-container {
+        flex-direction: row; /* Switch back to row in landscape */
+        text-align: left; /* Left align in landscape */
+        gap: 30px;
+        align-items: center;
+    }
+    
+    .featured-author-image-container {
+        width: 140px; /* Smaller in landscape */
+        height: 140px;
+        order: 1;
+    }
+    
+    .featured-author-image {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .featured-author-content {
+        order: 2;
+        text-align: left;
+    }
+    
+    .featured-author-bio {
+        text-align: left;
+    }
+    
+    .featured-author-source {
+        text-align: left;
+    }
+}
+
+/* High DPI screens */
+@media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+    .featured-author-image {
+        /* Ensure crisp images on retina displays */
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Dark mode support - Keep desktop theme */
+@media (max-width: 768px) and (prefers-color-scheme: dark) {
+    .featured-author-section {
+        background-color: #11B8CE; /* Keep desktop color */
+    }
+    
+    .featured-author-title,
+    .featured-author-name,
+    .featured-author-bio,
+    .featured-author-link {
+        color: white; /* Keep white text */
+    }
+    
+    .featured-author-source {
+        color: rgba(255, 255, 255, 0.8); /* Keep desktop transparency */
+    }
+}
+
+/* High contrast mode */
+@media (max-width: 768px) and (prefers-contrast: high) {
+    .featured-author-section {
+        background-color: #000;
+        color: #fff;
+    }
+    
+    .featured-author-image-container {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 2px solid #fff;
+    }
+    
+    .featured-author-image {
+        border: 2px solid #fff;
+    }
+    
+    .featured-author-title,
+    .featured-author-name,
+    .featured-author-bio,
+    .featured-author-source,
+    .featured-author-link {
+        color: #fff;
+    }
+    
+    .featured-author-link {
+        border-bottom-color: #fff;
+    }
+}
+
+/* Reduced motion */
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+    .featured-author-link {
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print and (max-width: 768px) {
+    .featured-author-section {
+        background-color: transparent !important;
+        color: #000 !important;
+        padding: 20px 0;
+    }
+    
+    .featured-author-title,
+    .featured-author-name,
+    .featured-author-bio,
+    .featured-author-source {
+        color: #000 !important;
+    }
+    
+    .featured-author-link {
+        color: #000 !important;
+        border-bottom-color: #000 !important;
+    }
+}

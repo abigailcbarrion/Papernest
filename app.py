@@ -1,18 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegistrationForm
 from utilities.register import handle_register, get_cities_json, get_barangays_json, get_postal_code_json
-from utilities.login import handle_login, load_users_from_db  # Changed from load_users
+from utilities.login import handle_login, load_users_from_db 
 from utilities.load_items import (
     get_nonbook_image_path, get_books_image_path, get_trending,
     load_books, load_nonbooks, get_nonbook_by_id
 )
 from utilities.storage import get_featured_author
-import os
+from utilities.search_item import search_products, get_search_suggestions, search_by_category
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__, 
             static_folder='static',
             template_folder='templates')
-app.secret_key = '631539ff18360356'  
+app.secret_key = '631539ff18360356' 
+csrf = CSRFProtect(app) 
 
 # ---------- File Paths ----------pip install requests
 BOOKS_FILE = 'data/books.json'
@@ -52,6 +54,18 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return handle_register()
+
+@app.route('/get_cities/<province_code>')
+def get_cities(province_code):
+    return jsonify(get_cities_json(province_code))
+
+@app.route('/get_barangays/<city_code>')
+def get_barangays(city_code):
+    return jsonify(get_barangays_json(city_code))
+
+@app.route('/get_postal_code')
+def get_postal_code():
+    return get_postal_code_json()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -102,18 +116,6 @@ def admin_registeredUsers():
     
     return render_template('components/admin_registeredUsers.html', users=users_data)
 
-@app.route('/get_cities/<province_code>', methods=['GET'])
-def get_cities(province_code):
-    return get_cities_json(province_code) 
-
-@app.route('/get_barangays/<city_code>', methods=['GET'])
-def get_barangays(city_code):
-    return get_barangays_json(city_code)
-
-@app.route('/get_postal_code', methods=['GET'])
-def get_postal_code():
-    return get_postal_code_json()
-
 @app.route('/account')
 def account():
     if 'user' not in session:
@@ -135,14 +137,13 @@ def add_to_cart():
 
     book_id = int(request.form['book_id'])
     
-    # Ensure session['cart'] exists
     if 'cart' not in session:
         session['cart'] = []
     
-    if book_id not in session['cart']:  # Avoid duplicates
+    if book_id not in session['cart']:  
         session['cart'].append(book_id)
 
-    session.modified = True  # Update session
+    session.modified = True  
     return redirect(url_for('index'))
 
 
@@ -153,14 +154,13 @@ def add_to_wishlist():
 
     book_id = int(request.form['book_id'])
 
-    # Ensure session['wishlist'] exists
     if 'wishlist' not in session:
         session['wishlist'] = []
 
-    if book_id not in session['wishlist']:  # Avoid duplicates
+    if book_id not in session['wishlist']:  
         session['wishlist'].append(book_id)
 
-    session.modified = True  # Update session
+    session.modified = True 
     return redirect(url_for('index'))
 
 
@@ -283,10 +283,15 @@ def product_view(product_id):
     # Product not found in either collection
     return "Product not found", 404
 
+# Update the category_mapping in the category_products function
 @app.route('/category/<category_name>')
 def category_products(category_name):
     books = load_books()
     non_books = load_nonbooks()
+    
+    # Get filter parameters from query string
+    price_filters = request.args.getlist('price')
+    language_filters = request.args.getlist('language')
 
     # Map URL category names to actual category names
     category_mapping = {
@@ -295,7 +300,11 @@ def category_products(category_name):
         "notebooks-and-journals": "Notebooks & Journals", 
         "novelties": "Novelties",
         "reading-accessories": "Reading Accessories",
-        "supplies": "Supplies"
+        "supplies": "Supplies",
+        # New mappings for drawing, painting, support
+        "drawing": "Drawing",
+        "painting": "Painting", 
+        "support": "Support"
     }
 
     # Get the actual category name from the URL
@@ -303,6 +312,11 @@ def category_products(category_name):
 
     # Filter books by category (case-insensitive match)
     filtered_books = [book for book in books if book.get("Category", "").lower().replace(" ", "-") == category_name.lower()]
+    
+    # Apply price and language filters to books
+    if price_filters or language_filters:
+        filtered_books = apply_filters(filtered_books, price_filters, language_filters, is_book=True)
+    
     # Attach image path
     for book in filtered_books: 
         book['image_path'] = get_books_image_path(book['Product ID'])
@@ -316,16 +330,91 @@ def category_products(category_name):
         if primary_category == actual_category:
             filtered_non_books.append(non_book)
 
+    # Apply price filters to non-books
+    if price_filters:
+        filtered_non_books = apply_filters(filtered_non_books, price_filters, [], is_book=False)
+
     for non_book in filtered_non_books:
         non_book['image_path'] = get_nonbook_image_path(non_book['Product ID'])
 
-    if category_name.lower() in NON_BOOK_CATEGORIES:
+    # Update NON_BOOK_CATEGORIES to include the new categories
+    updated_non_book_categories = NON_BOOK_CATEGORIES + ["drawing", "painting", "support"]
+    
+    if category_name.lower() in updated_non_book_categories:
         page_type = 'non_books'
     else:   
         page_type = 'books'
 
     all_products = filtered_books + filtered_non_books
-    return render_template('components/product_list.html', category=category_name, products=all_products, non_book_categories=NON_BOOK_CATEGORIES, book_categories=BOOK_CATEGORIES, page_type=page_type)
+    return render_template('components/product_list.html', 
+                        category=category_name, 
+                        products=all_products, 
+                        non_book_categories=updated_non_book_categories, 
+                        book_categories=BOOK_CATEGORIES, 
+                        page_type=page_type)
+
+def apply_filters(products, price_filters, language_filters, is_book=True):
+    """Apply price and language filters to products"""
+    filtered_products = []
+    
+    for product in products:
+        price = float(product.get('Price (PHP)', 0))
+        
+        # Price filtering - Handle single value instead of list
+        price_match = not price_filters or not price_filters[0]  # If no price filter or empty string, match all
+        if price_filters and price_filters[0]:  # If there's a price filter
+            price_range = price_filters[0]  # Get the single selected value
+            if price_range == '0-999.99' and 0 <= price <= 999.99:
+                price_match = True
+            elif price_range == '1000-1999.99' and 1000 <= price <= 1999.99:
+                price_match = True
+            elif price_range == '2000-above' and price >= 2000:
+                price_match = True
+            elif price_range == '0-499.99' and 0 <= price <= 499.99:
+                price_match = True
+            elif price_range == '500-999.99' and 500 <= price <= 999.99:
+                price_match = True
+            elif price_range == '1000-above' and price >= 1000:
+                price_match = True
+            else:
+                price_match = False
+        
+        # Language filtering (only for books) - Handle single value
+        language_match = not language_filters or not language_filters[0] or not is_book  # If no language filter, empty string, or not a book, match all
+        if language_filters and language_filters[0] and is_book:  # If there's a language filter and it's a book
+            product_language = product.get('Language', 'English').lower()
+            language_match = product_language == language_filters[0].lower()
+        
+        if price_match and language_match:
+            filtered_products.append(product)
+    
+    return filtered_products
+
+@app.route('/search')
+def search():
+    query = request.args.get('query', '').strip()
+    
+    if not query:
+        return redirect(url_for('index'))
+    
+    # Get filter parameters from query string
+    price_filters = request.args.getlist('price')
+    language_filters = request.args.getlist('language')
+    
+    # Use the search function from utilities
+    search_results_books, search_results_non_books, total_results = search_products(
+        query, price_filters, language_filters
+    )
+    
+    # Combine results
+    all_results = search_results_books + search_results_non_books
+    
+    return render_template('components/search_results.html',
+                        query=query,
+                        products=all_results,
+                        total_results=total_results,
+                        non_book_categories=NON_BOOK_CATEGORIES,
+                        book_categories=BOOK_CATEGORIES)
 
 @app.context_processor
 def inject_common_variables():
@@ -335,11 +424,23 @@ def inject_common_variables():
 
 @app.context_processor
 def inject_forms():
+    login_form = LoginForm()
+    registration_form = RegistrationForm()
+    
+    # Add prefixes to avoid ID conflicts
+    login_form.username.id = 'login_username'
+    login_form.password.id = 'login_password'
+    login_form.csrf_token.id = 'login_csrf_token'
+    
+    registration_form.username.id = 'register_username'
+    registration_form.password.id = 'register_password'
+    registration_form.csrf_token.id = 'register_csrf_token'
+    
     return {
-        'login_form': LoginForm(),
-        'registration_form': RegistrationForm()
+        'login_form': login_form,
+        'registration_form': registration_form
     }
 
 # ---------- Main ----------
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)  # Change port if neede
