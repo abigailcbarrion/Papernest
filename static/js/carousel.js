@@ -26,24 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         isTransitioning = true;
         
-        // Remove active classes
-        slides.forEach(slide => {
-            slide.classList.remove('active', 'prev');
-        });
         dots.forEach(dot => dot.classList.remove('active'));
-        
-        // Add active classes
-        slides[index].classList.add('active');
         dots[index].classList.add('active');
         
-        // Add prev class to previous slide for animation
-        if (currentSlide !== index) {
-            slides[currentSlide].classList.add('prev');
-        }
-        
+        carousel.style.transform = `translateX(-${index * 100}%)`;
+
         currentSlide = index;
-        
-        // Reset transition flag
+
         setTimeout(() => {
             isTransitioning = false;
         }, 500);
