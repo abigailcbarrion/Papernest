@@ -1,0 +1,196 @@
+/* both table*/
+th{
+    text-align: center;
+    vertical-align: middle;
+    color: #545454;
+    background: #d3d3d3;
+    font-weight: semibold;
+}
+th, td{
+    padding: 8px 10px;
+}
+.cart-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 40px;
+}
+.table-cart-items, .table-cart-summary{
+    width: 100%;
+    border-collapse: collapse;
+    border: 4px solid #d3d3d3;
+}
+/* Cart Items (table left) */
+.cart-item{
+    display: flex;
+    align-items: center;
+    background: none;
+    gap: 5px;
+    padding-left: 12px;
+}
+.item-name{
+    display: -webkit-box;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    max-width: 160px;    
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+<<<<<<< HEAD
+=======
+    line-clamp: 2;
+>>>>>>> dec7d75698d5af03fe38ad84c6231e3453a39d37
+    -webkit-box-orient: vertical;
+    margin: 0;
+}
+.item-quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; 
+}
+.item-quantity input[type=number] {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    text-align: center;
+    padding: 4px 0;
+    font-size: 14px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid #d3d3d3;
+    border-radius: 2px;
+    background: #fff;
+}
+.btn-decrease, .btn-increase, .btn-remove{
+    background: none;
+    color: #545454;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-decrease:hover, .btn-increase:hover, .btn-remove:hover {
+    background: none;
+    color: #545454;
+}
+.item-price{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.item-image{
+    width: 70px;
+    height: 90px;
+    object-fit: contain;
+    border: 2px solid #ddd;   
+    flex-wrap: wrap;
+}
+.cart-left {
+    flex: 2;
+}
+/* Order Summary (table right) */
+.cart-right {
+    flex: 1;
+}
+.cart-summary, .subtotal-price{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+hr{
+    width: 90%;
+    font-weight: lighter;
+}
+.table-cart-summary p {
+    text-align: left;
+    margin: 18px;
+}
+.table-cart-summary th {
+    text-align: center;
+}
+.btn-checkout {
+    display: block;
+    text-align: center;
+    background-color: #ffffff;
+    color: #FAC102;
+    border: 1.5px solid #FAC102;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    width: 90%;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+}
+.btn-apply{
+    background-color: #ffffff;
+    color: #FAC102;
+    border: 1.5px solid #FAC102;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    white-space: nowrap;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.btn-apply:hover, .btn-checkout:hover {
+    background-color: #FAC102;
+    color: #ffffff;
+}
+.cart-summary-checkout {
+    justify-content: center;
+}
+.cart-summary-total p, .total-price{
+    font-size: 19px;
+}
+.cart-summary-discount-label{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #545454;
+    padding: 18px;
+     
+}
+.discount-label, .discount-container{
+    padding: 18px;
+}
+.discount-container {
+    display: none;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: nowrap;
+}
+.cart-summary-apply{
+    padding: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.cart-summary-discount button{
+    background-color: transparent;
+    color: #545454;
+    padding: 18px;
+}
+input[type=text], input[type=number]:focus{
+    flex: 1;
+    padding: 10px;
+    height: 100%;
+    border: 1px solid #FAC102;
+    border-radius: 0%;
+    margin-bottom: 0; 
+    box-sizing: border-box;
+    outline: none;
+}

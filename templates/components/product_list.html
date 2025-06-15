@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_list.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_product_list.css') }}">
     <title>Product List</title>
 </head>
 <body>
@@ -24,79 +25,126 @@
 
         <!-- Main flex container for sidebar and content -->
         <div style="display: flex; gap: 32px;">
-            <!-- Sidebar -->
+            <!-- Sidebar with Form -->
             <div class="sidebar">
-                {% if category in book_categories %}
-                    <strong>PRICE</strong>
-                    <div>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="price" value="0-999.99">
-                            <span class="checkmark"></span>
-                            From ₱0 to ₱999.99
-                        </label>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="price" value="1000-1999.99">
-                            <span class="checkmark"></span>
-                            From ₱1,000 to ₱1,999.99
-                        </label>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="price" value="2000-above">
-                            <span class="checkmark"></span>
-                            From ₱2,000 and ABOVE
-                        </label>
-                    </div>
-                    <strong style="margin-top:16px; display:block;">Product Language</strong>
-                    <div>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="language" value="english">
-                            <span class="checkmark"></span>
-                            English
-                        </label>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="language" value="filipino">
-                            <span class="checkmark"></span>
-                            Filipino
-                        </label>
-                    </div>
+                <form method="GET" action="{{ url_for('product.category_products', category_name=category) }}" id="filterForm">
+                    {% if category in book_categories %}
+                        <strong>PRICE</strong>
+                        <div>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="" 
+                                    {% if not request.args.get('price') %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                All Prices
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="0-999.99" 
+                                    {% if request.args.get('price') == '0-999.99' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                From ₱0 to ₱999.99
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="1000-1999.99" 
+                                    {% if request.args.get('price') == '1000-1999.99' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                From ₱1,000 to ₱1,999.99
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="2000-above" 
+                                    {% if request.args.get('price') == '2000-above' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                From ₱2,000 and ABOVE
+                            </label>
+                        </div>
+                        <strong style="margin-top:16px; display:block;">Product Language</strong>
+                        <div>
+                            <label class="custom-radio">
+                                <input type="radio" name="language" value="" 
+                                    {% if not request.args.get('language') %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                All Languages
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="language" value="english" 
+                                    {% if request.args.get('language') == 'english' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                English
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="language" value="filipino" 
+                                    {% if request.args.get('language') == 'filipino' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                Filipino
+                            </label>
+                        </div>
 
-                {% elif category in non_book_categories %}
-                    <h3 class="sidebar-title">Non-Books</h3>
-                    <hr>
-                    <div class="sidebar-section">
-                        <h2 class="sidebar-category">Categories</h2>
-                        <ul class="sidebar-sub-info">
-                            <li><a href="/category/art-supplies">Drawing</a></li>
-                            <li><a href="/category/calendars-and-planners">Painting</a></li>
-                            <li><a href="/category/notebooks-and-journals">Support</a></li>
-                        </ul>
-                    </div>
-                    <strong>PRICE</strong>
-                    <div>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="price" value="0-499.99">
-                            <span class="checkmark"></span>
-                            From ₱0 to ₱499.99
-                        </label>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="price" value="500-999.99">
-                            <span class="checkmark"></span>
-                            From ₱500 to ₱999.99
-                        </label>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="price" value="1000-above">
-                            <span class="checkmark"></span>
-                            From ₱1,000 and ABOVE
-                        </label>
-                    </div>
-                {% endif %}
+                    {% elif category in non_book_categories %}
+                        <h3 class="sidebar-title">Non-Books</h3>
+                        <hr>
+                        <div class="sidebar-section">
+                            <h2 class="sidebar-category">Categories</h2>
+                            <ul class="sidebar-sub-info">
+                                <li><a href="/category/drawing">Drawing</a></li>
+                                <li><a href="/category/painting">Painting</a></li>
+                                <li><a href="/category/support">Support</a></li>
+                            </ul>
+                        </div>
+                        <strong>PRICE</strong>
+                        <div>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="" 
+                                    {% if not request.args.get('price') %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                All Prices
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="0-499.99" 
+                                    {% if request.args.get('price') == '0-499.99' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                From ₱0 to ₱499.99
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="500-999.99" 
+                                    {% if request.args.get('price') == '500-999.99' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                From ₱500 to ₱999.99
+                            </label>
+                            <label class="custom-radio">
+                                <input type="radio" name="price" value="1000-above" 
+                                    {% if request.args.get('price') == '1000-above' %}checked{% endif %}
+                                    onchange="submitForm()">
+                                <span class="checkmark"></span>
+                                From ₱1,000 and ABOVE
+                            </label>
+                        </div>
+                    {% endif %}
+
+                    <!-- Clear Filters Button -->
+                    <button type="button" onclick="clearFilters()" style="margin-top: 20px; padding: 10px; background: #11B8CE; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">Clear Filters</button>
+                </form>
             </div>
 
             <!-- Main Product Content -->
             <div style="flex: 1;">
+                <!-- Results Count -->
+                <div class="results-count" style="margin-bottom: 20px; font-weight: bold;">
+                    Showing {{ products|length }} products
+                </div>
+                
                 <div class="product-grid">
                     {% for product in products %}
                     <div class="product-card">
-                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                        <a href="{{ url_for('product.product_view', product_id=product['Product ID']) }}">
                             {% if category in book_categories %}
                                 <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
                             {% else %}
@@ -119,9 +167,30 @@
                     </div>
                     {% endfor %}
                 </div>
+
+                <!-- No Results Message -->
+                {% if products|length == 0 %}
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <h3>No products found</h3>
+                    <p>Try adjusting your filters to see more results.</p>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
+
+    <script>
+        function submitForm() {
+            // Small delay to ensure radio button state is updated
+            setTimeout(function() {
+                document.getElementById('filterForm').submit();
+            }, 100);
+        }
+            
+        function clearFilters() {
+            window.location.href = "{{ url_for('product.category_products', category_name=category) }}";
+        }
+    </script>
 
     {% include 'components/page_footer.html' %}
 </body>

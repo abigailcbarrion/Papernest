@@ -17,20 +17,21 @@
             <h4 class="active">Dashboard</h4>
             <h4>My Orders</h4>
             <h4>Discount Cards</h4>
-            <h4><a href="{{ url_for('logout') }}">Logout</a></h4>
+            <h4>My Wishlist</h4>
+            <h4><a href="{{ url_for('auth.logout') }}">Logout</a></h4>
         </div>
         <div class="account-container">
             <h2>Dashboard</h2>
             <h3>Account Information</h3>
             <div class="profile-box">
                 <h4>My Profile</h4>
-                <h4>Title: {{ user.title.title() }}</h4>
-                <h4>First Name: {{ user.first_name.title() }}</h4>
-                <h4>Last Name: {{ user.last_name.title() }}</h4>
-                <h4>Birth Date: {{ user.birth_date }}</h4>
-                <h4>Gender: {{ user.gender.title() }}</h4>
-                <h4>Phone Number: {{ user.phone_number }}</h4>
-                <h4>Email: {{ user.email }}</h4>
+                <h4>Title: {{ user.get("title", "").title() }}</h4>
+                <h4>First Name: {{ user.get("first_name", "").title() }}</h4>
+                <h4>Last Name: {{ user.get("last_name", "").title() }}</h4>
+                <h4>Birth Date: {{ user.get("birth_date", "") }}</h4>
+                <h4>Gender: {{ user.get("gender", "").title() }}</h4>
+                <h4>Phone Number: {{ user.get("phone_number", "") }}</h4>
+                <h4>Email: {{ user.get("email", "") }}</h4>
             </div>
             <div class="edit-actions">
                 <h4 class="edit-details-box">EDIT DETAILS</h4>
@@ -44,16 +45,16 @@
                 <div class="address-row">
                     <h5>Shipping Address:</h5>
                     <p class="address-row-details">
-                        {{ user.barangay.title() }}, {{ user.city.title() }}, {{ user.province.title() }}, {{ user.country.title() }}<br>
-                        Postal Code: {{ user.postal_code }}
+                        {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
+                        Postal Code: {{ user.get("postal_code", "") }}
                     </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
                 <div class="address-row">
                     <h5>Billing Address:</h5>
                     <p class="address-row-details">
-                        {{ user.barangay.title() }}, {{ user.city.title() }}, {{ user.province.title() }}, {{ user.country.title() }}<br>
-                        Postal Code: {{ user.postal_code }}
+                        {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
+                        Postal Code: {{ user.get("postal_code", "") }}
                     </p>
                     <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
@@ -61,6 +62,7 @@
         </div>
         <div class="orders-container" style="display: none;">
             <h2>My Orders</h2>
+            <p>You don't have any orders yet.</p>
             <!-- Orders content will be here -->
         </div>
         <div class="discount-cards-container" style="display: none;">
@@ -70,44 +72,14 @@
             <!-- Text box here, PlaceHolder: Enter the card number without spaces and branch code-->
             <!-- Button Here "Validate Number"-->
         </div>
+        <div class="my-wishlist-container" style="display: none;">
+            <h2>My Wishlist</h2>
+            <p>Your wishlist is empty. Find your next great read! Go back to homepage and start browsing.</p>
+            <!-- Go back to homepage and start browsing is hyperlink-->
+            <!-- Wishlist content will be here -->
+        </div>
     </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navItems = document.querySelectorAll('.account-nav h4');
-        const accountContainer = document.querySelector('.account-container');
-        const ordersContainer = document.querySelector('.orders-container');
-        const discountCardsContainer = document.querySelector('.discount-cards-container');
-
-        navItems.forEach(function(item) {
-            item.addEventListener('click', function() {
-                navItems.forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                if (this.textContent.trim() === 'Dashboard') {
-                    accountContainer.style.display = 'block';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                } else if (this.textContent.trim() === 'My Orders') {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'block';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                } else if (this.textContent.trim() === 'Discount Cards') {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'block';
-                } else {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                }
-            });
-        });
-
-        // Show account container by default
-        accountContainer.style.display = 'block';
-        if (ordersContainer) ordersContainer.style.display = 'none';
-        if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-    });
-    </script>
+    <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
     {% include 'components/page_footer.html' %}
 </body>
 </html>

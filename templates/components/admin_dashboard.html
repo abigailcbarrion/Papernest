@@ -107,9 +107,9 @@
       <nav>
         <ul>
           <li class="active"><a href="#">Dashboard</a></li>
-          <li><a href="/admin_products">Products</a></li>
-          <li><a href="/admin_orders">Orders</a></li>
-          <li><a href="/admin_registeredUsers">Users</a></li>
+          <li><a href="{{ url_for('admin.admin_products') }}">Products</a></li>
+          <li><a href="{{ url_for('admin.admin_orders') }}">Orders</a></li>
+          <li><a href="{{ url_for('admin.admin_registeredUsers') }}">Users</a></li>
         </ul>
       </nav>
     </aside>
@@ -121,19 +121,19 @@
       <section class="content">
           <h2 style="color: #666; font-size: 2rem; margin-bottom: 40px;">Dashboard</h2>
           <div style="display: flex; gap: 40px; margin-top: 24px; justify-content: center;">
-            <a href="/admin_products" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+            <a href="{{ url_for('admin.admin_products') }}" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
               <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                 <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_products }}</div>
                 <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Products</h3>
               </div>
             </a>
-            <a href="/admin_orders" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+            <a href="{{ url_for('admin.admin_orders') }}" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
               <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                 <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">0</div>
                 <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Orders</h3>
               </div>
             </a>
-            <a href="/admin_registeredUsers" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
+            <a href="{{ url_for('admin.admin_registeredUsers') }}" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
               <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                 <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_users }}</div>
                 <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Customers</h3>

@@ -3,7 +3,7 @@
 <head>
     <title>Home - Bookstore</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_typography.css') }}">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,11 +13,10 @@
         <div class="main-content">
             <div class="container">
                 <!-- Image Carousel -->
-                {% include 'components/carousel.html' %}
-            
+                {% include 'components/carousel.html' %}            
                 <h2 class="product-carousel-title">What's Trending from #BookTok</h2>
                 {% include 'components/product_carousel.html' %}
-            
+                {% include 'components/popular.html' %}
             </div>
         </div>
         {% include 'components/featured_author.html' %}

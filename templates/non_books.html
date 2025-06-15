@@ -1,6 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Non-Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .category-heading{
+          color: #ED1D7F;
+          text-align: center;
+        }
+        .popular-category{
+          color: #11B8CE;
+          text-align: center;
+          margin: 80px 0 80px 0;
+        }
+        .art-mats-wrapper{
+            background-color: #11B8CE;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 40px 0;
+            overflow: hidden;
+        }
+        .art-mats-image {
+            margin-left: 50px;
+        }
+        .art-mats-image img{
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .art-mats-content{
+            color: #FFFFFF;
+            text-align: right;
+            padding: 0 50px;
+        }
+        .art-mats-content h1{
+            color: #FFFFFF;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .shop-link {
+            color: #FFFFFF;
+            text-decoration: underline;
+            display: inline-block;
+            margin: 20px 0;
+            transition: background-color 0.3s, color 0.3s;
+        }  
+        /* Make it stack vertically on smaller screens */
+        @media (max-width: 768px){
+            .art-mats-wrapper{
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .art-mats-content{
+                text-align: center;
+                padding: 20px;
+            }
+        }
+        .trending-wrapper{
+            background-color: #FAC102;
+            width: 100vw;
+            min-height: 200px;
+            margin-left: calc(-50vw + 50%);
+            position: relative;
+            padding: 40px 0;
+            overflow: hidden;
+        }
+        .trending-content{
+            padding: 30px 0 10px;
+        }
+        
+        .trending-content h1{
+            color: #FFFFFF;
+            font-size: 26px;
+            margin: 0 0 0 60px;
+        }
+        body {
+            overflow-x: hidden;
+        }
+    </style>
   <title>Non-Books</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
@@ -104,45 +188,8 @@
             </div>
         </div>
 
-        <!-- Popular Category -->
-        <h1 class="popular-category-heading">Most Popular Categories</h1>
-        <div class="popular-grid">
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category1</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category2</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category3</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
-          <div class="popular-card">
-            <div class="popular-image-container">
-              <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Popular Category" class="popular-image">
-            </div>
-            <div class="popular-content">
-              <div class="category-title"><b>Category4</b></div>
-              <a href="/browse-all" class="browse-link">BROWSE ALL</a>
-            </div>
-          </div>
+        {% include 'components/popular.html' %}
+        
           <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
         </div>
                 

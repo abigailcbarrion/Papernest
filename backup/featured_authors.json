@@ -1,0 +1,18 @@
+{
+  "featured_authors": [
+    {
+      "name": "Cornelia Funke",
+      "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaafDRa7wS0xw-mup-TEF6SbDolCAMjm0uBQ&s",
+      "bio": "Cornelia Funke is the New York Times bestselling author of many magical novels for children, including The Thief Lord, Dragon Rider, and Inkheart. She is also the writer of the charming chapter books Emma and the Blue Genie, The Pirate Pig, and Ruffleclaw. Once named one of the 100 most influential people by Time magazine, Cornelia was born in Germany and lives with her family in California.",
+      "source_url": "https://corneliafunke.com/",
+      "more_link": "https://example.com"
+    },
+    {
+      "name": "Another Author",
+      "image_url": "/static/images/authors/author2.jpg",
+      "bio": "Another author bio...",
+      "source_url": "https://example.com",
+      "more_link": "https://example.com"
+    }
+  ]
+}
