@@ -119,6 +119,40 @@
       font-weight: 600;
       color: #28a745;
     }
+
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .btn {
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-edit {
+      background: #007bff;
+      color: white;
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
+
+    .no-products {
+      text-align: center;
+      color: #666;
+      padding: 40px 20px;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -127,16 +161,16 @@
       <h1 class="logo">papernest</h1>
       <nav>
         <ul>
-          <li><a href="/admin_dashboard">Dashboard</a></li>
+          <li><a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a></li>
           <li class="active">
             <a href="javascript:void(0);" onclick="toggleSubmenu(event)">Products ▼</a>
             <ul id="products-submenu" style="display:block; list-style:none; padding-left:15px; margin:5px 0 0 0;">
-              <li><a href="/admin_products/books" style="{% if product_type == 'Books' %}font-weight:bold;{% endif %}">Books</a></li>
-              <li><a href="/admin_products/non-books" style="{% if product_type == 'Non-Books' %}font-weight:bold;{% endif %}">Non-Books</a></li>
+              <li><a href="{{ url_for('admin.admin_products', product_type='books') }}" {% if product_type == 'Books' %}style="font-weight:bold;"{% endif %}>Books</a></li>
+              <li><a href="{{ url_for('admin.admin_products', product_type='non-books') }}" {% if product_type == 'Non-Books' %}style="font-weight:bold;"{% endif %}>Non-Books</a></li>
             </ul>
           </li>
-          <li><a href="/admin_orders">Orders</a></li>
-          <li><a href="/admin_registeredUsers">Users</a></li>
+          <li><a href="{{ url_for('admin.admin_orders') }}">Orders</a></li>
+          <li><a href="{{ url_for('admin.admin_registeredUsers') }}">Users</a></li>
         </ul>
       </nav>
     </aside>
@@ -151,7 +185,8 @@
           <table>
             <thead>
               <tr>
-                <th>Product ID</th>
+                <th>ID</th>
+                <th>Image</th>
                 <th>Product Name</th>
                 {% if product_type == 'Books' %}
                   <th>Author</th>
@@ -161,12 +196,21 @@
                 {% endif %}
                 <th>Category</th>
                 <th>Price (PHP)</th>
+                <th>Stock</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for product in products %}
               <tr>
                 <td>{{ product['Product ID'] }}</td>
+                <td>
+                  {% if product.get('image_path') %}
+                    <img src="{{ product.image_path }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                  {% else %}
+                    <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666;">No Image</div>
+                  {% endif %}
+                </td>
                 <td class="product-title">
                   {% if product_type == 'Books' %}
                     {{ product['Book Name'] }}
@@ -175,13 +219,22 @@
                   {% endif %}
                 </td>
                 {% if product_type == 'Books' %}
-                  <td>{{ product['Author'] }}</td>
-                  <td>{{ product['ISBN'] }}</td>
+                  <td>{{ product.get('Author', 'N/A') }}</td>
+                  <td>{{ product.get('ISBN', 'N/A') }}</td>
                 {% else %}
                   <td>{{ product.get('Brand', 'N/A') }}</td>
                 {% endif %}
                 <td>{{ product['Category'] }}</td>
-                <td class="price">₱{{ product['Price (PHP)'] }}</td>
+                <td class="price">₱{{ "%.2f"|format(product['Price (PHP)']) }}</td>
+                <td>{{ product.get('stock_quantity', 'N/A') }}</td>
+                <td>
+                  <button onclick="editProduct(this)" data-product-id="{{ product['Product ID'] }}" style="background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 3px; margin-right: 5px; cursor: pointer;">Edit</button>
+                  <button onclick="deleteProduct(this)" data-product-id="{{ product['Product ID'] }}" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Delete</button>
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="9" style="text-align: center; color: #666; padding: 20px;">No products found</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -192,10 +245,37 @@
   </div>
 
   <script>
-    function toggleSubmenu(event) {
-      event.preventDefault();
-      var submenu = document.getElementById('products-submenu');
-      submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+    function editProduct(button) {
+      var productId = button.getAttribute('data-product-id');
+      window.location.href = "{{ url_for('admin.admin_products2') }}" + "?edit=" + productId;
+    }
+
+    function deleteProduct(button) {
+      var productId = button.getAttribute('data-product-id');
+      if (confirm('Are you sure you want to delete this product?')) {
+        fetch("{{ url_for('admin.delete_product') }}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            product_id: productId,
+            product_type: "{{ product_type.lower() }}"
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Product deleted successfully');
+            location.reload();
+          } else {
+            alert('Error deleting product: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          alert('Network error: ' + error.message);
+        });
+      }
     }
   </script>
 </body>

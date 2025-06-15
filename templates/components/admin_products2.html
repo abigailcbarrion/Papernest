@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>papernest - Non-Book Products</title>
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -98,6 +99,79 @@ th, td {
   text-align: left;
 }
 
+/* Add to existing styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+}
+
+.btn-submit {
+  background: #00bcd4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn-reset {
+  background: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn-submit:hover, .btn-reset:hover, .btn-edit:hover, .btn-delete:hover {
+  opacity: 0.8;
+}
+
   </style>
 </head>
 <body>
@@ -106,25 +180,18 @@ th, td {
       <h1 class="logo">papernest</h1>
       <nav>
         <ul>
-          <li><a href="#">Dashboard</a></li>
+          <li><a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a></li>
           <li class="active">
             <a href="javascript:void(0);" onclick="toggleSubmenu(event)">Products ▼</a>
-            <ul id="products-submenu" style="display:none; list-style:none; padding-left:15px; margin:5px 0 0 0;">
-              <li><a href="/admin_products">Books</a></li>
-              <li><a href="/admin_products2">Non-Books</a></li>
+            <ul id="products-submenu" style="display:block; list-style:none; padding-left:15px; margin:5px 0 0 0;">
+              <li><a href="{{ url_for('admin.admin_products', product_type='books') }}">Books</a></li>
+              <li><a href="{{ url_for('admin.admin_products', product_type='non-books') }}" style="font-weight:bold;">Non-Books</a></li>
             </ul>
-            <script>
-              function toggleSubmenu(event) {
-                event.preventDefault();
-                var submenu = document.getElementById('products-submenu');
-                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-              }
-            </script>
-          </li></li>
-          <li><a href="#">Orders</a></li>
-          <li><a href="#">Users</a></li>
+          </li>
+          <li><a href="{{ url_for('admin.admin_orders') }}">Orders</a></li>
+          <li><a href="{{ url_for('admin.admin_registeredUsers') }}">Users</a></li>
         </ul>
-      </nav>
+    </nav>
     </aside>
 
     <main class="main-content">
@@ -132,26 +199,146 @@ th, td {
         <div class="user-icon">👤</div>
       </header>
       <section class="content">
-        <h2>Non-Books</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 style="margin: 0;">Non-Books</h2>
+          <a href="#form-group" style="background: #00bcd4; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-size: 14px;"> ➕ Want to add items? </a>
+        </div>       
+        
+        <div class="table-container" style="margin-top: 10px;">
           <div class="table-header">
-            <table>
+            <h3>All Non-Book Products ({{ non_book_products|length }})</h3>
+            <div style="margin-bottom: 10px;">
+              <input type="text" id="searchInput" placeholder="Search non-books..." style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 300px;">
+              <select id="categoryFilter" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-left: 10px;">
+                <option value="">All Categories</option>
+                <option value="Art Supplies">Art Supplies</option>
+                <option value="Calendars and Planners">Calendars and Planners</option>
+                <option value="Notebooks & Journals">Notebooks & Journals</option>
+                <option value="Novelties">Novelties</option>
+                <option value="Reading Accessories">Reading Accessories</option>
+                <option value="Supplies">Supplies</option>
+              </select>
+            </div>
+          </div>
+          
+          <table id="productsTable">
             <thead>
               <tr>
-                <th>Product ID</th>
+                <th>ID</th>
+                <th>Image</th>
                 <th>Product Name</th>
+                <th>Brand</th>
                 <th>Category</th>
                 <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {% for product in non_book_products %}
+              <tr data-category="{{ product['Category'] }}" data-name="{{ product['Product Name'].lower() }}">
+                <td>{{ product['Product ID'] }}</td>
+                <td>
+                  {% if product.get('image_path') %}
+                    <img src="{{ product.image_path }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                  {% else %}
+                    <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666;">No Image</div>
+                  {% endif %}
+                </td>
+                <td>{{ product['Product Name'] }}</td>
+                <td>{{ product.get('Brand', 'N/A') }}</td>
+                <td>{{ product['Category'] }}</td>
+                <td>₱{{ "%.2f"|format(product['Price (PHP)']) }}</td>
+                <td>
+                  <span id="stock-{{ product['Product ID'] }}">{{ product.get('stock_quantity', 'N/A') }}</span>
+                  <button onclick="updateStock(this)" 
+                          data-product-id="{{ product['Product ID'] }}" 
+                          style="background: #28a745; color: white; border: none; padding: 2px 6px; border-radius: 2px; margin-left: 5px; font-size: 11px;">
+                    Update
+                  </button>
+                </td>
+                <td>
+                  <button onclick="viewProduct(this)" 
+                          data-product-id="{{ product['Product ID'] }}" 
+                          class="btn-view" 
+                          style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-right: 3px;">
+                    View
+                  </button>
+                  <button onclick="editProduct(this)" 
+                          data-product-id="{{ product['Product ID'] }}" 
+                          class="btn-edit">
+                    Edit
+                  </button>
+                  <button onclick="deleteProduct(this)" 
+                          data-product-id="{{ product['Product ID'] }}" 
+                          class="btn-delete">
+                    Delete
+                  </button>
+                </td>
               </tr>
+              {% else %}
+              <tr>
+                <td colspan="8" style="text-align: center; color: #666;">No non-book products found</td>
+              </tr>
+              {% endfor %}
             </tbody>
           </table>
-          </div>
+        </div>
+
+        <!-- Replace the incomplete form section at the bottom -->
+        <div class="form-group" id="form-group" style="margin-top: 30px;">
+          <h3>Add New Non-Book Product</h3>
+          <form id="addProductForm" method="POST" action="{{ url_for('admin.admin_products2') }}" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="product_type" value="non_book">
+            
+            <div class="form-group">
+              <label for="product_name">Product Name:</label>
+              <input type="text" name="product_name" id="product_name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="brand">Brand:</label>
+              <input type="text" name="brand" id="brand">
+            </div>
+            
+            <div class="form-group">
+              <label for="category">Category:</label>
+              <select name="category" id="category" required>
+                <option value="">Select Category</option>
+                <option value="Art Supplies">Art Supplies</option>
+                <option value="Calendars and Planners">Calendars and Planners</option>
+                <option value="Notebooks & Journals">Notebooks & Journals</option>
+                <option value="Novelties">Novelties</option>
+                <option value="Reading Accessories">Reading Accessories</option>
+                <option value="Supplies">Supplies</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="price">Price (PHP):</label>
+              <input type="number" name="price" id="price" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="stock_quantity">Stock Quantity:</label>
+              <input type="number" name="stock_quantity" id="stock_quantity" value="0" min="0">
+            </div>
+            
+            <div class="form-group">
+              <label for="product_image">Product Image:</label>
+              <input type="file" name="product_image" id="product_image" accept="image/*">
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="btn-submit">Add Non-Book Product</button>
+              <button type="reset" class="btn-reset">Clear Form</button>
+            </div>
+          </form>
         </div>
       </section>
     </main>
   </div>
+  <script src="{{ url_for('static', filename='js/admin_nonbooks.js') }}"></script>
 </body>
 </html>

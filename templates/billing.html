@@ -13,84 +13,102 @@
         <div class="main-content">
         <div class="container">
             <div class="checkout-wrapper">
-                <!-- Payment Methods (right) -->
+                <!-- Payment Methods (left) -->
                 <div class="left-side">
-                    <div class="billing-container">
-                        <h3>Payment Details</h3>
-                        <div class="payment-method">
-                            <label>
-                                <input type="radio" name="payment" checked>
-                                <span class="icon-label">
-                                    <div class="icon-box">
-                                        <i class="fas fa-wallet"></i>
-                                    </div>
-                                    Debit or Credit Card
-                                </span>
-                            </label>
+                    <form method="POST" action="{{ url_for('checkout.billing') }}">
+                        <div class="billing-container">
+                            <h3>Payment Details</h3>
+                            <div class="payment-method">
+                                <label>
+                                    <input type="radio" name="payment" value="card" checked>
+                                    <span class="icon-label">
+                                        <div class="icon-box">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                        Debit or Credit Card
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <label>
+                                    <input type="radio" name="payment" value="digital_wallet">
+                                    <span class="icon-label">
+                                        <div class="icon-box">
+                                            <i class="fas fa-mobile"></i>
+                                        </div>
+                                        <div class="payment-desc">
+                                            <div>Digital Wallet</div>
+                                            <div class="wallet-desc">PayMaya, GCash, GrabPay, ShopeePay, WeChatPay, QR Pay, others</div>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <label>
+                                    <input type="radio" name="payment" value="cod">
+                                    <span class="icon-label">
+                                        <div class="icon-box">
+                                            <i class="fas fa-house"></i>
+                                        </div>
+                                        Cash on Delivery
+                                    </span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="payment-method">
-                            <label>
-                                <input type="radio" name="payment">
-                                <span class="icon-label">
-                                    <div class="icon-box">
-                                        <i class="fas fa-mobile"></i>
-                                    </div>
-                                    <div class="payment-desc">
-                                        <div>Digital Wallet</div>
-                                        <div class="wallet-desc">PayMaya, GCash, GrabPay, ShopeePay, WeChatPay, QR Pay, others</div>
-                                    </div>
-                                </span>
-                            </label>
+                        <div id="placeOrderBtn">
+                            <button type="submit" class="btn-placeOrder">PLACE ORDER</button>
                         </div>
-                        <div class="payment-method">
-                            <label>
-                                <input type="radio" name="payment">
-                                <span class="icon-label">
-                                    <div class="icon-box">
-                                        <i class="fas fa-house"></i>
-                                    </div>
-                                    Cash on Delivery
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    <div id="placeOrderBtn">
-                        <a href="/order" class="btn-placeOrder">PLACE ORDER</a>
-                    </div>
+                    </form>
                 </div>
-                <!-- Order Summary (left) -->
+                <!-- Order Summary (right) -->
                 <div class="order-summary">
                     <table class="table-cart-summary">
                         <tr>
                             <th>ORDER SUMMARY</th>
                         </tr>
-                        <tr class="cart-item-row">
-                            <td>
-                                <div class="cart-item">
-                                    <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Item Image" class="item-image">
-                                    <div class="prod-details">
-                                        <span class="prod-name">Product Name</span>
-                                        <div class="prod-row">
-                                            <span class="prod-quantity">Quantity: 1</span>
-                                            <span class="prod-price">₱00.00</span>
+                        {% if cart_products %}
+                            {% for item in cart_products %}
+                            <tr class="cart-item-row">
+                                <td>
+                                    <div class="cart-item">
+                                        <img src="{{ item.image_path or url_for('static', filename='images/placeholder.png') }}" 
+                                             alt="{{ item.product_name }}" class="item-image">
+                                        <div class="prod-details">
+                                            <span class="prod-name">{{ item.product_name }}</span>
+                                            <div class="prod-row">
+                                                <span class="prod-quantity">Quantity: {{ item.quantity }}</span>
+                                                <span class="prod-price">₱{{ "%.2f"|format(item.price * item.quantity) }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="cart-summary">
-                                    <p>Subtotal</p>
-                                    <p class="subtotal-price">₱0.00</p>
-                                </div>
-                                <div class="cart-summary cart-summary-total">
-                                    <p><b>Order Total</b></p>
-                                    <p class="total-price"><b>₱0.00</b></p>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>
+                                    <div class="cart-summary">
+                                        <p>Subtotal</p>
+                                        <p class="subtotal-price">₱{{ "%.2f"|format(total_amount) }}</p>
+                                    </div>
+                                    <div class="cart-summary cart-summary-total">
+                                        <p><b>Order Total</b></p>
+                                        <p class="total-price"><b>₱{{ "%.2f"|format(total_amount) }}</b></p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>
+                                    <p>Your cart is empty</p>
+                                    <a href="/" class="btn">Continue Shopping</a>
+                                </td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>
         </div>
-    </div>
+        </div>
      <footer>
         {% include 'components/page_footer.html' %}
     </footer>

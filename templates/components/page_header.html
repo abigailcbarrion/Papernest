@@ -43,7 +43,7 @@
                 <div class="user-links">
                     {% if session.get('user') %}
                         <a href="/account"><i class="fas fa-user"></i> Account</a>
-                        <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                        <a href="account/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
                         <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
                     {% else %}
                         <div class="login-dropdown">
@@ -93,8 +93,8 @@
                                 </form>
                             </div>
                         </div>
-                        <a href="/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
-                        <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                        <a href="javascript:void(0)" onclick="showLoginPopup()"><i class="fas fa-heart"></i> Wishlist</a>
+                        <a href="javascript:void(0)" onclick="showLoginPopup()"><i class="fas fa-shopping-cart"></i> Cart</a>
                     {% endif %}
                 </div>
             </div>

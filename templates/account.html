@@ -79,54 +79,7 @@
             <!-- Wishlist content will be here -->
         </div>
     </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const navItems = document.querySelectorAll('.account-nav h4');
-        const accountContainer = document.querySelector('.account-container');
-        const ordersContainer = document.querySelector('.orders-container');
-        const discountCardsContainer = document.querySelector('.discount-cards-container');
-        const wishlistContainer = document.querySelector('.my-wishlist-container'); // Add this line
-
-        navItems.forEach(function(item) {
-            item.addEventListener('click', function() {
-                navItems.forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                if (this.textContent.trim() === 'Dashboard') {
-                    accountContainer.style.display = 'block';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                    if (wishlistContainer) wishlistContainer.style.display = 'none';
-                } else if (this.textContent.trim() === 'My Orders') {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'block';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                    if (wishlistContainer) wishlistContainer.style.display = 'none';
-                } else if (this.textContent.trim() === 'Discount Cards') {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'block';
-                    if (wishlistContainer) wishlistContainer.style.display = 'none';
-                } else if (this.textContent.trim() === 'My Wishlist') {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                    if (wishlistContainer) wishlistContainer.style.display = 'block';
-                } else {
-                    accountContainer.style.display = 'none';
-                    if (ordersContainer) ordersContainer.style.display = 'none';
-                    if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-                    if (wishlistContainer) wishlistContainer.style.display = 'none';
-                } 
-            });
-        });
-
-        // Show account container by default
-        accountContainer.style.display = 'block';
-        if (ordersContainer) ordersContainer.style.display = 'none';
-        if (discountCardsContainer) discountCardsContainer.style.display = 'none';
-        if (wishlistContainer) wishlistContainer.style.display = 'none';
-    });
-    </script>
+    <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
     {% include 'components/page_footer.html' %}
 </body>
 </html>

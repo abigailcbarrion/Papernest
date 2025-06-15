@@ -168,6 +168,10 @@ def process_checkout(form_data):
     if 'user' not in session:
         return {'success': False, 'error': 'User not logged in'}
     
+    user_id = get_user_id_from_session()
+    if not user_id:
+        return {'success': False, 'error': 'User ID not found'}
+    
     cart_products, total_amount = get_cart_products()
     
     if not cart_products:
@@ -179,7 +183,7 @@ def process_checkout(form_data):
     
     # Create order data
     order_data = {
-        'user_id': session['user']['id'],
+        'user_id': user_id,  # Use the helper function
         'username': session['user']['username'],
         'items': cart_products,
         'subtotal': total_amount,
@@ -265,3 +269,81 @@ def update_order_status(order_id, new_status):
     except Exception as e:
         print(f"Error updating order status: {e}")
         return False
+    
+def get_all_orders():
+    """Get all orders from database for admin"""
+    try:
+        conn = get_db_connection('users.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT order_id, username, total_amount, order_date, status 
+            FROM orders 
+            ORDER BY order_date DESC
+        ''')
+        
+        orders = []
+        for row in cursor.fetchall():
+            orders.append(dict(row))
+        
+        conn.close()
+        return orders
+    except Exception as e:
+        print(f"Error getting all orders: {e}")
+        return []
+
+def get_order_stats():
+    """Get order statistics for admin dashboard"""
+    try:
+        conn = get_db_connection('users.db')
+        cursor = conn.cursor()
+        
+        # Get total orders count
+        cursor.execute('SELECT COUNT(*) FROM orders')
+        total_orders = cursor.fetchone()[0]
+        
+        # Get total revenue
+        cursor.execute('SELECT SUM(total_amount) FROM orders WHERE status != "cancelled"')
+        total_revenue = cursor.fetchone()[0] or 0
+        
+        conn.close()
+        return total_orders, total_revenue
+    except Exception as e:
+        print(f"Error getting order stats: {e}")
+        return 0, 0
+
+def get_user_id_from_session():
+    """Helper function to get user ID from session with different possible keys"""
+    if 'user' not in session:
+        return None
+    
+    user = session['user']
+    if isinstance(user, dict):
+        return user.get('id') or user.get('user_id') or user.get('User ID') or user.get('ID')
+    
+    return None
+
+def process_billing(form_data):
+    """Process billing/payment information"""
+    try:
+        payment_method = form_data.get('payment')
+        
+        # Get cart products
+        cart_products, total_amount = get_cart_products()
+        
+        if not cart_products:
+            return {'success': False, 'error': 'Cart is empty'}
+        
+        # For now, just clear the cart and return success
+        # You can implement proper order creation later
+        session['cart'] = []
+        
+        # Generate a fake order ID for now
+        import random
+        order_id = random.randint(1000, 9999)
+        
+        return {'success': True, 'order_id': order_id}
+        
+    except Exception as e:
+        print(f"Billing processing error: {e}")
+        return {'success': False, 'error': 'Failed to process order'}
