@@ -10,20 +10,7 @@ def register():
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            username = request.form.get('username')
-            password = request.form.get('password')
-            success = handle_login(username, password)
-            
-            if success:
-                return jsonify({'success': True, 'message': 'Login successful'})
-            else:
-                return jsonify({'success': False, 'message': 'Invalid credentials'})
-        else:
-            return handle_login()
-    
-    return redirect(url_for('main.index'))
+    return handle_login()
 
 @auth_bp.route('/logout')
 def logout():
@@ -41,3 +28,9 @@ def get_barangays(city_code):
 @auth_bp.route('/get_postal_code')
 def get_postal_code():
     return get_postal_code_json()
+
+@auth_bp.route('/auth/check', methods=['GET'])
+def check_auth():
+    """Check if user is authenticated"""
+    is_authenticated = 'user' in session
+    return jsonify({'authenticated': is_authenticated})

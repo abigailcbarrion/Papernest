@@ -50,35 +50,72 @@ def authenticate_user(username, password):
         return None
 
 def handle_login():
-    """Handle user login"""
-    form = LoginForm(request.form)
-    
-    if request.method == 'POST' and form.validate():
-        username = form.username.data
-        password = form.password.data
+    """Handle user login with Flask-WTF form validation"""
+    try:
+        print(f"Login request method: {request.method}")
+        print(f"Request headers: {dict(request.headers)}")
         
-        user = authenticate_user(username, password)
-        
-        if user:
-            # Successful login
-            session['user'] = user
-            session.setdefault('cart', [])
-            session.setdefault('wishlist', [])
+        # Handle POST request
+        if request.method == 'POST':
+            print("Processing POST request")
             
-            # Check if this is an AJAX request
+            # For AJAX requests, we might need to handle form data differently
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return jsonify({'success': True, 'message': 'Login successful'})
+                print("AJAX request detected")
+                
+                # Get form data directly for AJAX requests
+                username = request.form.get('username')
+                password = request.form.get('password')
+                
+                print(f"Username: {username}, Password: {'*' * len(password) if password else None}")
+                
+                if not username or not password:
+                    return jsonify({'success': False, 'message': 'Username and password are required'})
+                
+                # Authenticate user
+                user = authenticate_user(username.strip(), password)
+                print(f"Authentication result: {user is not None}")
+                
+                if user:
+                    # Successful login
+                    session['user'] = user
+                    session.setdefault('cart', [])
+                    session.setdefault('wishlist', [])
+                    
+                    return jsonify({'success': True, 'message': 'Login successful'})
+                else:
+                    return jsonify({'success': False, 'message': 'Invalid username or password'})
             else:
-                return redirect(url_for('index'))
+                # Handle regular form submission with Flask-WTF
+                from forms import LoginForm
+                form = LoginForm(request.form)
+                
+                if form.validate():
+                    username = form.username.data
+                    password = form.password.data
+                    
+                    user = authenticate_user(username, password)
+                    
+                    if user:
+                        session['user'] = user
+                        session.setdefault('cart', [])
+                        session.setdefault('wishlist', [])
+                        
+                        return redirect(url_for('main.index'))
+                    else:
+                        return redirect(url_for('main.index', error='invalid_credentials'))
+                else:
+                    return redirect(url_for('main.index', error='validation_error'))
+        
+        # Handle GET request
+        return redirect(url_for('main.index'))
+        
+    except Exception as e:
+        print(f"Login error: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'success': False, 'message': 'Server error occurred'})
         else:
-            # Invalid credentials
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return jsonify({'success': False, 'message': 'Invalid username or password. Please try again.'})
-            else:
-                return redirect(url_for('index', error='invalid_credentials'))
-    
-    # If GET request or form validation fails
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return jsonify({'success': False, 'message': 'Please fill in all required fields.'})
-    else:
-        return redirect(url_for('index'))
+            return redirect(url_for('main.index', error='server_error'))

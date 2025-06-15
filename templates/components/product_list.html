@@ -27,7 +27,7 @@
         <div style="display: flex; gap: 32px;">
             <!-- Sidebar with Form -->
             <div class="sidebar">
-                <form method="GET" action="{{ url_for('category_products', category_name=category) }}" id="filterForm">
+                <form method="GET" action="{{ url_for('product.category_products', category_name=category) }}" id="filterForm">
                     {% if category in book_categories %}
                         <strong>PRICE</strong>
                         <div>
@@ -144,7 +144,7 @@
                 <div class="product-grid">
                     {% for product in products %}
                     <div class="product-card">
-                        <a href="{{ url_for('product_view', product_id=product['Product ID']) }}">
+                        <a href="{{ url_for('product.product_view', product_id=product['Product ID']) }}">
                             {% if category in book_categories %}
                                 <img src="{{ product.image_path }}" alt="{{ product['Book Name'] }}" class="product-image">
                             {% else %}
@@ -186,9 +186,9 @@
                 document.getElementById('filterForm').submit();
             }, 100);
         }
-        
+            
         function clearFilters() {
-            window.location.href = "{{ url_for('category_products', category_name=category) }}";
+            window.location.href = "{{ url_for('product.category_products', category_name=category) }}";
         }
     </script>
 

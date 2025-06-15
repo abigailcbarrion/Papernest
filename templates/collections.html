@@ -161,11 +161,11 @@
                             <img src="{{ item.image }}" alt="{{ item.name }}">
                             <div class="card-info">
                                 {% if session.get('user') %}
-                                <form method="POST" action="{{ url_for('cart.add_to_cart_route') }}">
+                                <form method="POST" action="{{ url_for('cart.add_to_cart') }}">
                                     <input type="hidden" name="nonbook_id" value="{{ item.id }}">
                                     <button type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                                 </form>
-                                <form method="POST" action="{{ url_for('cart.add_to_wishlist_route') }}">
+                                <form method="POST" action="{{ url_for('cart.add_to_wishlist') }}">
                                     <input type="hidden" name="nonbook_id" value="{{ item.id }}">
                                     <button type="submit"><i class="fas fa-heart"></i> Wishlist</button>
                                 </form>
@@ -177,14 +177,14 @@
                 </div>
                 {% endfor %}
                 <div class="product-display">
-                    <img id="rotating-image" src="{{ url_for('static', filename='images/carousel/slide3.png') }}" alt="Women Empowerment" />
+                    <img id="rotating-image" src="{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}" alt="Women Empowerment" />
                     <div class="card-info">
                         {% if session.get('user') %}
-                        <form method="POST" action="{{ url_for('cart.add_to_cart_route') }}">
+                        <form method="POST" action="{{ url_for('cart.add_to_cart') }}">
                             <input type="hidden" name="nonbook_id" value="static_sample">
                             <button type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                         </form>
-                        <form method="POST" action="{{ url_for('cart.add_to_wishlist_route') }}">
+                        <form method="POST" action="{{ url_for('cart.add_to_wishlist') }}">
                             <input type="hidden" name="nonbook_id" value="static_sample">
                             <button type="submit"><i class="fas fa-heart"></i> Wishlist</button>
                         </form>
@@ -193,9 +193,9 @@
                 </div>
                 <script>
                     const images = [
-                        "{{ url_for('static', filename='images/carousel/slide3.png') }}",
-                        "{{ url_for('static', filename='images/carousel/slide2.png') }}",
-                        "{{ url_for('static', filename='images/carousel/slide1.png') }}"
+                        "{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}",
+                        "{{ url_for('static', filename='images/carousel/desktop_view/slide2.png') }}",
+                        "{{ url_for('static', filename='images/carousel/desktop_view/slide1.png') }}"
                     ];
                     let idx = 0;
                     setInterval(() => {

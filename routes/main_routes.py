@@ -63,3 +63,12 @@ def account():
     user = session['user']
     recent_orders = get_user_orders_from_db(user['user_id'])[:5]
     return render_template('account.html', user=user, recent_orders=recent_orders)
+
+
+@main_bp.route('account/wishlist')
+def wishlist():
+    if 'user' not in session:
+        return redirect(url_for('main.index'))
+
+    user = session.get('user')
+    return render_template('account.html', user=user, page='wishlist', active_session='wishlist')

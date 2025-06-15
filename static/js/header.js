@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            loginError.style.display = 'none';
+            if (loginError) {
+                loginError.style.display = 'none';
+            }
             
             const formData = new FormData(loginForm);
             
@@ -19,16 +21,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                // Handle success
+                console.log('Login response:', data);
+                
+                if (data.success) {
+                    // Close the login dropdown
+                    closeLoginDropdown();
+                    
+                    // Show success message
+                    alert('Login successful!');
+                    
+                    // Reload the page to update the header
+                    window.location.reload();
+                } else {
+                    // Show error message
+                    if (loginError) {
+                        loginError.textContent = data.message || 'Login failed';
+                        loginError.style.display = 'block';
+                    } else {
+                        alert(data.message || 'Login failed. Please try again.');
+                    }
+                }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Login error:', error);
+                
+                if (loginError) {
+                    loginError.textContent = 'An error occurred. Please try again.';
+                    loginError.style.display = 'block';
+                } else {
+                    alert('An error occurred. Please try again.');
+                }
             });
         });
     }
@@ -48,20 +79,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 loginDropdown.classList.remove('show');
                 loginDropdown.classList.remove('closing');
                 document.body.style.overflow = '';
-            }, 300); // Match the CSS transition duration
+            }, 300);
         }
     }
     
     function openLoginDropdown() {
         if (loginDropdown) {
-            loginDropdown.classList.remove('closing'); // Remove any closing state
+            loginDropdown.classList.remove('closing'); 
             loginDropdown.classList.add('show');
             if (window.innerWidth <= 768) {
                 document.body.style.overflow = 'hidden';
             }
         }
     }
-    
+
+    window.showLoginPopup = openLoginDropdown;
+
     // Handle login toggle click
     if (loginToggle && loginDropdown) {
         loginToggle.addEventListener('click', function(e) {
@@ -213,3 +246,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
