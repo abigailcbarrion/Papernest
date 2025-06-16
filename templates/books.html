@@ -20,12 +20,12 @@
 
                 <h2 class="category-heading">SHOP BY CATEGORY</h2>
                 <div class="categories-grid">
-                    <a href="/category/fiction" class="category-box">Fiction</a>
-                    <a href="/category/non-fiction" class="category-box">Non-Fiction</a>
-                    <a href="/category/science-technology" class="category-box">Science & Technology</a>
-                    <a href="/category/self-help-development" class="category-box">Self-help & Development</a>
-                    <a href="/category/childrens" class="category-box">Children's</a>
-                    <a href="/category/academic-reference" class="category-box">Academic Reference</a>
+                    <a href="{{ url_for('product.category_products', category_name='fiction') }}" class="category-box">Fiction</a>
+                    <a href="{{ url_for('product.category_products', category_name='non-fiction') }}" class="category-box">Non-Fiction</a>
+                    <a href="{{ url_for('product.category_products', category_name='science-and-technology') }}" class="category-box">Science & Technology</a>
+                    <a href="{{ url_for('product.category_products', category_name='self-help-and-personal-development') }}" class="category-box">Self-help & Development</a>
+                    <a href="{{ url_for('product.category_products', category_name='children\'s-books') }}" class="category-box">Children's</a>
+                    <a href="{{ url_for('product.category_products', category_name='academic-reference-development') }}" class="category-box">Academic Reference</a>
                 </div>
             </div>
             <div class="shop-now-section">
