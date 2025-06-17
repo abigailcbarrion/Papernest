@@ -8,100 +8,245 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* General Styles */
-        body {
-            font-family: Gilroy, sans-serif;
-            overflow-x: hidden;
-        }
+    body {
+        font-family: Gilroy, sans-serif;
+        overflow-x: hidden;
+    }
 
-        .breadcrumb {
-            margin: 20px 0 20px 100px;
-            font-size: 14px;
-        }
+    .breadcrumb {
+        margin: 20px 0 20px 100px;
+        font-size: 14px;
+    }
 
-        .breadcrumb a {
-            text-decoration: none;
-            color: #555;
-        }
+    .breadcrumb a {
+        text-decoration: none;
+        color: #555;
+    }
 
-        .breadcrumb span {
-            color: #555;
-        }
+    .breadcrumb span {
+        color: #555;
+    }
 
-        .category-heading {
-            color: #ED1D7F;
-            text-align: center;
-            margin: 40px 0;
-        }
+    .category-heading {
+        color: #ED1D7F;
+        text-align: center;
+        margin: 40px 0;
+    }
 
-        .popular-category {
-            color: #11B8CE;
-            text-align: center;
-            margin: 80px 0;
-        }
+    .popular-category {
+        color: #11B8CE;
+        text-align: center;
+        margin: 80px 0;
+    }
 
-        .collections-layout {
+    .collections-layout {
         display: flex;
         flex-wrap: nowrap;
-        gap: 32px; /* slightly larger for clarity */
+        gap: 32px;
         padding: 0 40px;
         align-items: flex-start;
         box-sizing: border-box;
     }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      width: 220px;
+      font-family: Arial, sans-serif;
+    }
 
-        .sidebar {
-            width: 260px; /* fixed width for consistency */
-            min-width: 200px;
-            max-width: 320px;
-            padding: 16px 12px;
-            background-color: #ffffff;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            box-sizing: border-box;
+    .dropdown-button {
+      padding: 10px 16px;
+      width: 100%;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      text-align: left;
+      border-radius: 4px;
+    }
+
+    .dropdown-button::after {
+      content: '▾';
+      float: right;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      width: 100%;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      z-index: 100;
+      border-radius: 4px;
+      margin-top: 2px;
+    }
+
+    .dropdown-content div {
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+
+    .dropdown-content div:hover {
+      background-color: #f2f2f2;
+    }
+
+    .dropdown.active .dropdown-content {
+      display: block;
+    }
+
+
+    .collections-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .card-info {
+        font-size: 11px;
+    }
+
+    .product-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .product-price {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    footer {
+        background-color: #545454;
+        text-align: left;
+    }
+
+    .custom-checkbox {
+        position: relative;
+        padding-left: 28px;
+        cursor: pointer;
+        font-size: 15px;
+        user-select: none;
+        display: inline-block;
+        line-height: 22px;
+    }
+
+    .custom-checkbox input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .custom-checkbox .checkmark {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 15px;
+        width: 15px;
+        background: #eee;
+        border: 1.5px solid #bbb;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .custom-checkbox:hover .checkmark {
+        background: #ccc;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+        background: #11B8CE;
+        border-color: #11B8CE;
+    }
+
+    .custom-checkbox .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .custom-checkbox .checkmark:after {
+        left: 4px;
+        top: 1px;
+        width: 4px;
+        height: 8px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    /* Default product-grid layout */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    /* Responsive styles for max-width 768px */
+    @media (max-width: 768px) {
+        .collections-layout {
+            flex-direction: column;
+            padding: 0 20px;
+            gap: 20px;
+        }
+
+        .dropdown {
+            width: 30%;
+            max-width: none;
+            padding: 12px;
         }
 
         .collections-content {
-            flex: 1;
-            min-width: 0;
+            width: 100%;
         }
+        .category-heading,
+        .popular-category {
+            margin: 30px 0;
+            font-size: 18px;
+        }
+
+        .product-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .product-card {
+            text-align: center;
+        }
+
         .card-info {
-            font-size: 11px;
+            font-size: 12px;
         }
 
-        .product-name {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .product-image-container img,
+        .product-card img {
+            width: 100%;
+            height: auto;
         }
 
-        .product-price {
-            color: #007bff;
-            font-weight: bold;
+        .product-buttons button {
+            width: 100%;
+            margin-top: 8px;
         }
+    }
+</style>
 
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        footer {
-            background-color: #545454;
-            text-align: left;
-        }
-        .custom-checkbox { position: relative; padding-left: 28px; cursor: pointer; font-size: 15px; user-select: none; display: inline-block; line-height: 22px;  }
-        .custom-checkbox input[type="checkbox"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
-        .custom-checkbox .checkmark { position: absolute; left: 0; top: 0; height: 15px; width: 15px; background: #eee; border: 1.5px solid #bbb; border-radius: 4px; transition: background 0.2s; }
-        .custom-checkbox:hover .checkmark { background: #ccc; }
-        .custom-checkbox input:checked ~ .checkmark { background: #11B8CE; border-color: #11B8CE; }
-        .custom-checkbox .checkmark:after { content: ""; position: absolute; display: none; }
-        .custom-checkbox input:checked ~ .checkmark:after { display: block; }
-        .custom-checkbox .checkmark:after { left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
     </style>
 </head>
 <body>
@@ -113,105 +258,18 @@
         </div> 
 
         <div class="collections-layout">
-             <div class="sidebar">
-                <h3>Filter by:</h3>
-                <form>
-                    <div>
-                        <strong>PRICE</strong>
-                        <div>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="price" value="0-999.99">
-                                <span class="checkmark"></span>
-                                From ₱0 to ₱999.99
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="price" value="1000-1999.99">
-                                <span class="checkmark"></span>
-                                From ₱1,000 to ₱1,999.99
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="price" value="2000-above">
-                                <span class="checkmark"></span>
-                                From ₱2,000 and ABOVE
-                            </label>
-                        </div>
-                    </div>
-                    <div style="margin-top: 16px;">
-                        <strong>CATEGORIES</strong>
-                        <div>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="category" value="summer">
-                                <span class="checkmark"></span>
-                                Summer Collection
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="category" value="mental_health">
-                                <span class="checkmark"></span>
-                                Mental Health
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="category" value="staff_picks">
-                                <span class="checkmark"></span>
-                                Staff Picks
-                            </label>
-                        </div>
-                    </div>
-                    <div style="margin-top: 16px;">
-                        <strong>BOOK CATEGORIES</strong>
-                        <div>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="book_category" value="fiction">
-                                <span class="checkmark"></span>
-                                Fiction
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="book_category" value="non_fiction">
-                                <span class="checkmark"></span>
-                                Non-fiction
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="book_category" value="science_technology">
-                                <span class="checkmark"></span>
-                                Science & Technology
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="book_category" value="children">
-                                <span class="checkmark"></span>
-                                Children's Books
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="book_category" value="self_help">
-                                <span class="checkmark"></span>
-                                Self Help & Personal Development
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="book_category" value="academics">
-                                <span class="checkmark"></span>
-                                Academics & References
-                            </label>
-                        </div>
-                    </div>
-                    <div style="margin-top: 16px;">
-                        <strong>Product Language</strong>
-                        <div>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="language" value="english">
-                                <span class="checkmark"></span>
-                                English
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="language" value="filipino">
-                                <span class="checkmark"></span>
-                                Filipino
-                            </label><br>
-                            <label class="custom-checkbox">
-                                <input type="checkbox" name="language" value="spanish">
-                                <span class="checkmark"></span>
-                                Spanish
-                            </label>
-                        </div>
-                    </div>
-                </form>
+            <!-- Sidebar Section -->
+             <div class="dropdown" id="customDropdown">
+            <div class="dropdown-button" id="dropdownBtn">Filter by</div>
+            <div class="dropdown-content" id="dropdownList">
+                <div onclick="selectOption(this)">Price: Low to High</div>
+                <div onclick="selectOption(this)">Price: High to Low</div>
+                <div onclick="selectOption(this)">Bestselling</div>
+                <div onclick="selectOption(this)">Newest</div>
+                <div onclick="selectOption(this)">Summer Reads</div>
+                <div onclick="selectOption(this)">Rainy Reads</div>
+                <div onclick="selectOption(this)">Mental Health</div>
+            </div>
             </div>
 
             <!-- Main Collection Content -->
