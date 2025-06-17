@@ -11,6 +11,8 @@ from routes.cart_routes import cart_bp
 from routes.checkout_routes import checkout_bp
 from routes.admin_routes import admin_bp
 from routes.product_routes import product_bp
+from routes.auth_routes import auth_bp
+
 
 def create_app():
     """Application factory pattern"""

@@ -387,6 +387,153 @@
     background-size: 22px 22px;
 }
 
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content.address-popup {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.address-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.address-table th {
+  background: #d3d3d3;
+  padding: 10px;
+  text-align: left;
+}
+
+.address-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.popup-actions {
+  text-align: right;
+}
+
+.edit-btn, .delete-btn {
+  padding: 10px 20px;
+  border: 1px solid #FAC102;
+  background: transparent;
+  color: #FAC102;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  background: #FAC102;
+  color: white;
+}
+
+/* Base popup overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Content box inside popup */
+.popup-content {
+  background: #fff;
+  padding: 45px 45px;
+  border-radius: 16px;
+  width: 60%;
+  max-width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 1px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* Form elements styling */
+.popup-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-content label {
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.popup-content input {
+  padding: 4px 4px;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.popup-content button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background-color: #FAC102;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popup-content button[type="button"] {
+  background-color: #6c757d;
+}
+
+.popup-content button:hover {
+  background-color: #11B8CE;
+}
+
+
+
 @media (max-width: 900px) {
   .account-main-wrapper {
     flex-direction: column;
@@ -429,5 +576,82 @@
     min-width: 0;
     width: 95vw;
     padding: 20px 10px;
+  }
+}
+@media (max-width: 768px) {
+  .account-main-wrapper {
+    flex-direction: column;
+    padding: 0 10px;
+  }
+
+  .account-nav {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .account-container,
+  .orders-container,
+  .discount-cards-container,
+  .my-wishlist-container {
+    width: 100%;
+    margin: 10px 0;
+    padding: 20px 15px;
+    overflow-x: auto;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .popup-content,
+  .change-password-content {
+    padding: 20px 15px;
+    width: 100%;
+    max-width: 95%;
+  }
+
+  .popup-content form button[type="submit"],
+  .change-password-content form button[type="submit"] {
+    font-size: 1rem;
+    padding: 10px;
+  }
+   .popup-content {
+    width: 70%;
+    padding: 30px 20px;
+    max-width: none;
+  }
+}
+@media (max-width: 480px) {
+  .account-nav h4 {
+    font-size: 14px;
+    padding: 10px 8px;
+  }
+
+  .edit-details-box,
+  .change-password-box {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .profile-box h4 {
+    font-size: 14px;
+  }
+
+  .popup-content {
+    padding: 15px 10px;
+  }
+
+  .popup-content form label,
+  .popup-content form input {
+    font-size: 0.9rem;
+  }
+
+  .popup-content form button {
+    font-size: 0.95rem;
+  }
+  .popup-content {
+    width: 95%;
+    padding: 20px 15px;
   }
 }
