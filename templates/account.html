@@ -34,7 +34,7 @@
                 <h4>Email: {{ user.get("email", "") }}</h4>
             </div>
             <div class="edit-actions">
-                <h4 class="edit-details-box">EDIT DETAILS</h4>
+                <h4 class="edit-details-box" onclick="showEditPopup()">EDIT DETAILS</h4>
                 <h4 class="change-password-box">CHANGE PASSWORD</h4>
             </div>
             <div class="address-book-header">
@@ -78,8 +78,41 @@
             <!-- Go back to homepage and start browsing is hyperlink-->
             <!-- Wishlist content will be here -->
         </div>
+    </div>  
+    <div id="editDetailsPopup" class="popup-overlay" style="display:none;">
+      <div class="popup-content">
+        <span class="close-btn" onclick="closeEditPopup()">&times;</span>
+        <h3>Edit Your Details</h3>
+        <form>
+          <label>Title:</label>
+          <input type="text" name="title"><br>
+          <label>First Name:</label>
+          <input type="text" name="first name"><br>
+          <label>Last Name:</label>
+          <input type="text" name="last name"><br>
+          <label>Birth Date:</label>
+          <input type="text" name="birth date"><br>
+          <label>Gender:</label>
+          <input type="text" name="gender"><br>
+          <label>Phone Number:</label>
+          <input type="text" name="email"><br>
+          <label>Email:</label>
+          <input type="text" name="email"><br>
+
+          <!-- Add more fields as needed -->
+          <button type="submit">Save</button>
+        </form>
+      </div>
     </div>
     <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
+    <script>
+function showEditPopup() {
+  document.getElementById('editDetailsPopup').style.display = 'flex';
+}
+function closeEditPopup() {
+  document.getElementById('editDetailsPopup').style.display = 'none';
+}
+</script>
     {% include 'components/page_footer.html' %}
 </body>
 </html>

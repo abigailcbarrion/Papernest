@@ -7,7 +7,7 @@ from constants import BOOK_CATEGORIES, NON_BOOK_CATEGORIES, CATEGORY_MAPPING
 
 product_bp = Blueprint('product', __name__)
 
-def extract_primary_category(category):
+def extract_primary_category(category): 
     """Extract primary category from category string"""
     if ' - ' in category:
         return category.split(' - ')[0]

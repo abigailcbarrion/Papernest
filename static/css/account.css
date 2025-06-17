@@ -296,4 +296,101 @@
     padding-top: 0;
 }
 
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
 
+.popup-content {
+    background: #fff;
+    padding: 36px 58px 28px 32px; /* reduced right padding from 32px to 18px */
+    border-radius: 16px;
+    min-width: 340px;
+    max-width: 95vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    position: relative;
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    animation: popup-fadein 0.25s;
+    margin: auto;
+}
+
+@keyframes popup-fadein {
+    from { transform: scale(0.96); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.close-btn {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-size: 1.7rem;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close-btn:hover {
+    color: #11B8CE;
+}
+
+.popup-content h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #222;
+    letter-spacing: 0.5px;
+}
+
+.popup-content form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    color: #444;
+    font-weight: 500;
+    margin-top: 14px;
+}
+
+.popup-content form input[type="text"],
+.popup-content form input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #fafafa;
+    transition: border 0.2s;
+    font-family: inherit;
+}
+
+.popup-content form input:focus {
+    border-color: #FAC102;
+    outline: none;
+    background: #fffbe6;
+}
+
+.popup-content form button[type="submit"] {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px 0;
+    background: #FAC102;
+    color: #222;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+}
+
+.popup-content form button[type="submit"]:hover {
+    background: #11B8CE;
+    color: #fff;
+}
