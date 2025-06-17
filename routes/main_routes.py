@@ -63,6 +63,14 @@ def account():
     user = session['user']
     recent_orders = get_user_orders_from_db(user['user_id'])[:5]
     return render_template('account.html', user=user, recent_orders=recent_orders)
+def update_address():
+    user_id = session.get('user_id')
+    update_user_address(user_id, request.form)
+    return redirect(url_for('account_page'))
+def delete_address():
+    user_id = session.get('user_id')
+    delete_user_address(user_id)
+    return redirect(url_for('account_page'))
 
 
 @main_bp.route('account/wishlist')
