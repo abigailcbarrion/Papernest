@@ -75,12 +75,21 @@ function addToCart(productId, productType, productName, price, imagePath, quanti
 }
 
 function addToWishlist(productId, productType, button) {
+    console.log('=== ADD TO WISHLIST CALLED ===');
+    console.log('Product ID:', productId);
+    console.log('Product Type:', productType);
+    
     checkUserAuthentication()
         .then(isLoggedIn => {
             if (!isLoggedIn) {
                 showLoginDialog();
                 return;
             }
+            
+            // Add loading state to button
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            button.disabled = true;
             
             const wishlistData = {
                 product_id: productId,
@@ -98,19 +107,30 @@ function addToWishlist(productId, productType, button) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showNotification('Product added to wishlist!', 'success');
+                    showNotification('Product added to wishlist! Redirecting...', 'success');
+                    
+                    // Update button appearance briefly
                     button.classList.add('active');
-                    button.style.transform = 'scale(1.1)';
+                    button.innerHTML = '<i class="fas fa-heart"></i>';
+                    button.style.background = '#ff4757';
+                    button.style.color = 'white';
+                    button.style.border = '2px solid #ff4757';
+                    
+                    // Redirect to account wishlist page after 1.5 seconds
                     setTimeout(() => {
-                        button.style.transform = 'scale(1)';
-                    }, 200);
+                        window.location.href = '/account#wishlist';
+                    }, 1500);
                 } else {
                     showNotification(data.message || 'Failed to add to wishlist', 'error');
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
                 }
             })
             .catch(error => {
                 console.error('Error adding to wishlist:', error);
                 showNotification('Error adding to wishlist', 'error');
+                button.innerHTML = originalHTML;
+                button.disabled = false;
             });
         })
         .catch(error => {

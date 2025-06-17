@@ -113,7 +113,7 @@ def clear_cart():
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/wishlist/add', methods=['POST'])
-def add_to_wishlist():
+def add_wishlist():
     if 'user' not in session:
         return jsonify({'success': False, 'message': 'Please log in to add items to wishlist'}), 401
     
@@ -125,6 +125,23 @@ def add_to_wishlist():
         )
         return jsonify(result)
     except Exception as e:
+        print(f"Error in add_wishlist route: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@cart_bp.route('/wishlist/remove', methods=['POST'])
+def remove_wishlist():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Please log in to remove items from wishlist'}), 401
+    
+    try:
+        data = request.get_json()
+        result = remove_from_wishlist_data(
+            data.get('product_id'),
+            data.get('product_type')
+        )
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error in remove_wishlist route: {str(e)}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/wishlist')

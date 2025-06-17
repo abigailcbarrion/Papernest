@@ -331,10 +331,131 @@ def clear_user_cart():
         return {'success': False, 'message': f'Database error: {str(e)}'}
 
 def add_to_wishlist_data(product_id, product_type):
-    """Add item to wishlist (you'll need to create a wishlist table for this)"""
-    # For now, return a placeholder response
-    return {'success': True, 'message': 'Wishlist functionality coming soon'}
+    """Add item to user's wishlist"""
+    try:
+        user_id = get_user_id()
+        if not user_id:
+            return {'success': False, 'message': 'User not found'}
+        
+        print(f"[DEBUG] Adding to wishlist: user_id={user_id}, product_id={product_id}, product_type={product_type}")
+        
+        conn = get_users_db()
+        cursor = conn.cursor()
+        
+        # Check if wishlist table exists, create if not
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS wishlist (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                product_id TEXT NOT NULL,
+                product_type TEXT NOT NULL,
+                added_date TEXT NOT NULL,
+                UNIQUE(user_id, product_id, product_type)
+            )
+        ''')
+        
+        # Check if item already in wishlist
+        cursor.execute('''
+            SELECT * FROM wishlist 
+            WHERE user_id = ? AND product_id = ? AND product_type = ?
+        ''', (user_id, str(product_id), product_type))
+        
+        if cursor.fetchone():
+            conn.close()
+            return {'success': False, 'message': 'Item already in wishlist'}
+        
+        # Add to wishlist
+        from datetime import datetime
+        cursor.execute('''
+            INSERT INTO wishlist (user_id, product_id, product_type, added_date)
+            VALUES (?, ?, ?, ?)
+        ''', (user_id, str(product_id), product_type, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        
+        conn.commit()
+        conn.close()
+        
+        print(f"[DEBUG] Successfully added to wishlist")
+        return {'success': True, 'message': 'Item added to wishlist'}
+        
+    except Exception as e:
+        print(f"Error adding to wishlist: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'message': str(e)}
 
 def get_wishlist_items():
-    """Get wishlist items (placeholder for now)"""
-    return []       
+    """Get all items in user's wishlist"""
+    try:
+        user_id = get_user_id()
+        if not user_id:
+            return []
+        
+        conn = get_users_db()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT product_id, product_type, added_date
+            FROM wishlist 
+            WHERE user_id = ?
+            ORDER BY added_date DESC
+        ''', (user_id,))
+        
+        wishlist_items = cursor.fetchall()
+        conn.close()
+        
+        print(f"[DEBUG] Found {len(wishlist_items)} wishlist items for user {user_id}")
+        
+        # Get product details for each item   
+        detailed_items = []
+        for item in wishlist_items:
+            print(f"[DEBUG] Getting details for product {item['product_id']}, type: {item['product_type']}")
+            product_details = get_product_details(item['product_id'], item['product_type'])
+            if product_details:
+                product_details['added_date'] = item['added_date']
+                product_details['product_type'] = item['product_type']  # Ensure product_type is included
+                detailed_items.append(product_details)
+                print(f"[DEBUG] Added product details: {product_details['product_name']}")
+            else:
+                print(f"[DEBUG] No details found for product {item['product_id']}")
+        
+        print(f"[DEBUG] Returning {len(detailed_items)} detailed wishlist items")
+        return detailed_items
+        
+    except Exception as e:
+        print(f"Error getting wishlist items: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return []  
+    
+def remove_from_wishlist_data(product_id, product_type):
+    """Remove item from user's wishlist"""
+    try:
+        user_id = get_user_id()
+        if not user_id:
+            return {'success': False, 'message': 'User not found'}
+        
+        print(f"[DEBUG] Removing from wishlist: user_id={user_id}, product_id={product_id}, product_type={product_type}")
+        
+        conn = get_users_db()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            DELETE FROM wishlist 
+            WHERE user_id = ? AND product_id = ? AND product_type = ?
+        ''', (user_id, str(product_id), product_type))
+        
+        rows_affected = cursor.rowcount
+        conn.commit()
+        conn.close()
+        
+        if rows_affected > 0:
+            print(f"[DEBUG] Successfully removed from wishlist")
+            return {'success': True, 'message': 'Item removed from wishlist'}
+        else:
+            return {'success': False, 'message': 'Item not found in wishlist'}
+        
+    except Exception as e:
+        print(f"Error removing from wishlist: {str(e)}")
+        import traceback
+        return {'success': False, 'message': str(e)}

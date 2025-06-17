@@ -27,13 +27,13 @@
     {% include 'components/page_header.html' %}
     <div class="account-main-wrapper">
         <div class="account-nav">
-            <h4 class="active">Dashboard</h4>
-            <h4>My Orders</h4>
-            <h4>Discount Cards</h4>
-            <h4>My Wishlist</h4>
+            <h4 id="nav-dashboard" class="nav-item active" onclick="showSection('dashboard')">Dashboard</h4>
+            <h4 id="nav-orders" class="nav-item" onclick="showSection('orders')">My Orders</h4>
+            <h4 id="nav-discount" class="nav-item" onclick="showSection('discount')">Discount Cards</h4>
+            <h4 id="nav-wishlist" class="nav-item" onclick="showSection('wishlist')">My Wishlist</h4>
             <h4><a href="{{ url_for('auth.logout') }}">Logout</a></h4>
         </div>
-        <div class="account-container">
+        <div id="dashboard-container" class="account-container">
             <h2>Dashboard</h2>
             <h3>Account Information</h3>
             <div class="profile-box">
@@ -71,23 +71,51 @@
                 </div>
             </div>
         </div>
-        <div class="orders-container" style="display: none;">
+        <div id="orders-container" class="account-container" style="display: none;">
             <h2>My Orders</h2>
             <p>You don't have any orders yet.</p>
             <!-- Orders content will be here -->
         </div>
-        <div class="discount-cards-container" style="display: none;">
+        <div id="discount-container" class="account-container" style="display: none;">
             <h2>Discount Cards</h2>
             <p>To add or replace discount card number, please use the text box below. For any questions, please contact us.</p>
             <h4>Validate Discount Card</h4>
             <!-- Text box here, PlaceHolder: Enter the card number without spaces and branch code-->
             <!-- Button Here "Validate Number"-->
         </div>
-        <div class="my-wishlist-container" style="display: none;">
+        <div id="wishlist-container" class="account-container" style="display: none;">
             <h2>My Wishlist</h2>
-            <p>Your wishlist is empty. Find your next great read! Go back to <a href="{{ url_for('main.index') }}">homepage and start browsing. <a></p>
-            <!-- Go back to homepage and start browsing is hyperlink-->
-            <!-- Wishlist content will be here -->
+            {% if wishlist_items %}
+              <div class="wishlist-items">
+                  {% for item in wishlist_items %}
+                  <div class="wishlist-item" data-product-id="{{ item.product_id }}" data-product-type="{{ item.product_type }}">
+                      <img src="{{ item.image_path }}" alt="{{ item.product_name }}" onerror="this.src='/static/images/placeholder.png'">
+                      <h4>{{ item.product_name }}</h4>
+                      <div class="price">₱{{ "%.2f"|format(item.price) }}</div>
+                      <p>Added: {{ item.added_date }}</p>
+                      <div class="buttons">
+                          <button class="btn-add-cart" 
+                                  data-product-id="{{ item.product_id }}"
+                                  data-product-type="{{ item.product_type }}"
+                                  data-product-name="{{ item.product_name }}"
+                                  data-price="{{ item.price }}"
+                                  data-image-path="{{ item.image_path }}">
+                              Add to Cart
+                          </button>
+                          <button class="btn-remove" onclick="removeFromWishlist('{{ item.product_id }}', '{{ item.product_type }}', this)">
+                              Remove
+                          </button>
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+            {% else %}
+              <div class="empty-wishlist">
+                    <i class="fas fa-heart" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                    <p>Your wishlist is empty. Find your next great read!</p>
+                    <p><a href="{{ url_for('main.index') }}">Go back to homepage and start browsing</a></p>
+                </div>
+            {% endif %}
         </div>
     </div>  
     <div id="editDetailsPopup" class="popup-overlay" style="display:none;">
@@ -220,6 +248,97 @@
 
     <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
     <script>
+// Navigation between sections
+function showSection(sectionName) {
+    // Hide all containers
+    document.getElementById('dashboard-container').style.display = 'none';
+    document.getElementById('orders-container').style.display = 'none';
+    document.getElementById('discount-container').style.display = 'none';
+    document.getElementById('wishlist-container').style.display = 'none';
+    
+    // Remove active class from all nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Show selected container
+    document.getElementById(sectionName + '-container').style.display = 'block';
+    
+    // Add active class to selected nav item
+    document.getElementById('nav-' + sectionName).classList.add('active');
+    
+    // Update URL hash
+    window.location.hash = sectionName;
+}
+
+// Check URL hash on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash.substring(1);
+    if (hash && ['dashboard', 'orders', 'discount', 'wishlist'].includes(hash)) {
+        showSection(hash);
+    }
+    
+    // Initialize cart buttons for wishlist items
+    if (typeof initializeCartButtons === 'function') {
+        initializeCartButtons();
+    }
+});
+
+// Remove item from wishlist
+function removeFromWishlist(productId, productType, button) {
+    if (!confirm('Remove this item from your wishlist?')) {
+        return;
+    }
+    
+    fetch('/wishlist/remove', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            product_type: productType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the item from the page
+            const wishlistItem = button.closest('.wishlist-item');
+            wishlistItem.style.transition = 'all 0.3s ease';
+            wishlistItem.style.transform = 'translateX(-100%)';
+            wishlistItem.style.opacity = '0';
+            
+            setTimeout(() => {
+                wishlistItem.remove();
+
+                // Check if wishlist is now empty
+                const remainingItems = document.querySelectorAll('.wishlist-item');
+                if (remainingItems.length === 0) {
+                    const wishlistContainer = document.getElementById('wishlist-container');
+                    wishlistContainer.innerHTML = `
+                        <h2>My Wishlist</h2>
+                        <div class="empty-wishlist">
+                            <i class="fas fa-heart" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                            <p>Your wishlist is empty. Find your next great read!</p>
+                            <p><a href="{{ url_for('main.index') }}">Go back to homepage and start browsing</a></p>
+                        </div>
+                    `;
+                }
+            }, 300);
+            
+            showNotification('Item removed from wishlist', 'success');
+        } else {
+            showNotification(data.message || 'Failed to remove item', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error removing from wishlist:', error);
+        showNotification('Error removing item', 'error');
+    });
+}
+
 function showEditPopup() {
   document.getElementById('editDetailsPopup').style.display = 'flex';
 }
