@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Account</title>
     <!-- Add Font Awesome CDN below -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_footer.css') }}">
+    <style>
+        .password-input-wrapper input[type="password"],
+        .password-input-wrapper input[type="text"] {
+            height: 40px;         /* or your preferred height */
+            line-height: 40px;    /* match the height */
+            font-family: inherit;
+            font-size: 1rem;
+            letter-spacing: 0; /* Force same spacing for both types */
+            width: 100%;
+            padding-right: 38px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
     {% include 'components/page_header.html' %}
@@ -35,7 +48,7 @@
             </div>
             <div class="edit-actions">
                 <h4 class="edit-details-box" onclick="showEditPopup()">EDIT DETAILS</h4>
-                <h4 class="change-password-box">CHANGE PASSWORD</h4>
+                <h4 class="change-password-box" onclick="showChangePasswordPopup()">CHANGE PASSWORD</h4>
             </div>
             <div class="address-book-header">
                 <h4>Address Book</h4>
@@ -48,7 +61,6 @@
                         {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
                         Postal Code: {{ user.get("postal_code", "") }}
                     </p>
-                    <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
                 <div class="address-row">
                     <h5>Billing Address:</h5>
@@ -56,7 +68,6 @@
                         {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
                         Postal Code: {{ user.get("postal_code", "") }}
                     </p>
-                    <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
             </div>
         </div>
@@ -104,6 +115,38 @@
         </form>
       </div>
     </div>
+
+    <div class="change-password-overlay" style="display:none;">
+      <div class="change-password-content">
+        <span class="change-password-close-btn" onclick="closeChangePasswordPopup()">&times;</span>
+        <h3>Change Password</h3>
+        <form>
+          <label>Current Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" name="old_password" placeholder="Current password">
+            <button type="button" class="toggle-password" aria-label="Show/Hide Password" onclick="togglePassword(this)">
+              <span class="eye-icon"></span>
+            </button>
+          </div>
+          <label>New Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" name="new_password" placeholder="New password">
+            <button type="button" class="toggle-password" aria-label="Show/Hide Password" onclick="togglePassword(this)">
+              <span class="eye-icon"></span>
+            </button>
+          </div>
+          <label>Confirm Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" name="confirm_new_password" placeholder="Confirm Password">
+            <button type="button" class="toggle-password" aria-label="Show/Hide Password" onclick="togglePassword(this)">
+              <span class="eye-icon"></span>
+            </button>
+          </div>
+          <button type="submit">Confirm</button>
+        </form>
+      </div>
+    </div>
+
     <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
     <script>
 function showEditPopup() {
@@ -111,6 +154,23 @@ function showEditPopup() {
 }
 function closeEditPopup() {
   document.getElementById('editDetailsPopup').style.display = 'none';
+}
+function showChangePasswordPopup() {
+  document.querySelector('.change-password-overlay').style.display = 'flex';
+}
+function closeChangePasswordPopup() {
+  document.querySelector('.change-password-overlay').style.display = 'none';
+}
+function togglePassword(btn) {
+  const input = btn.parentElement.querySelector('input');
+  const icon = btn.querySelector('.eye-icon');
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.add('closed'); // Show eye closed
+  } else {
+    input.type = "password";
+    icon.classList.remove('closed'); // Show eye open
+  }
 }
 </script>
     {% include 'components/page_footer.html' %}

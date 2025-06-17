@@ -37,7 +37,10 @@
     color: #222;
 }
 
-.account-container {
+.account-container,
+.orders-container,
+.discount-cards-container,
+.my-wishlist-container {
     border: 2px solid #d3d3d3;
     border-radius: 10px;
     background: #fff;
@@ -47,60 +50,20 @@
     display: block;
     min-width: 0;
     box-sizing: border-box;
-    width: 1200px;       /* or set a fixed width if you want */
-    max-width: 1298px;    /* prevents overflow */
+    width: 1200px;
+    max-width: 1298px;
+    margin-top: 40px;
 }
 
 .account-container h2,
-.account-container h3 {
+.account-container h3,
+.orders-container h2,
+.discount-cards-container h2,
+.my-wishlist-container h2 {
     margin-top: 0;
     padding-top: 0;
     font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: bold;
-}
-
-.orders-container {
-    border: 2px solid #d3d3d3;
-    border-radius: 10px;
-    background: #fff;
-    padding: 30px 40px;
-    margin: 40px 40px 40px 40px; /* Increased top margin to move it down */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    display: block;
-    min-width: 0;
-    box-sizing: border-box;
-    width: 1200px;       /* or set a fixed width if you want */
-    max-width: 1298px;    /* prevents overflow */
-    margin-top: 40px;     /* Extra move downwards */
-}
-
-.orders-container h2 {
-    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    margin-top: 0;
-    padding-top: 0;
-}
-
-.discount-cards-container {
-    border: 2px solid #d3d3d3;
-    border-radius: 10px;
-    background: #fff;
-    padding: 30px 40px;
-    margin: 40px 40px 40px 40px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    display: block;
-    min-width: 0;
-    box-sizing: border-box;
-    width: 1200px;       /* or set a fixed width if you want */
-    max-width: 1298px;   /* prevents overflow */
-    margin-top: 40px;    /* Extra move downwards */
-}
-
-.discount-cards-container h2 {
-    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    margin-top: 0;
-    padding-top: 0;
 }
 
 .account-actions .button.logout {
@@ -113,7 +76,7 @@
 
 .edit-details-box {
     border: 2px solid #454545;
-    border-radius: 0px;
+    border-radius: 0;
     background: #454545;
     color: #fff;
     padding: 14px 24px;
@@ -126,15 +89,15 @@
 }
 
 .edit-details-box:hover {
-    background: #fff; /* Keep the dark background on hover */
-    color: #454545;         /* Keep the text white */
+    background: #fff;
+    color: #454545;
 }
 
 .change-password-box {
     border: 2px solid #FAC102;
-    border-radius: 0px;
+    border-radius: 0;
     background: none;
-    color: #FAC102; /* Yellow text to match border */
+    color: #FAC102;
     padding: 14px 24px;
     margin: 25px 0;
     width: fit-content;
@@ -146,7 +109,7 @@
 
 .change-password-box:hover {
     background: #FAC102;
-    color: #454545; /* Dark text on yellow */
+    color: #454545;
 }
 
 .edit-actions {
@@ -168,17 +131,16 @@
 }
 
 .manage-address-book {
-    color: #FAC102; /* Change this color as needed */
-    font-weight: normal;
-    margin: 0;
+    color: #FAC102;
     font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: 600;
+    margin: 0;
 }
 
 .address-row {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align left edges */
+    align-items: flex-start;
     gap: 6px;
     margin-bottom: 10px;
 }
@@ -186,46 +148,26 @@
 .address-row h5 {
     font-family: 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: normal;
-    width: auto;           /* Let them size naturally */
+    width: auto;
     box-sizing: border-box;
-    margin: 0;   /* Top and bottom margin for spacing */
+    margin: 0;
     margin-left: 10px;
-    padding: 0;     /* Padding inside for space on all sides */
+    padding: 0;
 }
 
-.add-address-link {
-    border: 2px solid #FAC102;
-    border-radius: 0px;
-    background: none;
-    color: #FAC102;
-    padding: 10px 20px;
-    margin-left: 10px;
-    width: fit-content;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    font-size: 16px;
-    font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.add-address-link:hover {
-    background: #FAC102;
-    color: #fff;
-}
 
 .profile-box {
     border: 2px solid #d3d3d3;
-    border-radius: 0px;
+    border-radius: 0;
     background: #fafbfc;
-    padding: 0; /* Remove horizontal padding */
+    padding: 0;
     margin-bottom: 24px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .profile-box h4 {
     margin: 0;
-    padding: 10px 30px 10px 10px; /* Top, right, bottom, left (left is 0) */
+    padding: 10px 30px 10px 10px;
     border-bottom: 1px solid #e0e0e0;
     text-align: left;
 }
@@ -240,7 +182,7 @@
     font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: bold;
     border-radius: 0;
-    padding: 10px 30px 10px 10px; /* Match the others: left is 0 */
+    padding: 10px 30px 10px 10px;
     margin: 0;
     text-align: left;
 }
@@ -269,34 +211,15 @@
     width: 100%;
 }
 
-.address-row p{
+.address-row p {
     font-size: 11px;
     margin: 0;
     margin-left: 10px;
 }
 
-.my-wishlist-container {
-    border: 2px solid #d3d3d3;
-    border-radius: 10px;
-    background: #fff;
-    padding: 30px 40px;
-    margin: 40px 40px 40px 40px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    min-width: 0;
-    box-sizing: border-box;
-    width: 1200px;
-    max-width: 1298px;
-    margin-top: 40px;
-}
-
-.my-wishlist-container h2 {
-    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    margin-top: 0;
-    padding-top: 0;
-}
-
-.popup-overlay {
+/* Popup Styles */
+.popup-overlay,
+.change-password-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.35);
@@ -306,9 +229,10 @@
     z-index: 1000;
 }
 
-.popup-content {
+.popup-content,
+.change-password-content {
     background: #fff;
-    padding: 36px 58px 28px 32px; /* reduced right padding from 32px to 18px */
+    padding: 36px 58px 28px 32px;
     border-radius: 16px;
     min-width: 340px;
     max-width: 95vw;
@@ -324,7 +248,8 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-.close-btn {
+.close-btn,
+.change-password-close-btn {
     position: absolute;
     top: 14px;
     right: 20px;
@@ -333,11 +258,13 @@
     cursor: pointer;
     transition: color 0.2s;
 }
-.close-btn:hover {
+.close-btn:hover,
+.change-password-close-btn:hover {
     color: #11B8CE;
 }
 
-.popup-content h3 {
+.popup-content h3,
+.change-password-content h3 {
     margin-top: 0;
     margin-bottom: 18px;
     font-size: 1.4rem;
@@ -346,7 +273,8 @@
     letter-spacing: 0.5px;
 }
 
-.popup-content form label {
+.popup-content form label,
+.change-password-content form label {
     display: block;
     margin-bottom: 6px;
     font-size: 1rem;
@@ -356,7 +284,8 @@
 }
 
 .popup-content form input[type="text"],
-.popup-content form input[type="email"] {
+.popup-content form input[type="email"],
+.change-password-content form input[type="password"] {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 6px;
@@ -368,13 +297,15 @@
     font-family: inherit;
 }
 
-.popup-content form input:focus {
+.popup-content form input:focus,
+.change-password-content form input[type="password"]:focus {
     border-color: #FAC102;
     outline: none;
     background: #fffbe6;
 }
 
-.popup-content form button[type="submit"] {
+.popup-content form button[type="submit"],
+.change-password-content form button[type="submit"] {
     margin-top: 18px;
     width: 100%;
     padding: 12px 0;
@@ -390,7 +321,113 @@
     letter-spacing: 0.5px;
 }
 
-.popup-content form button[type="submit"]:hover {
+.popup-content form button[type="submit"]:hover,
+.change-password-content form button[type="submit"]:hover {
     background: #11B8CE;
     color: #fff;
+}
+
+/* Password Toggle Styles */
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.password-input-wrapper input[type="password"],
+.password-input-wrapper input[type="text"] {
+    width: 100%;
+    padding-right: 38px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1rem;
+    letter-spacing: 0;
+    background: #fafafa;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    height: 40px;
+    line-height: 40px;
+    transition: none;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.password-input-wrapper input[type="password"]::placeholder,
+.password-input-wrapper input[type="text"]::placeholder {
+    font-family: inherit;
+    font-size: 1rem;
+    letter-spacing: 0;
+    color: #aaa;
+    opacity: 1;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.eye-icon {
+    width: 22px;
+    height: 22px;
+    background: url('data:image/svg+xml;utf8,<svg fill="gray" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10a4 4 0 100 8 4 4 0 000-8z"/></svg>') no-repeat center center;
+    background-size: 22px 22px;
+}
+
+@media (max-width: 900px) {
+  .account-main-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .account-nav {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .account-container,
+  .orders-container,
+  .discount-cards-container,
+  .my-wishlist-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px 0;
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .account-nav h4 {
+    font-size: 16px;
+    padding: 12px 10px;
+  }
+  .edit-details-box,
+  .change-password-box,
+  .add-address-link {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .profile-box h4 {
+    padding: 10px 10px;
+    font-size: 15px;
+  }
+  .popup-content,
+  .change-password-content {
+    min-width: 0;
+    width: 95vw;
+    padding: 20px 10px;
+  }
 }
