@@ -85,7 +85,7 @@ function updateQuantity(button, change) {
             quantityInput.value = newQuantity;
             
             // Update the subtotal for this item
-            updateItemSubtotal(row, newQuantity);
+            updateItemSubtotal(row, newQuantity, data.item_price || getItemPrice(row));
             
             // Update the total
             updateCartTotal();
@@ -169,10 +169,27 @@ function removeFromCart(button) {
 }
 
 // Helper functions
-function updateItemSubtotal(row, quantity) {
+function getItemPrice(row) {
+    // Extract price from the current price display
     const priceElement = row.querySelector('.item-price');
-    const productPrice = parseFloat(row.dataset.price || 0);
-    const newSubtotal = productPrice * quantity;
+    const quantityInput = row.querySelector('.quantity-input');
+    
+    if (priceElement && quantityInput) {
+        const totalPrice = parseFloat(priceElement.textContent.replace('₱', ''));
+        const quantity = parseInt(quantityInput.value);
+        return quantity > 0 ? totalPrice / quantity : 0;
+    }
+    return 0;
+}
+
+function updateItemSubtotal(row, quantity, unitPrice = null) {
+    const priceElement = row.querySelector('.item-price');
+    
+    if (!unitPrice) {
+        unitPrice = getItemPrice(row);
+    }
+    
+    const newSubtotal = unitPrice * quantity;
     
     if (priceElement) {
         priceElement.textContent = `₱${newSubtotal.toFixed(2)}`;
@@ -183,11 +200,9 @@ function updateCartTotal() {
     let total = 0;
     
     document.querySelectorAll('.cart-item-row').forEach(row => {
-        const quantityInput = row.querySelector('.quantity-input');
         const priceElement = row.querySelector('.item-price');
         
-        if (quantityInput && priceElement) {
-            const quantity = parseInt(quantityInput.value);
+        if (priceElement) {
             const price = parseFloat(priceElement.textContent.replace('₱', ''));
             total += price;
         }
@@ -195,7 +210,7 @@ function updateCartTotal() {
     
     // Update total display
     const subtotalElement = document.querySelector('.subtotal-price');
-    const totalElement = document.querySelector('.total-price');
+    const totalElement = document.querySelector('.total-price b');
     
     if (subtotalElement) {
         subtotalElement.textContent = `₱${total.toFixed(2)}`;
@@ -252,7 +267,13 @@ function showCartNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Global functions for backward compatibility
-window.DiscountBtn = toggleDiscountSection;
+// Discount button functionality (legacy support)
+function DiscountBtn(button) {
+    toggleDiscountSection(button);
+}
+
+// Global functions for backward compatibility and direct HTML onclick handlers
+window.DiscountBtn = DiscountBtn;
 window.updateQuantity = updateQuantity;
 window.removeFromCart = removeFromCart;
+window.toggleDiscountSection = toggleDiscountSection;

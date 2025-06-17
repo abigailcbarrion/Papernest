@@ -20,6 +20,7 @@ def create_app():
     
     app.secret_key = '631539ff18360356'
     csrf = CSRFProtect(app)
+    csrf.init_app(app)
     
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(auth_bp, url_prefix='/')
@@ -57,6 +58,14 @@ def create_app():
         }
     
     return app
+
+    @csrf.exempt
+    def exempt_cart_routes():
+        pass
+
+    # Add this line to disable CSRF completely (for testing)
+    app.config['WTF_CSRF_ENABLED'] = False
+
 
 # Create app instance
 app = create_app()

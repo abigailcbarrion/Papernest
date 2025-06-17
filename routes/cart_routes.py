@@ -22,20 +22,32 @@ def cart():
     
     cart_products, total_amount = get_cart_items()
     
+    print(f"=== CART PAGE DEBUG ===")
+    print(f"Cart products count: {len(cart_products)}")
+    print(f"Total amount: {total_amount}")
+    print(f"Session cart: {session.get('cart', [])}")
+    
+    for i, item in enumerate(cart_products):
+        print(f"Item {i}: {item.product_name} - ₱{item.price} x {item.quantity}")
+    
     return render_template('cart.html', 
                         cart_products=cart_products, 
                         total_amount=total_amount)
 
 @cart_bp.route('/cart/add', methods=['POST'])
 def add_to_cart():
+    print("=== ADD TO CART ROUTE CALLED ===")
+    print(f"User in session: {'user' in session}")
+    
     if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in to add items to cart'})
+        return jsonify({'success': False, 'message': 'Please log in to add items to cart'}), 401
     
     try:
         data = request.get_json()
+        print(f"JSON data received: {data}")
         
         if not data:
-            return jsonify({'success': False, 'message': 'No data provided'})
+            return jsonify({'success': False, 'message': 'No data provided'}), 400
         
         product_id = data.get('product_id')
         product_type = data.get('product_type')
@@ -45,11 +57,13 @@ def add_to_cart():
         quantity = data.get('quantity', 1)
         
         result = add_to_cart_data(product_id, product_type, product_name, price, image_path, quantity)
+        print(f"Result: {result}")
+        
         return jsonify(result)
         
     except Exception as e:
-        print(f"Error adding to cart: {e}")
-        return jsonify({'success': False, 'message': 'Error adding product to cart'})
+        print(f"Exception: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/cart/update', methods=['POST'])
 def update_cart():
@@ -163,3 +177,13 @@ def wishlist():
     wishlist_items = get_wishlist_items()
     
     return render_template('wishlist.html', wishlist_items=wishlist_items)
+
+# Add this to cart_routes.py temporarily for testing
+@cart_bp.route('/test-cart', methods=['GET', 'POST'])
+def test_cart():
+    return jsonify({
+        'user_in_session': 'user' in session,
+        'method': request.method,
+        'cart_count': len(session.get('cart', [])),
+        'test': 'success'
+    })

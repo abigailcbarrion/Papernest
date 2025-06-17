@@ -131,11 +131,21 @@ function initializeWishlistButtons() {
     });
 }
 
-// Cart functions - Pure JavaScript, no Flask dependencies
+// Function to get CSRF token
+function getCSRFToken() {
+    const token = document.querySelector('meta[name=csrf-token]');
+    return token ? token.getAttribute('content') : null;
+}
+
+// Update the addToCart function
 function addToCart(productId, productType, productName, price, imagePath, button) {
-    // Check if user is logged in by making a request to the server
+    console.log('=== ADD TO CART CALLED ===');
+    console.log('Parameters:', {productId, productType, productName, price, imagePath});
+    
     checkUserAuthentication()
         .then(isLoggedIn => {
+            console.log('User authenticated:', isLoggedIn);
+            
             if (!isLoggedIn) {
                 showLoginDialog();
                 return;
@@ -153,16 +163,48 @@ function addToCart(productId, productType, productName, price, imagePath, button
                 quantity: 1
             };
             
+            console.log('Sending cart data:', cartData);
+            
+            // Get CSRF token
+            const csrfToken = getCSRFToken();
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            // Add CSRF token if available
+            if (csrfToken) {
+                headers['X-CSRFToken'] = csrfToken;
+            }
+            
             fetch('/cart/add', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
+                headers: headers,
                 body: JSON.stringify(cartData)
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    return response.text().then(errorText => {
+                        console.error('Server error response:', errorText);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    });
+                }
+                
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        console.error('Received non-JSON response:', text);
+                        throw new Error('Server returned HTML instead of JSON');
+                    });
+                }
+            })
             .then(data => {
+                console.log('Success response:', data);
+                
                 if (data.success) {
                     showNotification('Product added to cart!', 'success');
                     updateCartCount();
@@ -174,7 +216,7 @@ function addToCart(productId, productType, productName, price, imagePath, button
             })
             .catch(error => {
                 console.error('Error adding to cart:', error);
-                showNotification('Error adding to cart', 'error');
+                showNotification('Error adding to cart: ' + error.message, 'error');
                 removeLoadingState(false);
             });
         })

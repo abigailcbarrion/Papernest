@@ -3,36 +3,56 @@ from utilities.load_items import load_books, load_nonbooks, get_books_image_path
 
 def add_to_cart_data(product_id, product_type, product_name, price, image_path, quantity=1):
     """Add product to cart with full data"""
+    print("=== ADD_TO_CART_DATA CALLED ===")
+    print(f"Parameters: id={product_id}, type={product_type}, name={product_name}, price={price}, qty={quantity}")
+    
     if 'user' not in session:
+        print("User not in session")
         return {'success': False, 'message': 'Please login first'}
 
     if not all([product_id, product_type, product_name, price]):
+        print("Missing required parameters")
         return {'success': False, 'message': 'Missing product information'}
     
-    if 'cart' not in session:
-        session['cart'] = []
-    
-    # Check if item already exists in cart
-    for item in session['cart']:
-        if item['product_id'] == product_id and item['product_type'] == product_type:
-            item['quantity'] += quantity
-            session.modified = True
-            return {'success': True, 'message': 'Cart updated', 'cart_count': get_cart_count()}
-    
-    # Add new item to cart
-    cart_item = {
-        'product_id': product_id,
-        'product_type': product_type,
-        'product_name': product_name,
-        'price': float(price),
-        'image_path': image_path,
-        'quantity': quantity
-    }
-    
-    session['cart'].append(cart_item)
-    session.modified = True
-    
-    return {'success': True, 'message': 'Added to cart', 'cart_count': get_cart_count()}
+    try:
+        if 'cart' not in session:
+            print("Initializing empty cart")
+            session['cart'] = []
+        
+        print(f"Current cart before adding: {session.get('cart', [])}")
+        
+        # Check if item already exists in cart
+        for item in session['cart']:
+            if item['product_id'] == product_id and item['product_type'] == product_type:
+                print(f"Item exists, updating quantity from {item['quantity']} to {item['quantity'] + quantity}")
+                item['quantity'] += quantity
+                session.modified = True
+                return {'success': True, 'message': 'Cart updated', 'cart_count': get_cart_count()}
+        
+        # Add new item to cart
+        cart_item = {
+            'product_id': product_id,
+            'product_type': product_type,
+            'product_name': product_name,
+            'price': float(price),
+            'image_path': image_path,
+            'quantity': quantity
+        }
+        
+        print(f"Adding new item to cart: {cart_item}")
+        session['cart'].append(cart_item)
+        session.modified = True
+        
+        print(f"Cart after adding: {session.get('cart', [])}")
+        print(f"Cart count: {get_cart_count()}")
+        
+        return {'success': True, 'message': 'Added to cart', 'cart_count': get_cart_count()}
+        
+    except Exception as e:
+        print(f"Exception in add_to_cart_data: {e}")
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'message': f'Error: {str(e)}'}
 
 def update_cart_quantity(product_id, product_type, new_quantity):
     """Update quantity of item in cart"""
@@ -100,9 +120,21 @@ def get_cart_items():
         return [], 0.0
     
     cart = session.get('cart', [])
+    
+    # Convert dictionaries to objects for template compatibility
+    class CartItem:
+        def __init__(self, item_dict):
+            self.product_id = item_dict.get('product_id')
+            self.product_type = item_dict.get('product_type')  
+            self.product_name = item_dict.get('product_name')
+            self.price = float(item_dict.get('price', 0))
+            self.image_path = item_dict.get('image_path')
+            self.quantity = int(item_dict.get('quantity', 1))
+    
+    cart_products = [CartItem(item) for item in cart]
     total_amount = get_cart_total()
     
-    return cart, total_amount
+    return cart_products, total_amount
 
 def add_to_wishlist_data(product_id, product_type):
     """Add product to wishlist"""

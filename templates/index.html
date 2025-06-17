@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Home - Bookstore</title>
+    <!-- Add this to the <head> section of your base template -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_typography.css') }}">
     <!-- Add Font Awesome for icons -->
