@@ -2,7 +2,7 @@ from flask import Flask, url_for
 from flask_wtf.csrf import CSRFProtect
 from forms import LoginForm, RegistrationForm
 from utilities.storage import get_featured_author
-from utilities.cart import get_cart_and_wishlist_counts
+from utilities.cart import get_cart_count
 
 # Import all blueprints
 from routes.main_routes import main_bp
@@ -18,8 +18,14 @@ def create_app():
                 static_folder='static',
                 template_folder='templates')
     
-    app.secret_key = '631539ff18360356'
+    app.config['SECRET_KEY'] = '631539ff18360356'
+    
+    # Keep CSRF enabled for forms but exempt cart routes
     csrf = CSRFProtect(app)
+    csrf.init_app(app)
+    
+    # Exempt the cart blueprint from CSRF
+    csrf.exempt(cart_bp)
     
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(auth_bp, url_prefix='/')
@@ -28,10 +34,15 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/')
     app.register_blueprint(product_bp, url_prefix='/')
 
-    # Context processors
     @app.context_processor
-    def inject_cart_info():
-        return get_cart_and_wishlist_counts()
+    def inject_cart_count():
+        """Make cart count available in all templates"""
+        try:
+            count = get_cart_count()
+            return {'cart_count': count}  # Return a dictionary, not just the count
+        except Exception as e:
+            print(f"Error getting cart count for context: {str(e)}")
+            return {'cart_count': 0}  # Return dict with default value
 
     @app.context_processor
     def inject_common_variables():
@@ -55,6 +66,10 @@ def create_app():
             'login_form': login_form,
             'registration_form': registration_form
         }
+    
+    @csrf.exempt
+    def exempt_cart_routes():
+        pass
     
     return app
 

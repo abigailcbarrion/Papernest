@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_list.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_product_list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_product_list.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Product List</title>
 </head>
 <body>
@@ -160,8 +162,20 @@
                             {% endif %}
                             <div class="product-price">₱{{ product["Price (PHP)"] }}</div>
                             <div class="product-buttons">
-                                <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
-                                <button class="btn-add-cart">Add to Cart</button>
+                                <button class="btn-wishlist" 
+                                        title="Add to Wishlist"
+                                        data-product-id="{{ product['Product ID'] }}"
+                                        data-product-type="{% if category in book_categories %}book{% else %}non_book{% endif %}">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="btn-add-cart"
+                                        data-product-id="{{ product['Product ID'] }}"
+                                        data-product-type="{% if category in book_categories %}book{% else %}non_book{% endif %}"
+                                        data-product-name="{% if category in book_categories %}{{ product['Book Name'] }}{% else %}{{ product['Product Name'] }}{% endif %}"
+                                        data-price="{{ product['Price (PHP)'] }}"
+                                        data-image-path="{{ product.image_path }}">
+                                    Add to Cart
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -179,19 +193,16 @@
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
     <script>
         function submitForm() {
-            // Small delay to ensure radio button state is updated
-            setTimeout(function() {
-                document.getElementById('filterForm').submit();
-            }, 100);
+            setTimeout(() => document.getElementById('filterForm').submit(), 100);
         }
-            
+
         function clearFilters() {
             window.location.href = "{{ url_for('product.category_products', category_name=category) }}";
         }
     </script>
-
     {% include 'components/page_footer.html' %}
 </body>
 </html>

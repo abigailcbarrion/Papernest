@@ -3,66 +3,70 @@
 <div class="product-carousel-container">
     <div class="product-carousel" id="bookCarousel">
         {% for item in popular_items %}
-        <a href="{% if page_type == 'books' or page_type == 'homepage' %}
-                    {{ url_for('product.product_view', product_id=item['Product ID']) }}
-                {% elif page_type == 'non_books' %}
-                    {{ url_for('product.product_view', product_id=item['Product ID']) }}
-                {% endif %}"
-        class="product-card-link">
-            <div class="product-card">
-                <div class="product-image-container">
+        <div class="product-card">
+            <div class="product-image-container">
+                <a href="{% if page_type == 'books' or page_type == 'homepage' %}
+                            {{ url_for('product.product_view', product_id=item['Product ID']) }}
+                        {% elif page_type == 'non_books' %}
+                            {{ url_for('product.product_view', product_id=item['Product ID']) }}
+                        {% endif %}"
+                class="product-image-link">
                     {% if page_type == 'books' or page_type == 'homepage' %}
                         <img src="{{ item.image_path }}" alt="{{ item['Book Name'] }}" class="product-image">
                     {% elif page_type == 'non_books' %}
                         <img src="{{ item.image_path }}" alt="{{ item['Product Name'] }}" class="product-image">
                     {% endif %}
-                </div>
-                {% if page_type == 'books' or page_type == 'homepage'%}
-                    <div class="product-info">
-                        <h3 class="product-title">{{ item["Book Name"] }}</h3>
-                        <p class="product-author">by {{ item["Author"] }}</p>
-                        <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
-                        <div class="product-buttons">
-                            <button class="btn-wishlist" 
-                                    title="Add to Wishlist"
-                                    data-product-id="{{ item['Product ID'] }}"
-                                    data-product-type="book">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="btn-add-cart" 
-                                    data-product-id="{{ item['Product ID'] }}"
-                                    data-product-type="book"
-                                    data-product-name="{{ item['Book Name'] }}"
-                                    data-price="{{ item['Price (PHP)'] }}"
-                                    data-image-path="{{ item.image_path }}">
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                {% elif page_type == 'non_books' %}
-                    <div class="product-info">
-                        <h3 class="product-title">{{ item["Product Name"] }}</h3>
-                        <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
-                        <div class="product-buttons">
-                            <button class="btn-wishlist" 
-                                    title="Add to Wishlist"
-                                    data-product-id="{{ item['Product ID'] }}"
-                                    data-product-type="non_book">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="btn-add-cart" 
-                                    data-product-id="{{ item['Product ID'] }}"
-                                    data-product-type="non_book"
-                                    data-product-name="{{ item['Product Name'] }}"
-                                    data-price="{{ item['Price (PHP)'] }}"
-                                    data-image-path="{{ item.image_path }}">
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                {% endif %}
+                </a>
             </div>
-        </a>
+            {% if page_type == 'books' or page_type == 'homepage'%}
+                <div class="product-info">
+                    <a href="{{ url_for('product.product_view', product_id=item['Product ID']) }}" class="product-title-link">
+                        <h3 class="product-title">{{ item["Book Name"] }}</h3>
+                    </a>
+                    <p class="product-author">by {{ item["Author"] }}</p>
+                    <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
+                    <div class="product-buttons">
+                        <button class="btn-wishlist" 
+                                title="Add to Wishlist"
+                                data-product-id="{{ item['Product ID'] }}"
+                                data-product-type="book">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="btn-add-cart" 
+                                data-product-id="{{ item['Product ID'] }}"
+                                data-product-type="book"
+                                data-product-name="{{ item['Book Name'] }}"
+                                data-price="{{ item['Price (PHP)'] }}"
+                                data-image-path="{{ item.image_path }}">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            {% elif page_type == 'non_books' %}
+                <div class="product-info">
+                    <a href="{{ url_for('product.product_view', product_id=item['Product ID']) }}" class="product-title-link">
+                        <h3 class="product-title">{{ item["Product Name"] }}</h3>
+                    </a>
+                    <div class="product-price">₱{{ item["Price (PHP)"] }}</div>
+                    <div class="product-buttons">
+                        <button class="btn-wishlist" 
+                                title="Add to Wishlist"
+                                data-product-id="{{ item['Product ID'] }}"
+                                data-product-type="non_book">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="btn-add-cart" 
+                                data-product-id="{{ item['Product ID'] }}"
+                                data-product-type="non_book"
+                                data-product-name="{{ item['Product Name'] }}"
+                                data-price="{{ item['Price (PHP)'] }}"
+                                data-image-path="{{ item.image_path }}">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
         {% endfor %}
     </div>
     
@@ -72,6 +76,26 @@
     <div class="carousel-arrow arrow-next" id="nextBtn">
         <i class="fas fa-chevron-right"></i>
     </div>
-    
-    <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </div>
+
+<!-- Load scripts in correct order -->
+<script src="{{ url_for('static', filename='js/cart-utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
+
+<script>
+// Initialize carousel and cart buttons when this component loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure all DOM elements are ready
+    setTimeout(function() {
+        if (typeof initializeCartButtons === 'function') {
+            initializeCartButtons();
+        }
+        if (typeof initializeWishlistButtons === 'function') {
+            initializeWishlistButtons();
+        }
+        if (typeof initializeCarousel === 'function') {
+            initializeCarousel();
+        }
+    }, 100);
+});
+</script>

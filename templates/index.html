@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Home - Bookstore</title>
+    <!-- Add this to the <head> section of your base template -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_typography.css') }}">
     <!-- Add Font Awesome for icons -->
@@ -16,6 +18,7 @@
                 {% include 'components/carousel.html' %}            
                 <h2 class="product-carousel-title">What's Trending from #BookTok</h2>
                 {% include 'components/product_carousel.html' %}
+                <script src="{{ url_for('static', filename='js/cart-utils.js') }}"></script>
                 {% include 'components/popular.html' %}
             </div>
         </div>
