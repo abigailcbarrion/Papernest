@@ -261,3 +261,78 @@ input[type="text"].password-field {
 
 .validation-errors ul { margin: 0; padding-left: 20px; }
 .validation-errors li { margin: 5px 0; }
+
+/* EXISTING STYLES REMAIN UNCHANGED ABOVE */
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+
+  .form-wrapper {
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 90%;
+  }
+
+  .form-register-container {
+    padding: 15px;
+    box-shadow: none;
+  }
+
+  .name-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .register-header {
+    font-size: 18px;
+  }
+
+  .register-sub-header {
+    font-size: 15px;
+  }
+
+  .btn-register {
+    font-size: 15px;
+    padding: 10px 16px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="date"],
+  select {
+    font-size: 13px;
+    height: 45px;
+    padding: 8px;
+  }
+
+  label {
+    font-size: 13px;
+  }
+
+  .popup-content {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .popup-header h3 {
+    font-size: 1.3em;
+  }
+
+  .popup-body {
+    padding: 15px;
+  }
+
+  .popup-footer {
+    padding: 10px;
+  }
+
+  .btn-success {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .validation-errors {
+    font-size: 13px;
+  }
+}
