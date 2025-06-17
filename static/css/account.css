@@ -1,15 +1,38 @@
+/* ===========================================
+   MAIN LAYOUT
+   =========================================== */
+.account-main-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
+
+.container,
+.header-nav-wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ===========================================
+   NAVIGATION
+   =========================================== */
 .account-nav {
     border: 2px solid #d3d3d3;
     border-radius: 10px;
     background: #fff;
     padding: 20px 0;
     width: 220px;
-    margin-bottom: 30px;
+    margin: 40px 0 30px 40px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: inline-block;
     vertical-align: top;
-    margin-left: 40px;
-    margin-top: 40px;
 }
 
 .account-nav h4 {
@@ -20,6 +43,8 @@
     border-bottom: 1px solid #eee;
     font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .account-nav h4:last-child {
@@ -27,16 +52,17 @@
 }
 
 .account-nav h4:hover {
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    color: var(--button-hover-bg-color);
 }
 
 .account-nav h4.active {
+    color: var(--button-hover-bg-color);
     font-weight: bold;
-    color: #222;
 }
 
+/* ===========================================
+   CONTAINERS
+   =========================================== */
 .account-container,
 .orders-container,
 .discount-cards-container,
@@ -45,14 +71,12 @@
     border-radius: 10px;
     background: #fff;
     padding: 30px 40px;
-    margin: 40px 40px 40px 40px;
+    margin: 40px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: block;
-    min-width: 0;
-    box-sizing: border-box;
     width: 1200px;
     max-width: 1298px;
-    margin-top: 40px;
+    box-sizing: border-box;
 }
 
 .account-container h2,
@@ -66,12 +90,49 @@
     font-weight: bold;
 }
 
-.account-actions .button.logout {
-    background-color: var(--link-hover-color);
+/* ===========================================
+   PROFILE SECTION
+   =========================================== */
+.profile-box {
+    border: 2px solid #d3d3d3;
+    border-radius: 0;
+    background: #fafbfc;
+    padding: 0;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-.account-actions .button:hover {
-    background-color: var(--button-hover-bg-color);
+.profile-box h4 {
+    margin: 0;
+    padding: 10px 30px 10px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.profile-box h4:last-child {
+    border-bottom: none;
+}
+
+.profile-box h4:first-child {
+    background: #D9D9D9;
+    color: #222;
+    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border-radius: 0;
+}
+
+.profile-box h4:not(:first-child) {
+    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+    font-weight: normal;
+}
+
+/* ===========================================
+   ACTION BUTTONS
+   =========================================== */
+.edit-actions {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
 }
 
 .edit-details-box {
@@ -112,12 +173,9 @@
     color: #454545;
 }
 
-.edit-actions {
-    display: flex;
-    gap: 16px;
-    margin: 16px 0;
-}
-
+/* ===========================================
+   ADDRESS SECTION
+   =========================================== */
 .address-book-header {
     display: flex;
     align-items: center;
@@ -135,6 +193,7 @@
     font-family: 'Gilroy-SemiBold', 'Gilroy', Arial, Helvetica, sans-serif;
     font-weight: 600;
     margin: 0;
+    cursor: pointer;
 }
 
 .address-row {
@@ -150,114 +209,167 @@
     font-weight: normal;
     width: auto;
     box-sizing: border-box;
-    margin: 0;
-    margin-left: 10px;
+    margin: 0 0 0 10px;
     padding: 0;
-}
-
-
-.profile-box {
-    border: 2px solid #d3d3d3;
-    border-radius: 0;
-    background: #fafbfc;
-    padding: 0;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-
-.profile-box h4 {
-    margin: 0;
-    padding: 10px 30px 10px 10px;
-    border-bottom: 1px solid #e0e0e0;
-    text-align: left;
-}
-
-.profile-box h4:last-child {
-    border-bottom: none;
-}
-
-.profile-box h4:first-child {
-    background: #D9D9D9;
-    color: #222;
-    font-family: 'Gilroy-Bold', 'Gilroy', Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    border-radius: 0;
-    padding: 10px 30px 10px 10px;
-    margin: 0;
-    text-align: left;
-}
-
-.profile-box h4:not(:first-child) {
-    font-family: 'Gilroy', Arial, Helvetica, sans-serif;
-    font-weight: normal;
-}
-
-.account-main-wrapper {
-    display: flex;
-    align-items: flex-start;
-}
-
-.container,
-.header-nav-wrapper {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
 }
 
 .address-row p {
     font-size: 11px;
-    margin: 0;
-    margin-left: 10px;
+    margin: 0 0 0 10px;
 }
 
-/* Popup Styles */
+/* ===========================================
+   WISHLIST SECTION
+   =========================================== */
+.wishlist-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.wishlist-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.wishlist-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.wishlist-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.wishlist-item h4 {
+    margin: 10px 0 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.wishlist-item .price {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.wishlist-item .buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.wishlist-item .btn-add-cart {
+    flex: 1;
+    background: var(--button-hover-bg-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.wishlist-item .btn-add-cart:hover {
+    background: var(--button-hover-bg-color);
+}
+
+.wishlist-item .btn-remove {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.wishlist-item .btn-remove:hover {
+    background: var(--button-hover-bg-color);
+}
+
+.empty-wishlist {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.empty-wishlist a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.empty-wishlist a:hover {
+    text-decoration: underline;
+}
+
+/* ===========================================
+   POPUP OVERLAYS
+   =========================================== */
 .popup-overlay,
 .change-password-overlay {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.35);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
 }
 
 .popup-content,
 .change-password-content {
     background: #fff;
-    padding: 36px 58px 28px 32px;
+    padding: 45px;
     border-radius: 16px;
-    min-width: 340px;
-    max-width: 95vw;
+    width: 60%;
+    max-width: 600px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.18);
     position: relative;
     font-family: 'Gilroy', Arial, Helvetica, sans-serif;
     animation: popup-fadein 0.25s;
-    margin: auto;
+    box-sizing: border-box;
 }
 
 @keyframes popup-fadein {
-    from { transform: scale(0.96); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from { 
+        transform: scale(0.96); 
+        opacity: 0; 
+    }
+    to { 
+        transform: scale(1); 
+        opacity: 1; 
+    }
 }
 
 .close-btn,
 .change-password-close-btn {
     position: absolute;
-    top: 14px;
+    top: 15px;
     right: 20px;
-    font-size: 1.7rem;
+    font-size: 24px;
     color: #888;
     cursor: pointer;
     transition: color 0.2s;
 }
+
 .close-btn:hover,
 .change-password-close-btn:hover {
     color: #11B8CE;
@@ -273,19 +385,28 @@
     letter-spacing: 0.5px;
 }
 
+/* ===========================================
+   FORM ELEMENTS
+   =========================================== */
+.popup-content form,
+.change-password-content form {
+    display: flex;
+    flex-direction: column;
+}
+
 .popup-content form label,
 .change-password-content form label {
     display: block;
-    margin-bottom: 6px;
+    margin: 14px 0 6px 0;
     font-size: 1rem;
     color: #444;
     font-weight: 500;
-    margin-top: 14px;
 }
 
 .popup-content form input[type="text"],
 .popup-content form input[type="email"],
-.change-password-content form input[type="password"] {
+.change-password-content form input[type="password"],
+.change-password-content form input[type="text"] {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 6px;
@@ -295,10 +416,11 @@
     background: #fafafa;
     transition: border 0.2s;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
 .popup-content form input:focus,
-.change-password-content form input[type="password"]:focus {
+.change-password-content form input:focus {
     border-color: #FAC102;
     outline: none;
     background: #fffbe6;
@@ -327,7 +449,13 @@
     color: #fff;
 }
 
-/* Password Toggle Styles */
+.popup-content button[type="button"] {
+    background-color: #6c757d;
+}
+
+/* ===========================================
+   PASSWORD TOGGLE
+   =========================================== */
 .password-input-wrapper {
     position: relative;
     width: 100%;
@@ -341,24 +469,17 @@
     box-sizing: border-box;
     font-family: inherit;
     font-size: 1rem;
-    letter-spacing: 0;
     background: #fafafa;
     border: 1.5px solid #e0e0e0;
     border-radius: 6px;
     height: 40px;
     line-height: 40px;
-    transition: none;
     outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
 }
 
-.password-input-wrapper input[type="password"]::placeholder,
-.password-input-wrapper input[type="text"]::placeholder {
+.password-input-wrapper input::placeholder {
     font-family: inherit;
     font-size: 1rem;
-    letter-spacing: 0;
     color: #aaa;
     opacity: 1;
 }
@@ -387,271 +508,51 @@
     background-size: 22px 22px;
 }
 
-.popup-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.popup-content.address-popup {
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 600px;
-  position: relative;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
-}
-
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 24px;
-  cursor: pointer;
-}
-
+/* ===========================================
+   ADDRESS POPUP SPECIFIC
+   =========================================== */
 .address-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .address-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
 .address-table th {
-  background: #d3d3d3;
-  padding: 10px;
-  text-align: left;
+    background: #d3d3d3;
+    padding: 10px;
+    text-align: left;
 }
 
 .address-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 .popup-actions {
-  text-align: right;
+    text-align: right;
 }
 
-.edit-btn, .delete-btn {
-  padding: 10px 20px;
-  border: 1px solid #FAC102;
-  background: transparent;
-  color: #FAC102;
-  margin-left: 10px;
-  cursor: pointer;
+.edit-btn, 
+.delete-btn {
+    padding: 10px 20px;
+    border: 1px solid #FAC102;
+    background: transparent;
+    color: #FAC102;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
 }
 
-.edit-btn:hover, .delete-btn:hover {
-  background: #FAC102;
-  color: white;
-}
-
-/* Base popup overlay */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-/* Content box inside popup */
-.popup-content {
-  background: #fff;
-  padding: 45px 45px;
-  border-radius: 16px;
-  width: 60%;
-  max-width: 350px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  position: relative;
-  box-sizing: border-box;
-}
-
-/* Close button */
-.close-btn {
-  position: absolute;
-  top: 1px;
-  right: 15px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #555;
-}
-
-/* Form elements styling */
-.popup-content form {
-  display: flex;
-  flex-direction: column;
-}
-
-.popup-content label {
-  margin-top: 5px;
-  font-weight: 500;
-}
-
-.popup-content input {
-  padding: 4px 4px;
-  margin-top: 1px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.popup-content button {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background-color: #FAC102;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.popup-content button[type="button"] {
-  background-color: #6c757d;
-}
-
-.popup-content button:hover {
-  background-color: #11B8CE;
-}
-
-
-
-@media (max-width: 900px) {
-  .account-main-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .account-nav {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .account-container,
-  .orders-container,
-  .discount-cards-container,
-  .my-wishlist-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 20px 0;
-    padding: 20px 10px;
-  }
-}
-
-@media (max-width: 600px) {
-  .account-nav h4 {
-    font-size: 16px;
-    padding: 12px 10px;
-  }
-  .edit-details-box,
-  .change-password-box,
-  .add-address-link {
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  .profile-box h4 {
-    padding: 10px 10px;
-    font-size: 15px;
-  }
-  .popup-content,
-  .change-password-content {
-    min-width: 0;
-    width: 95vw;
-    padding: 20px 10px;
-  }
-}
-@media (max-width: 768px) {
-  .account-main-wrapper {
-    flex-direction: column;
-    padding: 0 10px;
-  }
-
-  .account-nav {
-    width: 100%;
-    margin: 10px 0;
-  }
-
-  .account-container,
-  .orders-container,
-  .discount-cards-container,
-  .my-wishlist-container {
-    width: 100%;
-    margin: 10px 0;
-    padding: 20px 15px;
-    overflow-x: auto;
-  }
-
-  .edit-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .popup-content,
-  .change-password-content {
-    padding: 20px 15px;
-    width: 100%;
-    max-width: 95%;
-  }
-
-  .popup-content form button[type="submit"],
-  .change-password-content form button[type="submit"] {
-    font-size: 1rem;
-    padding: 10px;
-  }
-   .popup-content {
-    width: 70%;
-    padding: 30px 20px;
-    max-width: none;
-  }
-}
-@media (max-width: 480px) {
-  .account-nav h4 {
-    font-size: 14px;
-    padding: 10px 8px;
-  }
-
-  .edit-details-box,
-  .change-password-box {
-    font-size: 13px;
-    padding: 8px 10px;
-  }
-
-  .profile-box h4 {
-    font-size: 14px;
-  }
-
-  .popup-content {
-    padding: 15px 10px;
-  }
-
-  .popup-content form label,
-  .popup-content form input {
-    font-size: 0.9rem;
-  }
-
-  .popup-content form button {
-    font-size: 0.95rem;
-  }
-  .popup-content {
-    width: 95%;
-    padding: 20px 15px;
-  }
+.edit-btn:hover, 
+.delete-btn:hover {
+    background: #FAC102;
+    color: white;
 }

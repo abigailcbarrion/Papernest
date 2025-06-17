@@ -193,8 +193,28 @@
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/cart-utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof initializeCartButtons === 'function') {
+                    initializeCartButtons();
+                }
+                if (typeof initializeWishlistButtons === 'function') {
+                    initializeWishlistButtons();
+                }
+            }, 100);
+        });
+
+        function submitForm() {
+            setTimeout(() => document.getElementById('filterForm').submit(), 100);
+        }
+
+        function clearFilters() {
+            window.location.href = "{{ url_for('product.category_products', category_name=category) }}";
+        }
+
         function submitForm() {
             setTimeout(() => document.getElementById('filterForm').submit(), 100);
         }
