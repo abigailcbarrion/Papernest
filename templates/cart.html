@@ -4,7 +4,6 @@
     <title>Your Cart</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
-    <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -121,9 +120,8 @@
     </div>
 </div>
 
-<!-- Load the cart JavaScript file -->
 <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
-</div>
+        </div>
         {% include 'components/page_footer.html' %}
 </body>
 </html>

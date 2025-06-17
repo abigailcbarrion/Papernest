@@ -1,233 +1,340 @@
-from flask import session, jsonify
-from utilities.load_items import load_books, load_nonbooks, get_books_image_path, get_nonbook_image_path
+import sqlite3
+from flask import session
+from datetime import datetime
+from utilities.load_items import get_books_image_path, get_nonbook_image_path
+from database_connection.connector import get_users_db, get_books_db, get_nonbooks_db
+
+def get_user_id():
+    """Get current user ID from session"""
+    if 'user' not in session:
+        print("[DEBUG] No user in session")
+        return None
+    user_id = session['user'].get('user_id')
+    print(f"[DEBUG] Found user_id: {user_id}")
+    return user_id
 
 def add_to_cart_data(product_id, product_type, product_name, price, image_path, quantity=1):
-    """Add product to cart with full data"""
-    print("=== ADD_TO_CART_DATA CALLED ===")
-    print(f"Parameters: id={product_id}, type={product_type}, name={product_name}, price={price}, qty={quantity}")
+    """Add item to user's cart in database"""
+    user_id = get_user_id()
+    print(f"[DEBUG] add_to_cart_data called - user_id: {user_id}, product_id: {product_id}, product_type: {product_type}")
     
-    if 'user' not in session:
-        print("User not in session")
-        return {'success': False, 'message': 'Please login first'}
-
-    if not all([product_id, product_type, product_name, price]):
-        print("Missing required parameters")
-        return {'success': False, 'message': 'Missing product information'}
+    if not user_id:
+        return {'success': False, 'message': 'User not logged in'}
     
     try:
-        if 'cart' not in session:
-            print("Initializing empty cart")
-            session['cart'] = []
+        conn = get_users_db()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
         
-        print(f"Current cart before adding: {session.get('cart', [])}")
+        print(f"[DEBUG] Database connection established")
         
         # Check if item already exists in cart
-        for item in session['cart']:
-            if item['product_id'] == product_id and item['product_type'] == product_type:
-                print(f"Item exists, updating quantity from {item['quantity']} to {item['quantity'] + quantity}")
-                item['quantity'] += quantity
-                session.modified = True
-                return {'success': True, 'message': 'Cart updated', 'cart_count': get_cart_count()}
+        cursor.execute('''
+            SELECT cart_id, quantity FROM user_cart 
+            WHERE user_id = ? AND product_id = ? AND product_type = ?
+        ''', (user_id, str(product_id), product_type))
         
-        # Add new item to cart
-        cart_item = {
-            'product_id': product_id,
-            'product_type': product_type,
-            'product_name': product_name,
-            'price': float(price),
-            'image_path': image_path,
-            'quantity': quantity
-        }
+        existing_item = cursor.fetchone()
+        print(f"[DEBUG] Existing item check: {existing_item}")
         
-        print(f"Adding new item to cart: {cart_item}")
-        session['cart'].append(cart_item)
-        session.modified = True
+        if existing_item:
+            # Update quantity if item exists
+            new_quantity = existing_item['quantity'] + quantity
+            cursor.execute('''
+                UPDATE user_cart 
+                SET quantity = ?, added_date = CURRENT_TIMESTAMP 
+                WHERE cart_id = ?
+            ''', (new_quantity, existing_item['cart_id']))
+            
+            message = f'Updated quantity to {new_quantity}'
+            print(f"[DEBUG] Updated existing item to quantity: {new_quantity}")
+        else:
+            # Insert new item
+            cursor.execute('''
+                INSERT INTO user_cart (user_id, product_id, product_type, quantity, added_date)
+                VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ''', (user_id, str(product_id), product_type, quantity))
+            
+            message = 'Item added to cart'
+            print(f"[DEBUG] Inserted new item")
         
-        print(f"Cart after adding: {session.get('cart', [])}")
-        print(f"Cart count: {get_cart_count()}")
+        conn.commit()
         
-        return {'success': True, 'message': 'Added to cart', 'cart_count': get_cart_count()}
+        # Verify the item was added/updated
+        cursor.execute('SELECT * FROM user_cart WHERE user_id = ?', (user_id,))
+        all_items = cursor.fetchall()
+        print(f"[DEBUG] All cart items after operation: {[dict(item) for item in all_items]}")
+        
+        conn.close()
+        
+        print(f"[DEBUG] Operation successful: {message}")
+        return {'success': True, 'message': message}
         
     except Exception as e:
-        print(f"Exception in add_to_cart_data: {e}")
+        print(f"[DEBUG] Error adding to cart: {str(e)}")
         import traceback
         traceback.print_exc()
-        return {'success': False, 'message': f'Error: {str(e)}'}
-
-def update_cart_quantity(product_id, product_type, new_quantity):
-    """Update quantity of item in cart"""
-    if 'user' not in session:
-        return {'success': False, 'message': 'Please login first'}
-    
-    if 'cart' not in session:
-        return {'success': False, 'message': 'Cart is empty'}
-    
-    for item in session['cart']:
-        if item['product_id'] == product_id and item['product_type'] == product_type:
-            if new_quantity <= 0:
-                session['cart'].remove(item)
-            else:
-                item['quantity'] = new_quantity
-            session.modified = True
-            return {'success': True, 'message': 'Cart updated'}
-    
-    return {'success': False, 'message': 'Item not found in cart'}
-
-def remove_from_cart_data(product_id, product_type):
-    """Remove specific item from cart"""
-    if 'user' not in session:
-        return {'success': False, 'message': 'Please login first'}
-    
-    if 'cart' not in session:
-        return {'success': False, 'message': 'Cart is empty'}
-    
-    session['cart'] = [item for item in session['cart'] 
-                      if not (item['product_id'] == product_id and item['product_type'] == product_type)]
-    
-    session.modified = True
-    return {'success': True, 'message': 'Item removed from cart'}
-
-def clear_cart():
-    """Clear all items from cart"""
-    if 'user' not in session:
-        return {'success': False, 'message': 'Please login first'}
-    
-    session['cart'] = []
-    session.modified = True
-    
-    return {'success': True, 'message': 'Cart cleared'}
-
-def get_cart_count():
-    """Get current cart count (total quantity)"""
-    if 'user' not in session:
-        return 0
-    
-    cart = session.get('cart', [])
-    return sum(item.get('quantity', 1) for item in cart)
-
-def get_cart_total():
-    """Calculate total cart amount"""
-    if 'user' not in session:
-        return 0.0
-    
-    cart = session.get('cart', [])
-    total = sum(item.get('price', 0) * item.get('quantity', 1) for item in cart)
-    return round(total, 2)
+        return {'success': False, 'message': f'Database error: {str(e)}'}
 
 def get_cart_items():
-    """Get all cart items with product details"""
-    if 'user' not in session:
+    """Get all cart items for current user with product details"""
+    user_id = get_user_id()
+    print(f"[DEBUG] get_cart_items called - user_id: {user_id}")
+    
+    if not user_id:
+        print("[DEBUG] No user_id, returning empty cart")
         return [], 0.0
     
-    cart = session.get('cart', [])
-    
-    # Convert dictionaries to objects for template compatibility
-    class CartItem:
-        def __init__(self, item_dict):
-            self.product_id = item_dict.get('product_id')
-            self.product_type = item_dict.get('product_type')  
-            self.product_name = item_dict.get('product_name')
-            self.price = float(item_dict.get('price', 0))
-            self.image_path = item_dict.get('image_path')
-            self.quantity = int(item_dict.get('quantity', 1))
-    
-    cart_products = [CartItem(item) for item in cart]
-    total_amount = get_cart_total()
-    
-    return cart_products, total_amount
+    try:
+        # Get cart items from users database
+        users_conn = get_users_db()
+        users_conn.row_factory = sqlite3.Row
+        users_cursor = users_conn.cursor()
+        
+        users_cursor.execute('''
+            SELECT 
+                cart_id,
+                product_id,
+                product_type,
+                quantity,
+                added_date
+            FROM user_cart
+            WHERE user_id = ?
+            ORDER BY added_date DESC
+        ''', (user_id,))
+        
+        cart_items = users_cursor.fetchall()
+        print(f"[DEBUG] Raw cart items from database: {[dict(item) for item in cart_items]}")
+        users_conn.close()
+        
+        # Get product details for each cart item
+        detailed_cart_items = []
+        total_amount = 0.0
+        
+        for item in cart_items:
+            print(f"[DEBUG] Processing cart item: {dict(item)}")
+            product_details = get_product_details(item['product_id'], item['product_type'])
+            print(f"[DEBUG] Product details for {item['product_id']}: {product_details}")
+            
+            if product_details:
+                cart_item = {
+                    'cart_id': item['cart_id'],
+                    'product_id': item['product_id'],
+                    'product_type': item['product_type'],
+                    'quantity': item['quantity'],
+                    'added_date': item['added_date'],
+                    'product_name': product_details.get('product_name', 'Unknown Product'),
+                    'price': float(product_details.get('price', 0)),
+                    'image_path': product_details.get('image_path', '/static/images/placeholder.png')
+                }
+                
+                detailed_cart_items.append(cart_item)
+                total_amount += cart_item['price'] * cart_item['quantity']
+                print(f"[DEBUG] Added detailed cart item: {cart_item}")
+            else:
+                print(f"[DEBUG] No product details found for {item['product_id']} ({item['product_type']})")
+        
+        print(f"[DEBUG] Final cart items: {detailed_cart_items}")
+        print(f"[DEBUG] Total amount: {total_amount}")
+        
+        return detailed_cart_items, total_amount
+        
+    except Exception as e:
+        print(f"[DEBUG] Error getting cart items: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return [], 0.0
 
-def add_to_wishlist_data(product_id, product_type):
-    """Add product to wishlist"""
-    if 'user' not in session:
-        return {'success': False, 'message': 'Please login first'}
-
-    if 'wishlist' not in session:
-        session['wishlist'] = []
-
-    wishlist_item = {
-        'product_id': product_id,
-        'product_type': product_type
-    }
+def get_product_details(product_id, product_type):
+    """Get product details from books or non_books database using correct column names"""
+    print(f"[DEBUG] get_product_details called - product_id: {product_id}, product_type: {product_type}")
     
-    # Check if already in wishlist
-    for item in session['wishlist']:
-        if item['product_id'] == product_id and item['product_type'] == product_type:
-            return {'success': False, 'message': 'Already in wishlist'}
-    
-    session['wishlist'].append(wishlist_item)
-    session.modified = True
-    return {'success': True, 'message': 'Added to wishlist'}
+    try:
+        if product_type == 'book':
+            conn = get_books_db()
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            # Use the actual column names from your database (without quotes)
+            cursor.execute('''
+                SELECT 
+                    product_id,
+                    book_name,
+                    price_php
+                FROM books 
+                WHERE product_id = ?
+            ''', (int(product_id),))
+            
+            product = cursor.fetchone()
+            conn.close()
+            
+            if product:
+                # Use your existing image path function
+                image_path = get_books_image_path(str(product_id), "Product Image Front")
+                
+                result = {
+                    'product_id': product['product_id'],
+                    'product_name': product['book_name'],
+                    'price': product['price_php'],
+                    'image_path': image_path
+                }
+                print(f"[DEBUG] Book details: {result}")
+                return result
+                
+        else:  # non_book
+            conn = get_nonbooks_db()
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            # Use the actual column names from your database (without quotes)
+            cursor.execute('''
+                SELECT 
+                    product_id,
+                    product_name,
+                    price_php
+                FROM non_books 
+                WHERE product_id = ?
+            ''', (int(product_id),))
+            
+            product = cursor.fetchone()
+            conn.close()
+            
+            if product:
+                # Use your existing image path function
+                image_path = get_nonbook_image_path(str(product_id), "Product Image Front")
+                
+                result = {
+                    'product_id': product['product_id'],
+                    'product_name': product['product_name'],
+                    'price': product['price_php'],
+                    'image_path': image_path
+                }
+                print(f"[DEBUG] Non-book details: {result}")
+                return result
+        
+        print(f"[DEBUG] No product found with ID {product_id}")
+        return None
+        
+    except Exception as e:
+        print(f"[DEBUG] Error getting product details: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return None
 
-def remove_from_wishlist_data(product_id, product_type):
-    """Remove product from wishlist"""
-    if 'user' not in session:
-        return {'success': False, 'message': 'Please login first'}
-
-    if 'wishlist' not in session:
-        return {'success': False, 'message': 'Wishlist is empty'}
+def update_cart_quantity(product_id, product_type, quantity):
+    """Update quantity of item in cart"""
+    user_id = get_user_id()
+    if not user_id:
+        return {'success': False, 'message': 'User not logged in'}
     
-    session['wishlist'] = [item for item in session['wishlist'] 
-                          if not (item['product_id'] == product_id and item['product_type'] == product_type)]
-    
-    session.modified = True
-    return {'success': True, 'message': 'Removed from wishlist'}
+    try:
+        conn = get_users_db()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        if quantity <= 0:
+            # Remove item if quantity is 0 or less
+            cursor.execute('''
+                DELETE FROM user_cart 
+                WHERE user_id = ? AND product_id = ? AND product_type = ?
+            ''', (user_id, str(product_id), product_type))
+            message = 'Item removed from cart'
+        else:
+            # Update quantity
+            cursor.execute('''
+                UPDATE user_cart 
+                SET quantity = ?, added_date = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND product_id = ? AND product_type = ?
+            ''', (quantity, user_id, str(product_id), product_type))
+            message = f'Quantity updated to {quantity}'
+        
+        conn.commit()
+        conn.close()
+        
+        return {'success': True, 'message': message}
+        
+    except Exception as e:
+        print(f"Error updating cart quantity: {str(e)}")
+        return {'success': False, 'message': f'Database error: {str(e)}'}
 
-def get_wishlist_count():
-    """Get current wishlist count"""
-    if 'user' not in session:
+def remove_from_cart_data(product_id, product_type):
+    """Remove item from cart"""
+    user_id = get_user_id()
+    if not user_id:
+        return {'success': False, 'message': 'User not logged in'}
+    
+    try:
+        conn = get_users_db()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            DELETE FROM user_cart 
+            WHERE user_id = ? AND product_id = ? AND product_type = ?
+        ''', (user_id, str(product_id), product_type))
+        
+        conn.commit()
+        conn.close()
+        
+        return {'success': True, 'message': 'Item removed from cart'}
+        
+    except Exception as e:
+        print(f"Error removing from cart: {str(e)}")
+        return {'success': False, 'message': f'Database error: {str(e)}'}
+
+def get_cart_count():
+    """Get total number of items in user's cart"""
+    user_id = get_user_id()
+    if not user_id:
         return 0
     
-    return len(session.get('wishlist', []))
+    try:
+        conn = get_users_db()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT COALESCE(SUM(quantity), 0) as total_count
+            FROM user_cart 
+            WHERE user_id = ?
+        ''', (user_id,))
+        
+        result = cursor.fetchone()
+        conn.close()
+        
+        return int(result['total_count']) if result else 0
+        
+    except Exception as e:
+        print(f"Error getting cart count: {str(e)}")
+        return 0
+
+def clear_user_cart():
+    """Clear all items from user's cart (useful after checkout)"""
+    user_id = get_user_id()
+    if not user_id:
+        return {'success': False, 'message': 'User not logged in'}
+    
+    try:
+        conn = get_users_db()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('DELETE FROM user_cart WHERE user_id = ?', (user_id,))
+        
+        conn.commit()
+        conn.close()
+        
+        return {'success': True, 'message': 'Cart cleared'}
+        
+    except Exception as e:
+        print(f"Error clearing cart: {str(e)}")
+        return {'success': False, 'message': f'Database error: {str(e)}'}
+
+def add_to_wishlist_data(product_id, product_type):
+    """Add item to wishlist (you'll need to create a wishlist table for this)"""
+    # For now, return a placeholder response
+    return {'success': True, 'message': 'Wishlist functionality coming soon'}
 
 def get_wishlist_items():
-    """Get all wishlist items with product details"""
-    if 'user' not in session:
-        return []
-
-    wishlist = session.get('wishlist', [])
-    wishlist_items = []
-    
-    books = load_books()
-    nonbooks = load_nonbooks()
-    
-    for item in wishlist:
-        if item['product_type'] == 'book':
-            for book in books:
-                if book['Product ID'] == item['product_id']:
-                    book['image_path'] = get_books_image_path(book['Product ID'])
-                    book['product_type'] = 'book'
-                    wishlist_items.append(book)
-                    break
-        elif item['product_type'] == 'non_book':
-            for nonbook in nonbooks:
-                if nonbook['Product ID'] == item['product_id']:
-                    nonbook['image_path'] = get_nonbook_image_path(nonbook['Product ID'])
-                    nonbook['product_type'] = 'non_book'
-                    wishlist_items.append(nonbook)
-                    break
-    
-    return wishlist_items
-
-def get_cart_and_wishlist_counts():
-    """Get both cart and wishlist counts for template context"""
-    return {
-        'cart_count': get_cart_count(),
-        'wishlist_count': get_wishlist_count()
-    }
-
-# Legacy compatibility functions
-def add_to_cart(product_id):
-    """Legacy function - redirects to new function"""
-    return {'success': False, 'message': 'Use add_to_cart_data instead'}
-
-def remove_from_cart(product_id):
-    """Legacy function - redirects to new function"""
-    return {'success': False, 'message': 'Use remove_from_cart_data instead'}
-
-def add_to_wishlist(book_id):
-    """Legacy function - redirects to new function"""
-    return {'success': False, 'message': 'Use add_to_wishlist_data instead'}
-
-def remove_from_wishlist(book_id):
-    """Legacy function - redirects to new function"""
-    return {'success': False, 'message': 'Use remove_from_wishlist_data instead'}
+    """Get wishlist items (placeholder for now)"""
+    return []       
