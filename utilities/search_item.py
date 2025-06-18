@@ -258,8 +258,6 @@ def get_popular_searches():
     Returns:
         list: List of popular search terms
     """
-    # This could be enhanced to track actual search queries
-    # For now, return some common categories and popular items
     return [
         "Fiction",
         "Romance",
