@@ -209,3 +209,80 @@ input[type=text], input[type=number]:focus{
     width: 100%;
   }
 }
+
+.item-checkbox {
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.checkbox-wrapper {
+    position: relative;
+    width: 22px;
+    height: 22px;
+}
+
+.item-checkbox input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #fff;
+    border: 2px solid #CD5C5C;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.item-checkbox input[type="checkbox"]:checked ~ .checkmark {
+    background-color: #CD5C5C;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.item-checkbox input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.select-all-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#select-all-label {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #444;
+    cursor: pointer;
+}
+
+.checkout-selected {
+    margin-top: 15px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+}

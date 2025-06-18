@@ -151,3 +151,34 @@ def wishlist():
     
     wishlist_items = get_wishlist_items()
     return render_template('wishlist.html', wishlist_items=wishlist_items)
+
+@cart_bp.route('/wishlist/check', methods=['POST'])
+def check_wishlist():
+    if 'user' not in session:
+        return jsonify({'in_wishlist': False})
+    
+    try:
+        data = request.get_json()
+        product_id = data.get('product_id')
+        product_type = data.get('product_type')
+
+        user_id = get_user_id()
+        if not user_id:
+            return jsonify({'in_wishlist': False})
+        
+        conn = get_users_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT COUNT(*) as count FROM wishlist
+            WHERE user_id = ? AND product_id = ? AND product_type = ?""",
+            (user_id, str(product_id), product_type))
+
+        result = cursor.fetchone()
+        cursor.close()
+
+        return jsonify({'in_wishlist': result[0] > 0})
+
+    except Exception as e:
+        print(f"Error checking wishlist: {str(e)}")
+        return jsonify({'in_wishlist': False})

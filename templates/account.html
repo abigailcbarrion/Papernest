@@ -175,9 +175,8 @@
       </div>
     </div>
 
-<!-- Popup -->
 <!-- Address Popup -->
-<div id="addressPopup" class="popup-overlay">
+<div id="addressPopup" class="popup-overlay" style="display: none;">
   <div class="popup-content address-popup">
     <span class="close-btn" onclick="closeAddressPopup()">&times;</span>
     <div class="address-header">
@@ -273,6 +272,7 @@ function showSection(sectionName) {
 
 // Check URL hash on page load
 document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addressPopup').style.display = 'none';
     const hash = window.location.hash.substring(1);
     if (hash && ['dashboard', 'orders', 'discount', 'wishlist'].includes(hash)) {
         showSection(hash);
