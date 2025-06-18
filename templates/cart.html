@@ -17,6 +17,18 @@
         <a href="/">Home</a>
     </div>
 
+    {% if cart_products %}
+    <div class="select-all-container">
+        <div class="item-checkbox">
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="select-all">
+                <span class="checkmark"></span>
+            </div>
+        </div>
+        <label id="select-all-label" for="select-all">Select All Items</label>
+    </div>
+    {% endif %}
+
     <h2>Your Shopping Cart</h2>
     <div class="cart-section">
         <div class="cart-left">
@@ -32,8 +44,14 @@
                     <tr class="cart-item-row" data-product-id="{{ item.product_id }}" data-product-type="{{ item.product_type }}">
                         <td>
                             <div class="cart-item">
+                                <div class="item-checkbox">
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" class="cart-item-checkbox" data-price="{{ item.price }}" data-quantity="{{ item.quantity }}">
+                                        <span class="checkmark"></span>
+                                    </div>
+                                </div>
                                 <img src="{{ item.image_path or url_for('static', filename='images/placeholder.png') }}" 
-                                     alt="{{ item.product_name }}" class="item-image">
+                                    alt="{{ item.product_name }}" class="item-image">
                                 <p class="item-name">{{ item.product_name }}</p>
                             </div>
                         </td>
@@ -87,13 +105,18 @@
                             <hr>
                         </div>
                         <div class="cart-summary cart-summary-total">
-                            <p><b>Order Total</b></p>
-                            <p class="total-price"><b>₱{{ "%.2f"|format(total_amount) if total_amount else "0.00" }}</b></p>
+                            <p><b>Selected Total</b></p>
+                            <p class="selected-total-price"><b>₱0.00</b></p>
                         </div>
                         {% if cart_products %}
-                        <div class="cart-summary cart-summary-checkout" id="CheckoutBtn">
-                            <a href="/checkout" class="btn-checkout"><i class="fas fa-lock"></i> CHECKOUT</a>
-                        </div>
+                            <div class="cart-summary cart-summary-checkout" id="CheckoutBtn">
+                            <a href="/checkout" class="btn-checkout" id="checkout-all">
+                                <i class="fas fa-lock"></i> CHECKOUT ALL
+                            </a>
+                            <a href="#" class="btn-checkout checkout-selected" id="checkout-selected" style="display: none;">
+                                <i class="fas fa-lock"></i> CHECKOUT SELECTED
+                            </a>
+                            </div>
                         {% endif %}
                         <div class="cart-summary">
                             <hr>
@@ -120,6 +143,7 @@
     </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/cart-utils.js') }}"></script>
 <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
         </div>
         {% include 'components/page_footer.html' %}
