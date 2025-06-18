@@ -1,6 +1,8 @@
 import sqlite3
 from datetime import datetime
 from flask import session
+from utilities.cart import get_cart_items, clear_user_cart
+from utilities.load_items import load_books, load_nonbooks, get_books_image_path, get_nonbook_image_path
 
 def get_db_connection(db_name):
     """Get connection to specific database"""
@@ -124,44 +126,6 @@ def get_order_by_id(order_id):
     except Exception as e:
         print(f"Error getting order: {e}")
         return None
-    
-# Add these functions to your checkout.py file:
-
-def get_cart_products():
-    """Get cart products with details from session"""
-    from utilities.load_items import load_books, load_nonbooks, get_books_image_path, get_nonbook_image_path
-    
-    cart_items = session.get('cart', [])
-    if not cart_items:
-        return [], 0
-    
-    # Load product data
-    books = load_books()
-    non_books = load_nonbooks()
-    
-    cart_products = []
-    total_amount = 0
-    
-    for item_id in cart_items:
-        # Check if it's a book
-        product = next((b for b in books if b.get('Product ID') == item_id), None)
-        if product:
-            product['image_path'] = get_books_image_path(item_id)
-            product['type'] = 'book'
-            product['quantity'] = cart_items.count(item_id)  # Count occurrences for quantity
-            cart_products.append(product)
-            total_amount += float(product.get('Price (PHP)', 0)) * product['quantity']
-        else:
-            # Check if it's a non-book
-            product = next((nb for nb in non_books if nb.get('Product ID') == item_id), None)
-            if product:
-                product['image_path'] = get_nonbook_image_path(item_id)
-                product['type'] = 'non_book'
-                product['quantity'] = cart_items.count(item_id)
-                cart_products.append(product)
-                total_amount += float(product.get('Price (PHP)', 0)) * product['quantity']
-    
-    return cart_products, total_amount
 
 def process_checkout(form_data):
     """Process checkout with shipping and billing info"""
@@ -172,7 +136,7 @@ def process_checkout(form_data):
     if not user_id:
         return {'success': False, 'error': 'User ID not found'}
     
-    cart_products, total_amount = get_cart_products()
+    cart_products, total_amount = get_cart_items()
     
     if not cart_products:
         return {'success': False, 'error': 'Cart is empty'}
@@ -214,9 +178,7 @@ def process_checkout(form_data):
     order_id = save_order_to_databases(order_data)
     
     if order_id:
-        # Clear cart after successful order
-        session['cart'] = []
-        session.modified = True
+        clear_user_cart()
         return {'success': True, 'order_id': order_id}
     else:
         return {'success': False, 'error': 'Failed to save order'}
@@ -329,7 +291,7 @@ def process_billing(form_data):
         payment_method = form_data.get('payment')
         
         # Get cart products
-        cart_products, total_amount = get_cart_products()
+        cart_products, total_amount = get_cart_items()
         
         if not cart_products:
             return {'success': False, 'error': 'Cart is empty'}
