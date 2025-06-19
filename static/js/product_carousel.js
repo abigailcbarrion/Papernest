@@ -6,25 +6,26 @@ document.addEventListener('DOMContentLoaded', function() {
 // Carousel functionality only
 function initializeCarousel() {
     const carousel = document.getElementById('bookCarousel');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    
+    let prevBtn = document.getElementById('prevBtn');
+    let nextBtn = document.getElementById('nextBtn');
     if (!carousel) return;
-    
-    const isMobile = window.innerWidth <= 768;
-    
+
+    let isMobile = window.innerWidth <= 768;
     if (isMobile) {
         setupMobileCarousel(carousel, prevBtn, nextBtn);
     } else {
         setupDesktopCarousel(carousel, prevBtn, nextBtn);
     }
-    
-    // Handle window resize
-    window.addEventListener('resize', function() {
+
+    // Track mode and re-initialize only when mode changes
+    window.addEventListener('resize', function () {
         const newIsMobile = window.innerWidth <= 768;
-        
         if (newIsMobile !== isMobile) {
-            if (newIsMobile) {
+            isMobile = newIsMobile;
+            // Always get fresh references after clearing listeners
+            prevBtn = document.getElementById('prevBtn');
+            nextBtn = document.getElementById('nextBtn');
+            if (isMobile) {
                 setupMobileCarousel(carousel, prevBtn, nextBtn);
             } else {
                 setupDesktopCarousel(carousel, prevBtn, nextBtn);
@@ -33,48 +34,154 @@ function initializeCarousel() {
     });
 }
 
+function clearArrowListeners(prevBtn, nextBtn) {
+    // Clone the node to remove all listeners
+    if (prevBtn) {
+        const newPrev = prevBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+    }
+    if (nextBtn) {
+        const newNext = nextBtn.cloneNode(true);
+        nextBtn.parentNode.replaceChild(newNext, nextBtn);
+    }
+}
+
 function setupMobileCarousel(carousel, prevBtn, nextBtn) {
-    // Mobile: Enable touch scrolling, hide arrows
-    if (prevBtn) prevBtn.style.display = 'none';
-    if (nextBtn) nextBtn.style.display = 'none';
+    clearArrowListeners(prevBtn, nextBtn);
+    prevBtn = document.getElementById('prevBtn');
+    nextBtn = document.getElementById('nextBtn');
+
+    if (prevBtn) prevBtn.style.display = 'flex';
+    if (nextBtn) nextBtn.style.display = 'flex';
+
+    // Track current card index for snap navigation
+    let currentCardIndex = 0;
+
+    const getCards = () => carousel.querySelectorAll('.product-card');
     
-    // Add momentum scrolling for iOS
-    carousel.style.webkitOverflowScrolling = 'touch';
-    
+    const getCardPosition = (index) => {
+        const cards = getCards();
+        if (index >= cards.length) return carousel.scrollWidth - carousel.clientWidth;
+        if (index < 0) return 0;
+        
+        const card = cards[index];
+        return card.offsetLeft;
+    };
+
+    prevBtn?.addEventListener('click', function () {
+        const cards = getCards();
+        if (currentCardIndex > 0) {
+            currentCardIndex--;
+            const targetPosition = getCardPosition(currentCardIndex);
+            carousel.scrollTo({
+                left: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    nextBtn?.addEventListener('click', function () {
+        const cards = getCards();
+        if (currentCardIndex < cards.length - 1) {
+            currentCardIndex++;
+            const targetPosition = getCardPosition(currentCardIndex);
+            carousel.scrollTo({
+                left: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    // Update current index based on scroll position
+    carousel.addEventListener('scroll', function() {
+        const cards = getCards();
+        const scrollLeft = carousel.scrollLeft;
+        
+        // Find the closest card to the left edge
+        let closestIndex = 0;
+        let minDistance = Math.abs(scrollLeft - getCardPosition(0));
+        
+        for (let i = 1; i < cards.length; i++) {
+            const distance = Math.abs(scrollLeft - getCardPosition(i));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = i;
+            }
+        }
+        
+        currentCardIndex = closestIndex;
+    });
+
     addScrollIndicators(carousel);
 }
 
 function setupDesktopCarousel(carousel, prevBtn, nextBtn) {
-    // Desktop: Use arrow navigation
+    clearArrowListeners(prevBtn, nextBtn);
+    prevBtn = document.getElementById('prevBtn');
+    nextBtn = document.getElementById('nextBtn');
+
     if (prevBtn) prevBtn.style.display = 'flex';
     if (nextBtn) nextBtn.style.display = 'flex';
+
+    // Track current card index for snap navigation
+    let currentCardIndex = 0;
+
+    const getCards = () => carousel.querySelectorAll('.product-card');
     
-    if (prevBtn && nextBtn) {
-        const cardWidth = 220; // Approximate card width including gap
-        let currentScroll = 0;
+    const getCardPosition = (index) => {
+        const cards = getCards();
+        if (index >= cards.length) return carousel.scrollWidth - carousel.clientWidth;
+        if (index < 0) return 0;
         
-        prevBtn.addEventListener('click', function() {
-            currentScroll = Math.max(0, currentScroll - cardWidth * 2);
+        const card = cards[index];
+        return card.offsetLeft;
+    };
+
+    prevBtn?.addEventListener('click', function () {
+        const cards = getCards();
+        if (currentCardIndex > 0) {
+            currentCardIndex--;
+            const targetPosition = getCardPosition(currentCardIndex);
             carousel.scrollTo({
-                left: currentScroll,
+                left: targetPosition,
                 behavior: 'smooth'
             });
-        });
-        
-        nextBtn.addEventListener('click', function() {
-            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-            currentScroll = Math.min(maxScroll, currentScroll + cardWidth * 2);
+        }
+    });
+
+    nextBtn?.addEventListener('click', function () {
+        const cards = getCards();
+        if (currentCardIndex < cards.length - 1) {
+            currentCardIndex++;
+            const targetPosition = getCardPosition(currentCardIndex);
             carousel.scrollTo({
-                left: currentScroll,
+                left: targetPosition,
                 behavior: 'smooth'
             });
-        });
+        }
+    });
+
+    // Update current index based on scroll position
+    carousel.addEventListener('scroll', function() {
+        const cards = getCards();
+        const scrollLeft = carousel.scrollLeft;
         
-        // Update current scroll position on manual scroll
-        carousel.addEventListener('scroll', function() {
-            currentScroll = carousel.scrollLeft;
-        });
-    }
+        // Find the closest card to the left edge
+        let closestIndex = 0;
+        let minDistance = Math.abs(scrollLeft - getCardPosition(0));
+        
+        for (let i = 1; i < cards.length; i++) {
+            const distance = Math.abs(scrollLeft - getCardPosition(i));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = i;
+            }
+        }
+        
+        currentCardIndex = closestIndex;
+    });
+
+    addScrollIndicators(carousel);
 }
 
 function addScrollIndicators(carousel) {
