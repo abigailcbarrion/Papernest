@@ -11,10 +11,16 @@ def index():
     trending_books = get_trending(curr_section='homepage')
     for item in trending_books:
         item['image_path'] = get_books_image_path(item['Product ID'])
-    
+    popular_categories = [
+        {'name': 'Fiction', 'image': url_for('static', filename='images/popular/books_fiction.png'), 'link': url_for('product.category_products', category_name='fiction')},
+        {'name': 'Non-Fiction', 'image': url_for('static', filename='images/popular/books_non_fiction.png'), 'link': url_for('product.category_products', category_name='non-fiction')},
+        {'name': 'Art Supplies', 'image': url_for('static', filename='images/popular/nonbooks_art_supplies.png'), 'link': '/category/art-supplies'},
+        {'name': 'Calendars and Planners', 'image': url_for('static', filename='images/popular/nonbooks_calendar_planner.png'), 'link': '/category/calendars-and-planners'}
+    ]
     return render_template('index.html', 
                         popular_items=trending_books,
                         featured_author=featured_author, 
+                        popular_categories=popular_categories,
                         page_type='homepage')
 
 @main_bp.route('/about')
@@ -30,14 +36,26 @@ def books():
     trending_books = get_trending(curr_section='books')
     for item in trending_books:
         item['image_path'] = get_books_image_path(item['Product ID'])
-    return render_template('books.html', popular_items=trending_books, page_type='books')
+    popular_categories = [
+        {'name': "Children's", 'image': url_for('static', filename='images/popular/books_childrens.png'), 'link': url_for('product.category_products', category_name="children's-books")},
+        {'name': 'Fiction', 'image': url_for('static', filename='images/popular/books_fiction.png'), 'link': url_for('product.category_products', category_name='fiction')},
+        {'name': 'Non-Fiction', 'image': url_for('static', filename='images/popular/books_non_fiction.png'), 'link': url_for('product.category_products', category_name='non-fiction')},
+        {'name': 'Self-Help and Development', 'image': url_for('static', filename='images/popular/books_self_help.png'), 'link': url_for('product.category_products', category_name='self-help-and-personal-development')}
+    ]
+    return render_template('books.html', popular_items=trending_books, page_type='books', popular_categories=popular_categories)
 
 @main_bp.route('/non_books')
 def non_books():
     trending_non_books = get_trending(curr_section='non_books')
     for item in trending_non_books:
         item['image_path'] = get_nonbook_image_path(item['Product ID'])
-    return render_template('non_books.html', popular_items=trending_non_books, page_type='non_books')
+    popular_categories = [
+        {'name': 'Art Supplies', 'image': url_for('static', filename='images/popular/nonbooks_art_supplies.png'), 'link': '/category/art-supplies'},
+        {'name': 'Calendars and Planners', 'image': url_for('static', filename='images/popular/nonbooks_calendar_planner.png'), 'link': '/category/calendars-and-planners'},
+        {'name': 'Notebooks and Journals', 'image': url_for('static', filename='images/popular/nonbooks_notebook_journal.png'), 'link': '/category/notebooks-and-journals'},
+        {'name': 'Novelties', 'image': url_for('static', filename='images/popular/nonbooks_novelties.png'), 'link': '/category/novelties'}
+    ]
+    return render_template('non_books.html', popular_items=trending_non_books, page_type='non_books', popular_categories=popular_categories)
 
 @main_bp.route('/bestsellers')
 def bestsellers():
