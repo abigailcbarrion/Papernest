@@ -1,83 +1,94 @@
 import sqlite3
 from datetime import datetime
 from flask import session
+from utilities.session_utils import get_current_user_id, get_current_username
 from utilities.cart import get_cart_items, clear_user_cart
 from utilities.load_items import load_books, load_nonbooks, get_books_image_path, get_nonbook_image_path
+from utilities.cart import get_cart_items
+from utilities.cart import clear_user_cart
+import json
 
 def get_db_connection(db_name):
-    """Get connection to specific database"""
     conn = sqlite3.connect(f'data/{db_name}')
     conn.row_factory = sqlite3.Row
     return conn
 
-def save_order_to_databases(order_data):
-    """Save order across multiple databases"""
+def save_order_to_database(order):
+    """Save an order to the database using the correct schema"""
     try:
-        # Save main order to users.db
-        users_conn = get_db_connection('users.db')
-        users_cursor = users_conn.cursor()
+        # Get user from session properly
+        if 'user' not in session:
+            print("[DEBUG] No user in session")
+            return False
+            
+        user = session.get('user', {})
         
-        users_cursor.execute('''
-            INSERT INTO orders (user_id, username, subtotal, shipping_cost, total_amount, payment_method, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+        # Try to get user_id from multiple possible fields in session
+        user_id = get_current_user_id()
+        
+        if not user_id:
+            print("[DEBUG] No user ID found in session")
+            return False
+            
+        print(f"[DEBUG] Using user ID from session: {user_id}")
+        
+        # Get username
+        username = get_current_username() or "Customer"
+        
+        conn = get_db_connection('users.db')
+        cursor = conn.cursor()
+        
+        # Calculate totals
+        items = order.get('items', [])
+        subtotal = sum(float(item.get('price', 0)) * int(item.get('quantity', 1)) for item in items)
+        shipping_cost = order.get('shipping_cost', 0)
+        total_amount = subtotal + shipping_cost
+        payment_method = order.get('payment_method', 'Unknown')
+
+        cursor.execute('''
+            INSERT INTO orders (
+                user_id, username, subtotal, shipping_cost, 
+                total_amount, payment_method, status, order_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
-            order_data['user_id'],
-            order_data['username'],
-            order_data['subtotal'],
-            order_data['shipping_cost'],
-            order_data['total_amount'],
-            order_data['payment_method'],
-            order_data['status']
+            user_id,
+            username,
+            subtotal,
+            shipping_cost,
+            total_amount,
+            payment_method,
+            'pending',
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ))
         
-        order_id = users_cursor.lastrowid
+        # Get the auto-incremented order_id
+        order_id = cursor.lastrowid
+        print(f"[DEBUG] Created order with ID: {order_id}")
         
-        # Save shipping info
-        shipping = order_data['shipping_info']
-        users_cursor.execute('''
-            INSERT INTO shipping_info (order_id, method, recipient_name, address, city, province, postal_code, phone)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (order_id, shipping['method'], shipping['name'], shipping['address'], 
-              shipping['city'], shipping['province'], shipping['postal_code'], shipping['phone']))
+        # CRITICAL: Make sure we commit the transaction
+        conn.commit()
         
-        # Save billing info
-        billing = order_data['billing_info']
-        users_cursor.execute('''
-            INSERT INTO billing_info (order_id, name, address, city, province, postal_code, phone)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (order_id, billing['name'], billing['address'], billing['city'], 
-              billing['province'], billing['postal_code'], billing['phone']))
-        
-        users_conn.commit()
-        users_conn.close()
-        
-        # Save order items to respective databases
-        for item in order_data['items']:
-            db_name = 'books.db' if item['type'] == 'book' else 'nonbooks.db'
-            item_conn = get_db_connection(db_name)
-            item_cursor = item_conn.cursor()
+        order['order_id'] = order_id  
+
+        # Verify the order was saved
+        cursor.execute('SELECT * FROM orders WHERE order_id = ?', (order_id,))
+        saved_order = cursor.fetchone()
+        if saved_order:
+            print(f"[DEBUG] Order {order_id} verified in database!")
+        else:
+            print(f"[ERROR] Order {order_id} not found after save!")
             
-            item_cursor.execute('''
-                INSERT INTO order_items (order_id, product_id, product_name, product_type, price, quantity, subtotal)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                order_id,
-                item.get('Product ID'),
-                item.get('Book Name', item.get('Product Name')),
-                item['type'],
-                item.get('Price (PHP)'),
-                item.get('quantity', 1),
-                float(item.get('Price (PHP)', 0)) * item.get('quantity', 1)
-            ))
-            
-            item_conn.commit()
-            item_conn.close()
+        conn.close()
         
-        return order_id
+        # Store order ID in the original order object
+        order['order_id'] = order_id
         
+        return {'success': True, 'order_id': order_id}
     except Exception as e:
-        print(f"Error saving order: {e}")
-        return None
+        print(f"Error saving order: {str(e)}")
+        import traceback
+        traceback.print_exc()  # Print detailed error
+        return False
 
 def get_order_by_id(order_id):
     """Get complete order from multiple databases"""
@@ -175,7 +186,7 @@ def process_checkout(form_data):
     }
     
     # Save order
-    order_id = save_order_to_databases(order_data)
+    order_id = save_order_to_database(order_data)
     
     if order_id:
         clear_user_cart()
@@ -186,6 +197,11 @@ def process_checkout(form_data):
 def get_user_orders_from_db(user_id):
     """Get all orders for a user from existing database"""
     try:
+        if user_id is None:
+            user_id = get_user_id_from_session()
+            if not user_id:
+                return []
+
         conn = get_db_connection('users.db')
         cursor = conn.cursor()
         
@@ -285,27 +301,278 @@ def get_user_id_from_session():
     
     return None
 
-def process_billing(form_data):
-    """Process billing/payment information"""
+def process_billing(payment_method, payment_details=None):
+    """Process billing information and create an order"""
     try:
-        payment_method = form_data.get('payment')
+        # Check if user is logged in
+        if 'user' not in session:
+            print("[DEBUG] No user in session for billing")
+            return {'success': False, 'error': 'User not logged in'}
         
-        # Get cart products
-        cart_products, total_amount = get_cart_items()
+        # Get cart items
+        cart_items, total_amount = get_cart_items()
+        print(f"[DEBUG] Total amount: {total_amount}")
         
-        if not cart_products:
-            return {'success': False, 'error': 'Cart is empty'}
+        if not cart_items:
+            return {'success': False, 'error': 'Your cart is empty'}
         
-        # For now, just clear the cart and return success
-        # You can implement proper order creation later
-        session['cart'] = []
+        # Parse payment details if provided
+        payment_method_name = payment_method
+        if payment_details:
+            try:
+                payment_info = json.loads(payment_details)
+                payment_method_name = payment_info.get('method', payment_method)
+            except:
+                pass
         
-        # Generate a fake order ID for now
-        import random
-        order_id = random.randint(1000, 9999)
+        # Create order
+        order = {
+            'items': cart_items,
+            'subtotal': total_amount,
+            'shipping_cost': 0,
+            'total_amount': total_amount,
+            'payment_method': payment_method_name
+        }
         
-        return {'success': True, 'order_id': order_id}
+        # Save order to database
+        result = save_order_to_database(order)
+        
+        if result.get('success'):
+            order_id = result.get('order_id')
+            
+            # IMPORTANT: Save each item to the appropriate order_items table
+            for item in cart_items:
+                save_item_to_order_items(order_id, item)
+            
+            # Clear cart after successful order
+            clear_user_cart()
+            
+            # Store order ID in session for reference
+            session['last_order_id'] = order_id
+            return {'success': True, 'order_id': order_id}
+        else:
+            return {'success': False, 'error': 'Failed to save order to database'}
         
     except Exception as e:
-        print(f"Billing processing error: {e}")
-        return {'success': False, 'error': 'Failed to process order'}
+        print(f"Error processing billing: {str(e)}")
+        return {'success': False, 'error': f'An error occurred: {str(e)}'}
+
+def save_order_with_user_id(payment_method, user_id, username=None):
+    """Save an order with explicit user ID without relying on session"""
+    try:
+        print(f"[DEBUG] Processing order for user_id: {user_id}")
+        
+        # Temporarily set the user ID in session if needed
+        original_user = None
+        if 'user' in session:
+            original_user = session.get('user')
+            
+        # Set the user in session temporarily to use with get_cart_items()
+        session['user'] = {'id': user_id, 'user_id': user_id, 'username': username or 'Customer'}
+        
+        try:
+            cart_items, total_amount = get_cart_items()  # Remove the parameter
+            
+            if not cart_items:
+                return {'success': False, 'error': 'Your cart is empty'}
+            
+            # Create order object
+            order = {
+                'user_id': user_id,
+                'username': username or 'Customer',
+                'items': cart_items,
+                'subtotal': total_amount,
+                'shipping_cost': 0,
+                'total_amount': total_amount,
+                'payment_method': payment_method
+            }
+            
+            db_path = 'data/users.db'
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            try:
+                # Insert order
+                cursor.execute('''
+                    INSERT INTO orders (
+                        user_id, username, subtotal, shipping_cost,
+                        total_amount, payment_method, status, order_date
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    user_id,
+                    username or 'Customer',
+                    total_amount,
+                    0,
+                    total_amount,
+                    payment_method,
+                    'pending',
+                    datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ))
+                
+                # Get order ID
+                order_id = cursor.lastrowid
+                print(f"[DEBUG] Created order with ID: {order_id}")
+                
+                # Commit transaction
+                conn.commit()
+
+                for item in cart_items:
+                    save_item_to_order_items(order_id, item)
+                
+                clear_user_cart()  # No parameters here either
+                
+                return {'success': True, 'order_id': order_id}
+                
+            except Exception as e:
+                print(f"[ERROR] Database error: {str(e)}")
+                return {'success': False, 'error': str(e)}
+                
+            finally:
+                conn.close()
+                
+        finally:
+            # Restore original user in session if there was one
+            if original_user:
+                session['user'] = original_user
+            elif 'user' in session:
+                session.pop('user')
+    
+    except Exception as e:
+        print(f"[ERROR] Order processing error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'error': str(e)}
+
+def save_order_items(order_id, items):
+    """Save order items to the appropriate database"""
+    for item in items:
+        product_id = item.get('product_id')
+        product_type = item.get('product_type', 'book')
+        product_name = item.get('product_name')
+        price = item.get('price', 0)
+        quantity = item.get('quantity', 1)
+        subtotal = price * quantity
+        
+        # Determine which database to use based on product type
+        db_name = 'books.db' if product_type.lower() == 'book' else 'non_books.db'
+        
+        try:
+            conn = get_db_connection(db_name)
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                INSERT INTO order_items (
+                    order_id, product_id, product_name, product_type,
+                    price, quantity, subtotal
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                order_id,
+                product_id,
+                product_name,
+                product_type,
+                price,
+                quantity,
+                subtotal
+            ))
+            
+            conn.commit()
+            conn.close()
+            
+        except Exception as e:
+            print(f"Error saving order item {product_id} to {db_name}: {str(e)}")
+
+# Add this to utilities/checkout.py
+
+def process_billing_fixed(payment_method, payment_details=None):
+    """Process billing with fixed database saving"""
+    try:
+        # Get user ID
+        user_id = get_current_user_id()
+        
+        if not user_id:
+            return {'success': False, 'error': 'User not logged in'}
+            
+        print(f"[DEBUG] Processing billing for user_id: {user_id}")
+        
+        # Get cart items
+        from utilities.cart import get_cart_items, clear_user_cart
+        cart_items, total_amount = get_cart_items()
+        
+        if not cart_items:
+            return {'success': False, 'error': 'Your cart is empty'}
+        
+        # Create order object
+        order = {
+            'items': cart_items,
+            'subtotal': total_amount,
+            'shipping_cost': 0,
+            'total_amount': total_amount,
+            'payment_method': payment_method
+        }
+        
+        # Save order to database
+        order_result = save_order_to_database(order)
+        
+        if order_result.get('success'):
+            order_id = order_result.get('order_id')
+            
+            # IMPORTANT: Save each item to the appropriate order_items table
+            for item in cart_items:
+                save_item_to_order_items(order_id, item)
+            
+            # Clear cart
+            clear_user_cart()
+            
+            return {'success': True, 'order_id': order_id}
+        else:
+            return {'success': False, 'error': 'Failed to save order'}
+        
+    except Exception as e:
+        print(f"[ERROR] Billing processing error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'error': str(e)}
+
+def save_item_to_order_items(order_id, item):
+    """Save an individual item to the appropriate order_items table"""
+    try:
+        product_id = item.get('product_id')
+        product_type = item.get('product_type', 'book')
+        product_name = item.get('product_name')
+        price = float(item.get('price', 0))
+        quantity = int(item.get('quantity', 1))
+        subtotal = price * quantity
+        
+        # Determine which database to use
+        db_name = 'books.db' if product_type.lower() == 'book' else 'non_books.db'
+        
+        # Connect to appropriate database
+        from database_connection.connector import get_db_connection
+        conn = get_db_connection(db_name)
+        cursor = conn.cursor()
+        
+        # Insert the item
+        cursor.execute('''
+            INSERT INTO order_items (
+                order_id, product_id, product_name, product_type,
+                price, quantity, subtotal
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            order_id,
+            product_id,
+            product_name,
+            product_type,
+            price,
+            quantity,
+            subtotal
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        print(f"[DEBUG] Saved item {product_id} to {db_name} order_items table")
+        return True
+        
+    except Exception as e:
+        print(f"[ERROR] Failed to save item {item.get('product_id')} to order_items: {str(e)}")
+        return False

@@ -50,7 +50,7 @@ def view_all_databases():
     databases = [
         'data/users.db',
         'data/books.db', 
-        'data/nonbooks.db'
+        'data/non_books.db'
     ]
     
     for db_path in databases:
