@@ -4,159 +4,199 @@
     <title>Non-Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+      <title>Non-Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .category-heading{
-          color: #ED1D7F;
-          text-align: center;
-        }
-        .popular-category{
-          color: #11B8CE;
-          text-align: center;
-          margin: 80px 0 80px 0;
-        }
-        .art-mats-wrapper{
-            background-color: #11B8CE;
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
-            position: relative;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            padding: 40px 0;
-            overflow: hidden;
-        }
-        .art-mats-image {
-            margin-left: 50px;
-        }
-        .art-mats-image img{
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .art-mats-content{
-            color: #FFFFFF;
-            text-align: right;
-            padding: 0 50px;
-        }
-        .art-mats-content h1{
-            color: #FFFFFF;
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-        .shop-link {
-            color: #FFFFFF;
-            text-decoration: underline;
-            display: inline-block;
-            margin: 20px 0;
-            transition: background-color 0.3s, color 0.3s;
-        }  
-        /* Make it stack vertically on smaller screens */
-        @media (max-width: 768px){
-            .art-mats-wrapper{
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .art-mats-content{
-                text-align: center;
-                padding: 20px;
-            }
-        }
-        .trending-wrapper{
-            background-color: #FAC102;
-            width: 100vw;
-            min-height: 200px;
-            margin-left: calc(-50vw + 50%);
-            position: relative;
-            padding: 40px 0;
-            overflow: hidden;
-        }
-        .trending-content{
-            padding: 30px 0 10px;
-        }
-        
-        .trending-content h1{
-            color: #FFFFFF;
-            font-size: 26px;
-            margin: 0 0 0 60px;
-        }
-        body {
-            overflow-x: hidden;
-        }
-    </style>
-  <title>Non-Books</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
-  <!-- Add Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .shop-now-section{
-      background-color: #11B8CE;
-      width: 100vw;
-      flex: 0 0 100vw; 
-      margin-left: calc(-50vw + 50%);
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 40px 0;
-      overflow: hidden;
+  /* Base Styles */
+  body {
+    overflow-x: hidden;
+    font-family: sans-serif;
+  }
+
+  .category-heading,
+  .popular-category {
+    text-align: center;
+  }
+
+  .category-heading {
+    color: #ED1D7F;
+  }
+
+  .popular-category {
+    color: #11B8CE;
+    margin: 80px 0;
+  }
+
+  .breadcrumb {
+    margin: 20px 0;
+    font-size: 14px;
+  }
+
+  .breadcrumb a {
+    text-decoration: none;
+    color: #333;
+  }
+
+  .breadcrumb span {
+    color: #666;
+  }
+
+  .art-mats-wrapper,
+  .shop-now-section {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 40px 0;
+    overflow: hidden;
+  }
+
+  .art-mats-wrapper {
+    background-color: #11B8CE;
+  }
+
+  .shop-now-section {
+    background-color: #11B8CE;
+  }
+
+  .art-mats-image,
+  .shop-now-image-container {
+    margin-left: 50px;
+    padding: 0 50px;
+  }
+
+  .art-mats-image img,
+  .shop-now-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .art-mats-content,
+  .shop-now-content {
+    color: #fff;
+    text-align: right;
+    padding: 0 50px;
+  }
+
+  .art-mats-content h1,
+  .shop-now-content h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .shop-link,
+  .shop-now-link {
+    color: #fff;
+    text-decoration: underline;
+    display: inline-block;
+    margin: 20px 0;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .trending-wrapper {
+    background-color: #FAC102;
+    width: 100vw;
+    min-height: 200px;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    padding: 40px 0;
+    overflow: hidden;
+  }
+
+  .trending-content {
+    padding: 30px 0 10px;
+  }
+
+  .trending-content h1 {
+    color: #fff;
+    font-size: 26px;
+    margin-left: 60px;
+  }
+
+  .products {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+  }
+
+  .sidebar-div {
+    grid-row: span 4 / span 4;
+  }
+
+  .products-div {
+    grid-column: span 4 / span 4;
+    grid-row: span 5 / span 5;
+  }
+
+  /* Responsive Styles: For 768px and below */
+  @media (max-width: 768px) {
+    .art-mats-wrapper,
+    .shop-now-section {
+      grid-template-columns: 1fr;
+      text-align: center;
     }
-    .shop-now-image-container{
-      height: 100%;
-      width: 100%;
-      display: flex;
-      object-fit: contain;
-      align-items: center;
-      padding: 0 50px;
-    }
-    .shop-now-image{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .shop-now-content{
-      color: #FFFFFF;
-      text-align: right;
-      padding: 0 50px;
-    }
-    .shop-now-content h1{
-      color: #FFFFFF;
-      font-size: 48px;
-      margin-bottom: 10px;
-    }
-    .shop-now-link{
-      color: #FFFFFF;
-      text-decoration: underline;
-      display: inline-block;
-      margin: 20px 0;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    body{
-      overflow-x: hidden;
-    }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(5, 1fr);
-      gap: 10px;
-      max-width: 1200px;
+
+    .art-mats-image,
+    .shop-now-image-container {
       margin: 0 auto;
-      margin-bottom: 40px;
+      padding: 0 20px;
     }
-    .sidebar-div {
-      grid-row: span 4 / span 4;
-      margin-left: 0px;
+
+    .art-mats-content,
+    .shop-now-content {
+      text-align: center;
+      padding: 20px;
     }
-    .products-div {
-      grid-column: span 4 / span 4;
-      grid-row: span 5 / span 5;
-      margin-right: 0px;
+
+    .art-mats-content h1,
+    .shop-now-content h1 {
+      font-size: 28px;
     }
-  </style>
+
+    .trending-content h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 22px;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      margin-left: 10px;
+    }
+
+    .products {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      padding: 0 10px;
+    }
+
+    .category-heading,
+    .popular-category {
+      font-size: 18px;
+      margin: 40px 0;
+    }
+
+    .shop-link,
+    .shop-now-link {
+      font-size: 14px;
+    }
+  }
+</style>
 </head>
 <body>
   <div class="page-wrapper">

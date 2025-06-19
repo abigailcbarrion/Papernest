@@ -2,25 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Account</title>
     <!-- Add Font Awesome CDN below -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_footer.css') }}">
+    <style>
+        .password-input-wrapper input[type="password"],
+        .password-input-wrapper input[type="text"] {
+            height: 40px;         /* or your preferred height */
+            line-height: 40px;    /* match the height */
+            font-family: inherit;
+            font-size: 1rem;
+            letter-spacing: 0; /* Force same spacing for both types */
+            width: 100%;
+            padding-right: 38px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
     {% include 'components/page_header.html' %}
     <div class="account-main-wrapper">
         <div class="account-nav">
-            <h4 class="active">Dashboard</h4>
-            <h4>My Orders</h4>
-            <h4>Discount Cards</h4>
-            <h4>My Wishlist</h4>
+            <h4 id="nav-dashboard" class="nav-item active" onclick="showSection('dashboard')">Dashboard</h4>
+            <h4 id="nav-orders" class="nav-item" onclick="showSection('orders')">My Orders</h4>
+            <h4 id="nav-discount" class="nav-item" onclick="showSection('discount')">Discount Cards</h4>
+            <h4 id="nav-wishlist" class="nav-item" onclick="showSection('wishlist')">My Wishlist</h4>
             <h4><a href="{{ url_for('auth.logout') }}">Logout</a></h4>
         </div>
-        <div class="account-container">
+        <div id="dashboard-container" class="account-container">
             <h2>Dashboard</h2>
             <h3>Account Information</h3>
             <div class="profile-box">
@@ -34,12 +47,12 @@
                 <h4>Email: {{ user.get("email", "") }}</h4>
             </div>
             <div class="edit-actions">
-                <h4 class="edit-details-box">EDIT DETAILS</h4>
-                <h4 class="change-password-box">CHANGE PASSWORD</h4>
+                <h4 class="edit-details-box" onclick="showEditPopup()">EDIT DETAILS</h4>
+                <h4 class="change-password-box" onclick="showChangePasswordPopup()">CHANGE PASSWORD</h4>
             </div>
             <div class="address-book-header">
                 <h4>Address Book</h4>
-                <h5 class="manage-address-book">Manage your Address Book</h5>
+                <h4 class="manage-address-book" onclick="openAddressPopup()">Manage Address Book</h4>
             </div>
             <div class="address-row-group" style="display: flex; gap: 32px;">
                 <div class="address-row">
@@ -48,7 +61,6 @@
                         {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
                         Postal Code: {{ user.get("postal_code", "") }}
                     </p>
-                    <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
                 <div class="address-row">
                     <h5>Billing Address:</h5>
@@ -56,30 +68,333 @@
                         {{ user.get("barangay", "").title() }}, {{ user.get("city", "").title() }}, {{ user.get("province", "").title() }}, {{ user.get("country", "").title() }}<br>
                         Postal Code: {{ user.get("postal_code", "") }}
                     </p>
-                    <h4 class="add-address-link">ADD NEW ADDRESS</h4>
                 </div>
             </div>
         </div>
-        <div class="orders-container" style="display: none;">
+        <div id="orders-container" class="account-container" style="display: none;">
             <h2>My Orders</h2>
             <p>You don't have any orders yet.</p>
             <!-- Orders content will be here -->
         </div>
-        <div class="discount-cards-container" style="display: none;">
+        <div id="discount-container" class="account-container" style="display: none;">
             <h2>Discount Cards</h2>
             <p>To add or replace discount card number, please use the text box below. For any questions, please contact us.</p>
             <h4>Validate Discount Card</h4>
             <!-- Text box here, PlaceHolder: Enter the card number without spaces and branch code-->
             <!-- Button Here "Validate Number"-->
         </div>
-        <div class="my-wishlist-container" style="display: none;">
+        <div id="wishlist-container" class="account-container" style="display: none;">
             <h2>My Wishlist</h2>
-            <p>Your wishlist is empty. Find your next great read! Go back to homepage and start browsing.</p>
-            <!-- Go back to homepage and start browsing is hyperlink-->
-            <!-- Wishlist content will be here -->
+            {% if wishlist_items %}
+              <div class="wishlist-items">
+                  {% for item in wishlist_items %}
+                  <div class="wishlist-item" data-product-id="{{ item.product_id }}" data-product-type="{{ item.product_type }}">
+                      <img src="{{ item.image_path }}" alt="{{ item.product_name }}" onerror="this.src='/static/images/placeholder.png'">
+                      <h4>{{ item.product_name }}</h4>
+                      <div class="price">₱{{ "%.2f"|format(item.price) }}</div>
+                      <p>Added: {{ item.added_date }}</p>
+                      <div class="buttons">
+                          <button class="btn-add-cart" 
+                                  data-product-id="{{ item.product_id }}"
+                                  data-product-type="{{ item.product_type }}"
+                                  data-product-name="{{ item.product_name }}"
+                                  data-price="{{ item.price }}"
+                                  data-image-path="{{ item.image_path }}">
+                              Add to Cart
+                          </button>
+                          <button class="btn-remove" onclick="removeFromWishlist('{{ item.product_id }}', '{{ item.product_type }}', this)">
+                              Remove
+                          </button>
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+            {% else %}
+              <div class="empty-wishlist">
+                    <i class="fas fa-heart" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                    <p>Your wishlist is empty. Find your next great read!</p>
+                    <p><a href="{{ url_for('main.index') }}">Go back to homepage and start browsing</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>  
+    <div id="editDetailsPopup" class="popup-overlay" style="display:none;">
+      <div class="popup-content">
+        <span class="close-btn" onclick="closeEditPopup()">&times;</span>
+        <h3>Edit Your Details</h3>
+        <form>
+          <label>Title:</label>
+          <input type="text" name="title"><br>
+          <label>First Name:</label>
+          <input type="text" name="first name"><br>
+          <label>Last Name:</label>
+          <input type="text" name="last name"><br>
+          <label>Birth Date:</label>
+          <input type="text" name="birth date"><br>
+          <label>Gender:</label>
+          <input type="text" name="gender"><br>
+          <label>Phone Number:</label>
+          <input type="text" name="email"><br>
+          <label>Email:</label>
+          <input type="text" name="email"><br>
+
+          <!-- Add more fields as needed -->
+          <button type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="change-password-overlay" style="display:none;">
+      <div class="change-password-content">
+        <span class="change-password-close-btn" onclick="closeChangePasswordPopup()">&times;</span>
+        <h3>Change Password</h3>
+        <form>
+          <label>Current Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" name="old_password" placeholder="Current password">
+            <button type="button" class="toggle-password" aria-label="Show/Hide Password" onclick="togglePassword(this)">
+              <span class="eye-icon"></span>
+            </button>
+          </div>
+          <label>New Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" name="new_password" placeholder="New password">
+            <button type="button" class="toggle-password" aria-label="Show/Hide Password" onclick="togglePassword(this)">
+              <span class="eye-icon"></span>
+            </button>
+          </div>
+          <label>Confirm Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" name="confirm_new_password" placeholder="Confirm Password">
+            <button type="button" class="toggle-password" aria-label="Show/Hide Password" onclick="togglePassword(this)">
+              <span class="eye-icon"></span>
+            </button>
+          </div>
+          <button type="submit">Confirm</button>
+        </form>
+      </div>
+    </div>
+
+<!-- Address Popup -->
+<div id="addressPopup" class="popup-overlay" style="display: none;">
+  <div class="popup-content address-popup">
+    <span class="close-btn" onclick="closeAddressPopup()">&times;</span>
+    <div class="address-header">
+      <h2>My Address Book</h2>
+    </div>
+    <table class="address-table">
+      <tr><th colspan="2">Address</th></tr>
+      <tr><td>First name</td><td>{{ user.get("first_name", "").title() }}</td></tr>
+      <tr><td>Last name</td><td>{{ user.get("last_name", "").title() }}</td></tr>
+      <tr><td>City</td><td>{{ user.get("city", "").title() }}</td></tr>
+      <tr><td>Barangay</td><td>{{ user.get("barangay", "").title() }}</td></tr>
+      <tr><td>Province</td><td>{{ user.get("province", "").title() }}</td></tr>
+      <tr><td>Street</td><td>{{ user.get("street", "").title() }}</td></tr>
+      <tr><td>Postal code</td><td>{{ user.get("postal_code", "").title() }}</td></tr>
+      <tr><td>Country</td><td>{{ user.get("country", "").title() }}</td></tr>
+      <tr><td>Phone number</td><td>{{ user.get("phone_number", "").title() }}</td></tr>
+    </table>
+    <div class="popup-actions">
+      <button onclick="showEditAddress()">EDIT ADDRESS</button>
+      <button onclick="confirmDeleteAddress()">DELETE</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Address Form -->
+<div id="editAddressPopup" class="popup-overlay" style="display: none;">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closeEditAddressPopup()">&times;</span>
+    <h3>Edit Address</h3>
+    <form method="POST" action="{{ url_for('auth.update_address') }}">
+      <label>First Name:</label>
+      <input type="text" name="first_name" value="{{ user.get('first_name', '') }}"><br>
+      <label>Last Name:</label>
+      <input type="text" name="last_name" value="{{ user.get('last_name', '') }}"><br>
+      <label>City:</label>
+      <input type="text" name="city" value="{{ user.get('city', '') }}"><br>
+      <label>Barangay:</label>
+      <input type="text" name="barangay" value="{{ user.get('barangay', '') }}"><br>
+      <label>Province:</label>
+      <input type="text" name="province" value="{{ user.get('province', '') }}"><br>
+      <label>Street:</label>
+      <input type="text" name="street" value="{{ user.get('street', '') }}"><br>
+      <label>Postal Code:</label>
+      <input type="text" name="postal_code" value="{{ user.get('postal_code', '') }}"><br>
+      <label>Country:</label>
+      <input type="text" name="country" value="{{ user.get('country', '') }}"><br>
+      <label>Phone Number:</label>
+      <input type="text" name="phone_number" value="{{ user.get('phone_number', '') }}"><br>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation -->
+<div id="deleteAddressPopup" class="popup-overlay" style="display: none;">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closeDeleteAddressPopup()">&times;</span>
+    <h3>Are you sure you want to delete this address?</h3>
+    <form method="POST" action="{{ url_for('auth.delete_address') }}">
+      <button type="submit">Yes, Delete</button>
+      <button type="button" onclick="closeDeleteAddressPopup()">Cancel</button>
+    </form>
+  </div>
+</div>
+
         </div>
     </div>
+
     <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
+    <script>
+// Navigation between sections
+function showSection(sectionName) {
+    // Hide all containers
+    document.getElementById('dashboard-container').style.display = 'none';
+    document.getElementById('orders-container').style.display = 'none';
+    document.getElementById('discount-container').style.display = 'none';
+    document.getElementById('wishlist-container').style.display = 'none';
+    
+    // Remove active class from all nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Show selected container
+    document.getElementById(sectionName + '-container').style.display = 'block';
+    
+    // Add active class to selected nav item
+    document.getElementById('nav-' + sectionName).classList.add('active');
+    
+    // Update URL hash
+    window.location.hash = sectionName;
+}
+
+// Check URL hash on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addressPopup').style.display = 'none';
+    const hash = window.location.hash.substring(1);
+    if (hash && ['dashboard', 'orders', 'discount', 'wishlist'].includes(hash)) {
+        showSection(hash);
+    }
+    
+    // Initialize cart buttons for wishlist items
+    if (typeof initializeCartButtons === 'function') {
+        initializeCartButtons();
+    }
+});
+
+// Remove item from wishlist
+function removeFromWishlist(productId, productType, button) {
+    if (!confirm('Remove this item from your wishlist?')) {
+        return;
+    }
+    
+    fetch('/wishlist/remove', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            product_type: productType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the item from the page
+            const wishlistItem = button.closest('.wishlist-item');
+            wishlistItem.style.transition = 'all 0.3s ease';
+            wishlistItem.style.transform = 'translateX(-100%)';
+            wishlistItem.style.opacity = '0';
+            
+            setTimeout(() => {
+                wishlistItem.remove();
+
+                // Check if wishlist is now empty
+                const remainingItems = document.querySelectorAll('.wishlist-item');
+                if (remainingItems.length === 0) {
+                    const wishlistContainer = document.getElementById('wishlist-container');
+                    wishlistContainer.innerHTML = `
+                        <h2>My Wishlist</h2>
+                        <div class="empty-wishlist">
+                            <i class="fas fa-heart" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                            <p>Your wishlist is empty. Find your next great read!</p>
+                            <p><a href="{{ url_for('main.index') }}">Go back to homepage and start browsing</a></p>
+                        </div>
+                    `;
+                }
+            }, 300);
+            
+            showNotification('Item removed from wishlist', 'success');
+        } else {
+            showNotification(data.message || 'Failed to remove item', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error removing from wishlist:', error);
+        showNotification('Error removing item', 'error');
+    });
+}
+
+function showEditPopup() {
+  document.getElementById('editDetailsPopup').style.display = 'flex';
+}
+function closeEditPopup() {
+  document.getElementById('editDetailsPopup').style.display = 'none';
+}
+function showChangePasswordPopup() {
+  document.querySelector('.change-password-overlay').style.display = 'flex';
+}
+function closeChangePasswordPopup() {
+  document.querySelector('.change-password-overlay').style.display = 'none';
+}
+function togglePassword(btn) {
+  const input = btn.parentElement.querySelector('input');
+  const icon = btn.querySelector('.eye-icon');
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.add('closed'); // Show eye closed
+  } else {
+    input.type = "password";
+    icon.classList.remove('closed'); // Show eye open
+  }
+}
+  function openAddressPopup() {
+    document.getElementById("addressPopup").style.display = "flex";
+  }
+
+  function closeAddressPopup() {
+    document.getElementById("addressPopup").style.display = "none";
+  }
+
+  function showEditAddress() {
+    document.getElementById("editAddressPopup").style.display = "flex";
+  }
+
+  function closeEditAddressPopup() {
+    document.getElementById("editAddressPopup").style.display = "none";
+  }
+
+  function confirmDeleteAddress() {
+    document.getElementById("deleteAddressPopup").style.display = "flex";
+  }
+
+  function closeDeleteAddressPopup() {
+    document.getElementById("deleteAddressPopup").style.display = "none";
+  }
+
+  window.addEventListener("click", function (e) {
+    ['addressPopup', 'editAddressPopup', 'deleteAddressPopup'].forEach(id => {
+      const popup = document.getElementById(id);
+      if (e.target === popup) {
+        popup.style.display = "none";
+      }
+    });
+  });
+</script>
     {% include 'components/page_footer.html' %}
 </body>
 </html>
