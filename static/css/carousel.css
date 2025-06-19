@@ -2,7 +2,7 @@
 .carousel-container {
     position: relative;
     width: 100vw; /* Full viewport width */
-    height: 400px;
+    height: 520px;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -79,27 +79,32 @@
     right: 15px;
 }
 
-/* Dots */
+/* Dots - Positioned below content */
 .dots-container {
     position: absolute;
-    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;
     z-index: 10;
+    background: #ffffff; /* White background for contrast */
+    padding: 8px 16px; /* Add padding for better visibility */
+    border-radius: 20px; /* Rounded corners */
+   
 }
 
 .dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
+    background: #D3D3D3; /* Light gray for inactive dots */
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
 .dot.active,
 .dot:hover {
-    background: white;
+    background: #ed1d7f; /* Match your brand color */
+    transform: scale(1.2); /* Slightly larger when active */
 }
