@@ -243,8 +243,13 @@
     /* Title styling for full width */
     .product-carousel-title {
         color: #FAC102;
-        margin-left: 20px; /* Align with carousel content */
+        text-align: center;
+        margin-left: 0;
         padding-left: 0;
+        font-size: 40px;
+        font-weight: bold;
+        margin: 0 auto;
+        padding: 10px 0;
     }
 }
 
@@ -334,7 +339,9 @@
     
     .product-carousel-title {
         color: #FAC102;
-        margin-left: 10px;
+        text-align: center;
+        margin-left: 0;
+        font-size: 32px;
     }
 }
 
@@ -422,7 +429,9 @@
     
     .product-carousel-title {
         color: #FAC102;
-        margin-left: 12px;
+        text-align: center;
+        margin-left: 0;
+        font-size: 36px;
     }
 }
 
@@ -510,7 +519,9 @@
     
     .product-carousel-title {
         color: #FAC102;
-        margin-left: 15px;
+        text-align: center;
+        margin-left: 0;
+        font-size: 40px;
     }
 }
 
@@ -621,11 +632,14 @@
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
-    
 }
 
-/* Add a general rule for desktop screens and any other screen sizes */
+/* General rule for all screen sizes - Carousel title styling */
 .product-carousel-title {
-    color: #FAC102;
+    color: #FAC102 !important;
+    text-align: center;
+    font-weight: bold;
+    margin: 0 auto;
+    padding: 10px 0;
+    font-size: 32px;
 }
-
