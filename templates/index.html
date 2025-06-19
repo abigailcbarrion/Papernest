@@ -14,20 +14,13 @@
         {% include 'components/page_header.html' %}
         <div class="main-content">
             <div class="container">
-                <div class="categories">
-                    <a href="{{ url_for('product.category_products', category_name='fiction') }}" class="category">Fiction</a>
-                    <a href="{{ url_for('product.category_products', category_name='non-fiction') }}" class="category">Non-Fiction</a>
-                    <a href="/category/art-supplies" class="category">Art Supplies</a>
-                    <a href="/category/calendars-and-planners" class="category">Calendars and Planners</a>
-                </div>
                 {% include 'components/carousel.html' %}            
                 <h2 class="product-carousel-title">What's Trending from #BookTok</h2>
                 {% include 'components/product_carousel.html' %}
                 <script src="{{ url_for('static', filename='js/cart-utils.js') }}"></script>
                 {% include 'components/popular.html' %}
             </div>
-            <!-- Popular Categories-->
-                 {% include 'components/popular.html' %}
+        
         </div>
         {% include 'components/featured_author.html' %}
         {% include 'components/page_footer.html' %}
