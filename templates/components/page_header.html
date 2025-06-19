@@ -62,15 +62,15 @@
                                 
                                 <div class="error-message" id="loginError" style="display: none;">
                                     <i class="fas fa-exclamation-circle"></i>
-                                    <span id="errorText">Invalid username or password. Please try again.</span>
+                                    <span id="errorText">Invalid email or password. Please try again.</span>
                                 </div>
                                 
                                 <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}">
                                     {{ login_form.hidden_tag() }}
                                     <div class="form-login-container">
                                         <div class="input-group">
-                                            {{ login_form.username.label(class="form-label") }}
-                                            {{ login_form.username(class="form-input") }}
+                                            {{ login_form.email.label(class="form-label") }}
+                                            {{ login_form.email(class="form-input", placeholder="Enter your email address") }}
                                         </div>
                                         <div class="input-group password-group">
                                             {{ login_form.password.label(class="form-label") }}
