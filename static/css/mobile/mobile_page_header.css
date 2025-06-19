@@ -4,26 +4,23 @@
     /* Top bar adjustments */
     .top-bar {
         flex-direction: column;
-        gap: 8px;
-        padding: 8px;
+        gap: 0px;
         text-align: center;
     }
-    
     .utility-links {
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
+        display: none;
     }
-    
     .utility-links a {
-        padding: 0 8px;
-        font-size: 12px;
+        display: none;
     }
-    
     .shipping-info {
+        display: block;
         font-size: 12px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    
     /* Header Container - Mobile specific styling */
     .header-container {
         padding: 10px 15px; /* Reduced padding */
@@ -37,19 +34,20 @@
         align-items: center; /* Center all items */
     }
     
-    /* Logo - Centered and prominent */
+    /* Logo - Centered and prominent, moved upwards */
     .logo {
         order: 1;
         width: 100%;
         text-align: center;
+        margin-top: -20px; /* Move logo upwards */
     }
     
     .logo a {
         font-size: 32px; /* Slightly smaller but still prominent */
         margin-right: 0;
         display: block;
+        padding-top: 0; /* Remove any top padding */
     }
-    
     /* Search Bar - Full width, below logo */
     .search-bar-container {
         order: 2;
@@ -93,10 +91,13 @@
         order: 3;
         justify-content: center;
         flex-wrap: wrap;
-        gap: 20px;
         width: 100%;
         margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px; /* add spacing between menu and links */
     }
+    
     
     .user-links a, .login-dropdown .dropbtn {
         margin-right: 0;
@@ -680,4 +681,10 @@
     .desktop-nav {
         display: flex !important;
     }
+}@media (max-width: 600px) {
+    .header-icons {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
 }
+

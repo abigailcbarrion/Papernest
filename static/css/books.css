@@ -150,3 +150,58 @@
     margin: 20px 0;
     transition: background-color 0.3s, color 0.3s;
 }
+
+/* Responsive styles for mobile */
+@media (max-width: 900px) {
+  .account-main-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .account-nav {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px 10px 0 0;
+    box-sizing: border-box;
+  }
+  .account-container,
+  .orders-container,
+  .discount-cards-container,
+  .my-wishlist-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 20px 0;
+    padding: 20px 10px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 600px) {
+  .account-nav h4 {
+    font-size: 16px;
+    padding: 12px 10px;
+  }
+  .edit-details-box,
+  .change-password-box {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .profile-box h4 {
+    padding: 10px 10px;
+    font-size: 15px;
+  }
+  .popup-content,
+  .change-password-content {
+    min-width: 0;
+    width: 98vw;
+    padding: 16px 4vw;
+  }
+  .account-container,
+  .orders-container,
+  .discount-cards-container,
+  .my-wishlist-container {
+    padding: 12px 2vw;
+    font-size: 15px;
+  }
+}
