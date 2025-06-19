@@ -5,6 +5,7 @@
     .top-bar {
         flex-direction: column;
         gap: 0px;
+        padding: 8px;
         text-align: center;
     }
     .utility-links {
@@ -34,20 +35,21 @@
         align-items: center; /* Center all items */
     }
     
-    /* Logo - Centered and prominent, moved upwards */
+    /* Logo - Centered and prominent */
     .logo {
         order: 1;
         width: 100%;
         text-align: center;
-        margin-top: -20px; /* Move logo upwards */
     }
     
     .logo a {
         font-size: 32px; /* Slightly smaller but still prominent */
         margin-right: 0;
+        margin-top: -10px; /* Adjusted margin for better centering */
         display: block;
-        padding-top: 0; /* Remove any top padding */
+        padding-top:none;
     }
+    
     /* Search Bar - Full width, below logo */
     .search-bar-container {
         order: 2;
@@ -92,7 +94,8 @@
         justify-content: center;
         flex-wrap: wrap;
         width: 100%;
-        margin-top: 10px;
+        margin-top: 0px;
+        margin-bottom: 0px;
         display: flex;
         align-items: center;
         gap: 10px; /* add spacing between menu and links */
@@ -688,3 +691,7 @@
     }
 }
 
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
