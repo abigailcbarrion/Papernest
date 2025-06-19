@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/trending.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/popular_category.css') }}">
+    <!-- Add this line to connect mobile styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_books.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -52,5 +55,40 @@
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Check viewport size when page loads and when window resizes
+    function checkViewport() {
+        const grid = document.querySelector('.categories-grid');
+        const boxes = document.querySelectorAll('.category-box');
+        
+        if (window.innerWidth <= 767) {
+            // Mobile view - add classes instead of inline styles
+            console.log("Mobile view active");
+            
+            if (grid) {
+                grid.classList.add('mobile-grid');
+            }
+            
+            boxes.forEach(box => {
+                box.classList.add('mobile-category');
+            });
+        } else {
+            // Desktop view - remove mobile classes
+            if (grid) {
+                grid.classList.remove('mobile-grid');
+            }
+            
+            boxes.forEach(box => {
+                box.classList.remove('mobile-category');
+            });
+        }
+    }
+    
+    // Run on load and on window resize
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+});
+</script>
 </body>
 </html>

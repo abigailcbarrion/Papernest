@@ -1,0 +1,196 @@
+/* mobile_seacrh_results.css - Mobile optimization for search results page */
+
+@media (max-width: 767px) {
+    /* Core layout fixes */
+    body, html {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    .container {
+        padding: 0 10px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Breadcrumb styling */
+    .breadcrumb {
+        font-size: 12px !important;
+        margin: 10px 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    /* Search results header */
+    h2 {
+        font-size: 18px !important;
+        margin: 12px 0 5px 0 !important;
+    }
+
+    /* Stack sidebar and main content */
+    .container div[style*="display: flex"] {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Make sidebar collapsible */
+    .sidebar {
+        width: 100% !important;
+        margin-bottom: 15px !important;
+        border-bottom: 1px solid #eee !important;
+        padding-bottom: 15px !important;
+        position: relative !important;
+    }
+
+    /* Add expand/collapse functionality */
+    .sidebar:before {
+        content: "Filter Results ▼" !important;
+        display: block !important;
+        padding: 10px !important;
+        background: #f5f5f5 !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Hide form by default and show on click via JavaScript */
+    #filterForm {
+        display: none !important;
+        padding: 0 10px !important;
+    }
+    
+    /* Show form when sidebar has active class */
+    .sidebar.active #filterForm {
+        display: block !important;
+    }
+    
+    /* Change arrow when expanded */
+    .sidebar.active:before {
+        content: "Filter Results ▲" !important;
+    }
+
+    /* Style filter sections */
+    .sidebar strong {
+        display: block !important;
+        margin: 15px 0 10px 0 !important;
+        font-size: 14px !important;
+    }
+
+    .custom-radio {
+        display: block !important;
+        margin-bottom: 10px !important;
+        font-size: 13px !important;
+    }
+
+    /* Clear filters button */
+    .clear-filters-btn {
+        width: 100% !important;
+        padding: 12px !important;
+        margin-top: 15px !important;
+        font-size: 14px !important;
+        background-color: #f1f1f1 !important;
+        border: none !important;
+        border-radius: 4px !important;
+    }
+
+    /* Results count */
+    .results-count {
+        text-align: center !important;
+        margin: 15px 0 !important;
+        font-size: 13px !important;
+        color: #666 !important;
+    }
+
+    /* Product grid - change to single column */
+    .product-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    /* Product card styling */
+    .product-card {
+        width: 100% !important;
+        margin: 0 0 15px 0 !important;
+        border: 1px solid #eee !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+    }
+
+    .product-image {
+        height: auto !important;
+        max-height: 200px !important;
+        width: 100% !important;
+        object-fit: contain !important;
+    }
+
+    .product-info {
+        padding: 10px !important;
+    }
+
+    .product-title {
+        font-size: 15px !important;
+        margin: 5px 0 !important;
+        line-height: 1.3 !important;
+    }
+
+    .product-author,
+    .product-category {
+        font-size: 12px !important;
+        margin: 3px 0 !important;
+    }
+
+    .product-price {
+        font-size: 16px !important;
+        font-weight: bold !important;
+        margin: 8px 0 !important;
+    }
+
+    /* Button styling */
+    .product-buttons {
+        display: flex !important;
+        gap: 8px !important;
+    }
+
+    .btn-wishlist {
+        width: 40px !important;
+        height: 36px !important;
+    }
+
+    .btn-add-cart {
+        flex: 1 !important;
+        height: 36px !important;
+        font-size: 14px !important;
+    }
+
+    /* No results styling */
+    .no-results {
+        padding: 20px 15px !important;
+        text-align: center !important;
+    }
+
+    .no-results h3 {
+        font-size: 18px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .no-results p {
+        font-size: 14px !important;
+        margin: 8px 0 !important;
+    }
+
+    .no-results ul {
+        margin: 15px 0 !important;
+        padding-left: 20px !important;
+    }
+
+    .no-results li {
+        margin-bottom: 8px !important;
+        font-size: 14px !important;
+    }
+}
