@@ -1,103 +1,96 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
-from utilities.cart import (
-    add_to_cart_data,
-    update_cart_quantity,
-    remove_from_cart_data,
-    clear_cart,
-    get_cart_count,
-    get_cart_total,
-    get_cart_items,
-    add_to_wishlist_data,
-    remove_from_wishlist_data,
-    get_wishlist_count,
-    get_wishlist_items
-)
+from utilities.cart import *
+from flask_wtf.csrf import CSRFError
 
 cart_bp = Blueprint('cart', __name__)
 
 @cart_bp.route('/cart')
 def cart():
+    print("[DEBUG] Cart route accessed")
+    
     if 'user' not in session:
+        print("[DEBUG] No user in session, redirecting to index")
         return redirect(url_for('main.index'))
     
-    cart_products, total_amount = get_cart_items()
+    print(f"[DEBUG] User in session: {session['user']}")
     
-    return render_template('cart.html', 
-                        cart_products=cart_products, 
-                        total_amount=total_amount)
+    cart_products, total_amount = get_cart_items()
+    print(f"[DEBUG] Cart route - cart_products: {cart_products}")
+    print(f"[DEBUG] Cart route - total_amount: {total_amount}")
+    
+    return render_template('cart.html', cart_products=cart_products, total_amount=total_amount)
 
 @cart_bp.route('/cart/add', methods=['POST'])
 def add_to_cart():
+    print("=== CART ADD ROUTE CALLED ===")
+    print(f"User in session: {'user' in session}")
+    
     if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in to add items to cart'})
+        print("User not logged in")
+        return jsonify({'success': False, 'message': 'Please log in to add items to cart'}), 401
     
     try:
         data = request.get_json()
+        print(f"Received data: {data}")
         
         if not data:
-            return jsonify({'success': False, 'message': 'No data provided'})
+            print("No data provided")
+            return jsonify({'success': False, 'message': 'No data provided'}), 400
         
-        product_id = data.get('product_id')
-        product_type = data.get('product_type')
-        product_name = data.get('product_name')
-        price = data.get('price')
-        image_path = data.get('image_path')
-        quantity = data.get('quantity', 1)
+        # Validate required fields
+        required_fields = ['product_id', 'product_type', 'product_name', 'price']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'success': False, 'message': f'Missing required field: {field}'}), 400
         
-        result = add_to_cart_data(product_id, product_type, product_name, price, image_path, quantity)
+        result = add_to_cart_data(
+            data.get('product_id'),
+            data.get('product_type'),
+            data.get('product_name'),
+            data.get('price'),
+            data.get('image_path'),
+            data.get('quantity', 1)
+        )
+        
+        print(f"Add to cart result: {result}")
         return jsonify(result)
         
     except Exception as e:
-        print(f"Error adding to cart: {e}")
-        return jsonify({'success': False, 'message': 'Error adding product to cart'})
+        print(f"Error in add_to_cart route: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/cart/update', methods=['POST'])
 def update_cart():
     if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in'})
+        return jsonify({'success': False, 'message': 'Please log in'}), 401
     
     try:
         data = request.get_json()
-        product_id = data.get('product_id')
-        product_type = data.get('product_type')
-        quantity = data.get('quantity')
-        
-        result = update_cart_quantity(product_id, product_type, quantity)
+        result = update_cart_quantity(
+            data.get('product_id'),
+            data.get('product_type'),
+            data.get('quantity')
+        )
         return jsonify(result)
-        
     except Exception as e:
-        print(f"Error updating cart: {e}")
-        return jsonify({'success': False, 'message': str(e)})
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/cart/remove', methods=['POST'])
 def remove_from_cart():
     if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in'})
+        return jsonify({'success': False, 'message': 'Please log in'}), 401
     
     try:
         data = request.get_json()
-        product_id = data.get('product_id')
-        product_type = data.get('product_type')
-        
-        result = remove_from_cart_data(product_id, product_type)
+        result = remove_from_cart_data(
+            data.get('product_id'),
+            data.get('product_type')
+        )
         return jsonify(result)
-        
     except Exception as e:
-        print(f"Error removing from cart: {e}")
-        return jsonify({'success': False, 'message': str(e)})
-
-@cart_bp.route('/cart/clear', methods=['POST'])
-def clear_cart_route():
-    if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in'})
-    
-    try:
-        result = clear_cart()
-        return jsonify(result)
-        
-    except Exception as e:
-        print(f"Error clearing cart: {e}")
-        return jsonify({'success': False, 'message': str(e)})
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/cart/count', methods=['GET'])
 def cart_count():
@@ -105,55 +98,51 @@ def cart_count():
         count = get_cart_count()
         return jsonify({'count': count})
     except Exception as e:
-        print(f"Error getting cart count: {e}")
+        print(f"Error getting cart count: {str(e)}")
         return jsonify({'count': 0})
+
+@cart_bp.route('/cart/clear', methods=['POST'])
+def clear_cart():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Please log in'}), 401
+    
+    try:
+        result = clear_user_cart()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/wishlist/add', methods=['POST'])
-def add_to_wishlist():
+def add_wishlist():
     if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in to add items to wishlist'})
+        return jsonify({'success': False, 'message': 'Please log in to add items to wishlist'}), 401
     
     try:
         data = request.get_json()
-        
-        if not data:
-            return jsonify({'success': False, 'message': 'No data provided'})
-        
-        product_id = data.get('product_id')
-        product_type = data.get('product_type')
-        
-        result = add_to_wishlist_data(product_id, product_type)
+        result = add_to_wishlist_data(
+            data.get('product_id'),
+            data.get('product_type')
+        )
         return jsonify(result)
-        
     except Exception as e:
-        print(f"Error adding to wishlist: {e}")
-        return jsonify({'success': False, 'message': 'Error adding product to wishlist'})
+        print(f"Error in add_wishlist route: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/wishlist/remove', methods=['POST'])
-def remove_from_wishlist():
+def remove_wishlist():
     if 'user' not in session:
-        return jsonify({'success': False, 'message': 'Please log in'})
+        return jsonify({'success': False, 'message': 'Please log in to remove items from wishlist'}), 401
     
     try:
         data = request.get_json()
-        product_id = data.get('product_id')
-        product_type = data.get('product_type')
-        
-        result = remove_from_wishlist_data(product_id, product_type)
+        result = remove_from_wishlist_data(
+            data.get('product_id'),
+            data.get('product_type')
+        )
         return jsonify(result)
-        
     except Exception as e:
-        print(f"Error removing from wishlist: {e}")
-        return jsonify({'success': False, 'message': str(e)})
-
-@cart_bp.route('/wishlist/count', methods=['GET'])
-def wishlist_count():
-    try:
-        count = get_wishlist_count()
-        return jsonify({'count': count})
-    except Exception as e:
-        print(f"Error getting wishlist count: {e}")
-        return jsonify({'count': 0})
+        print(f"Error in remove_wishlist route: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 @cart_bp.route('/wishlist')
 def wishlist():
@@ -161,5 +150,35 @@ def wishlist():
         return redirect(url_for('main.index'))
     
     wishlist_items = get_wishlist_items()
-    
     return render_template('wishlist.html', wishlist_items=wishlist_items)
+
+@cart_bp.route('/wishlist/check', methods=['POST'])
+def check_wishlist():
+    if 'user' not in session:
+        return jsonify({'in_wishlist': False})
+    
+    try:
+        data = request.get_json()
+        product_id = data.get('product_id')
+        product_type = data.get('product_type')
+
+        user_id = get_user_id()
+        if not user_id:
+            return jsonify({'in_wishlist': False})
+        
+        conn = get_users_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT COUNT(*) as count FROM wishlist
+            WHERE user_id = ? AND product_id = ? AND product_type = ?""",
+            (user_id, str(product_id), product_type))
+
+        result = cursor.fetchone()
+        cursor.close()
+
+        return jsonify({'in_wishlist': result[0] > 0})
+
+    except Exception as e:
+        print(f"Error checking wishlist: {str(e)}")
+        return jsonify({'in_wishlist': False})

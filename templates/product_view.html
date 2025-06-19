@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
     <title>Collections</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_product_view.css') }}">
@@ -77,11 +78,22 @@
         }
         .add-to-cart {
             background-color: #11b8ce;
-            padding: 10px 20px;
+            color: white;
+            padding: 12px 24px;
             border: none;
             cursor: pointer;
             font-weight: bold;
             margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .add-to-cart:hover {
+            background-color: #ED1D7F;
+        }
+        .add-to-cart:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
         .product-note {
             font-size: 16px;
@@ -115,6 +127,32 @@
         }
         .similar-products {
             padding: 40px;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .quantity-controls button {
+            width: 32px;
+            color: #555;
+            height: 32px;
+            font-size: 20px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .quantity-controls button:hover {
+            background: #f0f0f0;
+        }
+        .quantity-controls input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            height: 30px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -153,12 +191,20 @@
                             {% endif %}
                         </h1>
                         <p class="product-price">₱{{ "%.2f"|format(product["Price (PHP)"]) }}</p>
-                        <div class="quantity-controls" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                            <button type="button" id="decrease-qty" style="width:32px;height:32px;font-size:20px;">-</button>
-                            <input type="text" id="product-qty" value="1" min="1" style="width:40px;text-align:center;" readonly>
-                            <button type="button" id="increase-qty" style="width:32px;height:32px;font-size:20px;">+</button>
+                        <div class="quantity-controls">
+                            <button type="button" id="decrease-qty">-</button>
+                            <input type="text" id="product-qty" value="1" min="1" readonly>
+                            <button type="button" id="increase-qty">+</button>
                         </div>
-                        <button class="add-to-cart">ADD TO CART</button>
+                        <!-- Update the button to include the add-to-cart class -->
+                        <button id="add-to-cart-btn" class="btn btn-success btn-lg add-to-cart" 
+                                data-product-id="{{ product['Product ID'] }}"
+                                data-product-type="{{ page_type[:-1] }}"
+                                data-product-name="{{ product['Product Name'] if page_type == 'non_books' else product['Book Name'] }}"
+                                data-price="{{ product['Price (PHP)'] }}"
+                                data-image-path="{{ product.image_path }}">
+                            <i class="fas fa-shopping-cart me-2" style="margin-right:5px"></i>ADD TO CART
+                        </button>
                         <div class="product-note">
                             <i class="fa-solid fa-id-card"></i>
                             <span>Membership Discount: Cardholders enjoy additional 5% off on D-Coded items.</span>
@@ -228,31 +274,38 @@
         </footer>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const qtyInput = document.getElementById('product-qty');
-            document.getElementById('decrease-qty').onclick = function() {
-                let val = parseInt(qtyInput.value, 10);
-                if(val > 1) qtyInput.value = val - 1;
-            };
-            document.getElementById('increase-qty').onclick = function() {
-                let val = parseInt(qtyInput.value, 10);
-                qtyInput.value = val + 1;
-            };
-        });
-
-        function changeMainImage(thumbnail) {
-            // Update main image source
-            document.getElementById('main-product-image').src = thumbnail.src;
-            
-            // Remove active class from all thumbnails
-            document.querySelectorAll('.thumbnail').forEach(img => {
-                img.classList.remove('active');
-            });
-            
-            // Add active class to clicked thumbnail
-            thumbnail.classList.add('active');
+    document.addEventListener('DOMContentLoaded', function() {
+        if(typeof initializeCartButtons === 'function') {
+            initializeCartButtons();
         }
+        if(typeof initializeWishlistButtons === 'function') {
+            initializeWishlistButtons();
+        }
+
+        const decreaseBtn = document.getElementById('decrease-qty');
+        const increaseBtn = document.getElementById('increase-qty');
+        const qtyInput = document.getElementById('product-qty');
+
+        if (decreaseBtn && increaseBtn && qtyInput){
+            decreaseBtn.addEventListener('click', function(){
+                let currentQty = parseInt(qtyInput.value);
+                if (currentQty > 1) {
+                    qtyInput.value = currentQty - 1;
+                }
+            });
+
+            increaseBtn.addEventListener('click', function(){
+                let currentQty = parseInt(qtyInput.value);
+                qtyInput.value = currentQty + 1;
+            });
+        }
+    });
+    
+    function changeMainImage(thumbnail) {
+        document.getElementById('main-product-image').src = thumbnail.src;
+        document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('active'));
+        thumbnail.classList.add('active');
+    }
     </script>
-    <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// Mobile-Responsive Carousel JavaScript
+// Mobile-Responsive Carousel JavaScript - FIXED
 document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.querySelector('.carousel');
     const slides = document.querySelectorAll('.slide');
@@ -11,6 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let autoPlayInterval;
     let touchStartX = 0;
     let touchEndX = 0;
+    let autoPlayDelay = 3000; // 4 seconds - customizable
+    let isAutoPlayEnabled = true; // Can be toggled
+    let isPaused = false;
+    
+    // Check if we're on mobile
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
     
     // Initialize carousel
     function init() {
@@ -20,16 +28,33 @@ document.addEventListener('DOMContentLoaded', function() {
         lazyLoadImages();
     }
     
-    // Show specific slide
+    // Show specific slide - FIXED to handle both desktop and mobile
     function showSlide(index) {
         if (isTransitioning) return;
         
         isTransitioning = true;
         
+        // Update dots
         dots.forEach(dot => dot.classList.remove('active'));
-        dots[index].classList.add('active');
+        if (dots[index]) {
+            dots[index].classList.add('active');
+        }
         
-        carousel.style.transform = `translateX(-${index * 100}%)`;
+        if (isMobile()) {
+            // Mobile approach: use classes for individual slides
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i === index - 1 || (index === 0 && i === slides.length - 1)) {
+                    slide.classList.add('prev');
+                }
+            });
+        } else {
+            // Desktop approach: transform the entire carousel
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+        }
 
         currentSlide = index;
 
@@ -93,20 +118,33 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Pause on hover (desktop)
+        // Pause on hover (desktop) - ENHANCED
         if (carousel) {
-            carousel.addEventListener('mouseenter', pauseAutoPlay);
-            carousel.addEventListener('mouseleave', startAutoPlay);
+            carousel.addEventListener('mouseenter', () => {
+                pauseAutoPlay();
+            });
+            carousel.addEventListener('mouseleave', () => {
+                resumeAutoPlay();
+            });
         }
         
-        // Pause when page is not visible
+        // Pause when page is not visible - ENHANCED
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 pauseAutoPlay();
             } else {
-                startAutoPlay();
+                resumeAutoPlay();
             }
         });
+        
+        // Pause when window loses focus
+        window.addEventListener('blur', pauseAutoPlay);
+        window.addEventListener('focus', resumeAutoPlay);
+        
+        // Handle window resize - IMPORTANT for responsive behavior
+        window.addEventListener('resize', debounce(() => {
+            handleResize();
+        }, 250));
     }
     
     // Touch event handlers
@@ -122,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleTouchEnd(e) {
         touchEndX = e.changedTouches[0].clientX;
         handleSwipe();
-        startAutoPlay();
+        resumeAutoPlay(); // Resume instead of start
     }
     
     // Handle swipe gesture
@@ -141,10 +179,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Auto-play functionality
+    // Auto-play functionality - ENHANCED
     function startAutoPlay() {
+        if (!isAutoPlayEnabled) return;
+        
         pauseAutoPlay(); // Clear any existing interval
-        autoPlayInterval = setInterval(nextSlide, 5000); // 5 seconds
+        isPaused = false;
+        
+        autoPlayInterval = setInterval(() => {
+            if (!isPaused && !isTransitioning) {
+                nextSlide();
+            }
+        }, autoPlayDelay);
     }
     
     function pauseAutoPlay() {
@@ -152,11 +198,39 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(autoPlayInterval);
             autoPlayInterval = null;
         }
+        isPaused = true;
+    }
+    
+    function resumeAutoPlay() {
+        if (isAutoPlayEnabled) {
+            startAutoPlay();
+        }
     }
     
     function resetAutoPlay() {
         pauseAutoPlay();
-        startAutoPlay();
+        setTimeout(() => {
+            startAutoPlay();
+        }, 100); // Small delay to prevent rapid resets
+    }
+    
+    // Toggle auto-play on/off
+    function toggleAutoPlay() {
+        isAutoPlayEnabled = !isAutoPlayEnabled;
+        if (isAutoPlayEnabled) {
+            startAutoPlay();
+        } else {
+            pauseAutoPlay();
+        }
+        return isAutoPlayEnabled;
+    }
+    
+    // Set custom auto-play delay
+    function setAutoPlayDelay(delay) {
+        autoPlayDelay = delay;
+        if (isAutoPlayEnabled) {
+            resetAutoPlay();
+        }
     }
     
     // Lazy load images
@@ -176,13 +250,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle window resize
+    // Handle window resize - FIXED to reinitialize on resize
     function handleResize() {
-        // Recalculate positions if needed
-        showSlide(currentSlide);
+        // Reset transforms and classes when switching between mobile/desktop
+        if (isMobile()) {
+            // Reset desktop transforms
+            carousel.style.transform = '';
+            // Apply mobile classes
+            showSlide(currentSlide);
+        } else {
+            // Remove mobile classes
+            slides.forEach(slide => {
+                slide.classList.remove('active', 'prev');
+            });
+            // Apply desktop transform
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
     }
-    
-    window.addEventListener('resize', debounce(handleResize, 250));
     
     // Debounce function
     function debounce(func, wait) {
@@ -199,4 +283,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize the carousel
     init();
+    
+    // Expose public methods for external control (optional)
+    window.carouselController = {
+        nextSlide: nextSlide,
+        prevSlide: prevSlide,
+        goToSlide: showSlide,
+        toggleAutoPlay: toggleAutoPlay,
+        setAutoPlayDelay: setAutoPlayDelay,
+        pauseAutoPlay: pauseAutoPlay,
+        resumeAutoPlay: resumeAutoPlay,
+        getCurrentSlide: () => currentSlide,
+        getTotalSlides: () => slides.length,
+        isAutoPlayEnabled: () => isAutoPlayEnabled
+    };
 });
