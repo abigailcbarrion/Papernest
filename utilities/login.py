@@ -3,6 +3,7 @@ from forms import LoginForm
 from database_connection.connector import get_users_db
 import sqlite3
 
+
 def row_to_user_dict(row):
     """Convert database row to user dictionary"""
     return {

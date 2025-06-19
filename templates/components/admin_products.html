@@ -253,7 +253,7 @@
     function deleteProduct(button) {
       var productId = button.getAttribute('data-product-id');
       if (confirm('Are you sure you want to delete this product?')) {
-        fetch("{{ url_for('admin.delete_product') }}", {
+        fetch("{{ url_for('admin.delete_product_route') }}", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
