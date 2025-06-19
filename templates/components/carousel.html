@@ -13,25 +13,28 @@
             <div class="slide active">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ url_for('static', filename='images/carousel/mobile_view/slide1.png') }}">
-                    <source media="(min-width: 769px)" srcset="{{ url_for('static', filename='images/carousel/desktop_view/slide1.png') }}">
                     <img src="{{ url_for('static', filename='images/carousel/desktop_view/slide1.png') }}" alt="Featured Books">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ url_for('static', filename='images/carousel/mobile_view/slide2.png') }}">
-                    <source media="(min-width: 769px)" srcset="{{ url_for('static', filename='images/carousel/desktop_view/slide2.png') }}">
                     <img src="{{ url_for('static', filename='images/carousel/desktop_view/slide2.png') }}" alt="Summer Reading">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ url_for('static', filename='images/carousel/mobile_view/slide3.png') }}">
-                    <source media="(min-width: 769px)" srcset="{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}">
                     <img src="{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}" alt="Special Offers">
                 </picture>
             </div>
-        </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="{{ url_for('static', filename='images/carousel/mobile_view/slide4.png') }}">
+                    <img src="{{ url_for('static', filename='images/carousel/desktop_view/slide4.png') }}" alt="Special Offers">
+                </picture>
+            </div>
+            </div>
         
         <!-- Navigation buttons -->
         <button class="carousel-btn prev" aria-label="Previous slide">❮</button>
@@ -42,6 +45,7 @@
             <span class="dot active" data-index="0"></span>
             <span class="dot" data-index="1"></span>
             <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
         </div>
     </div>
 

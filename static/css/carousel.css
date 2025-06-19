@@ -2,7 +2,7 @@
 .carousel-container {
     position: relative;
     width: 100vw; /* Full viewport width */
-    height: 400px;
+    height: 520px;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -13,10 +13,12 @@
     margin-right: -50vw;
 }
 
-/* Carousel - Full width */
+/* Ensure slides display properly */
 .carousel {
     position: relative;
     width: 100%;
+    padding: 0;
+    margin: 0;
     height: 100%;
     display: flex;
     transition: transform 0.5s ease-in-out;
@@ -51,10 +53,10 @@
     display: block;
 }
 
-/* Navigation buttons */
+/* Navigation buttons - fix to carousel container */
 .carousel-btn {
-    position: absolute;
-    top: 50%;
+    position: absolute; /* This is correct, but we need to ensure the container has position: relative */
+    top: 50%; /* This positions at 50% of the container height */
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.5);
     color: white;
@@ -65,6 +67,10 @@
     border-radius: 5px;
     z-index: 10;
     transition: background 0.3s ease;
+    position: absolute;
+    top: calc(50%); /* Center vertically */
+    transform: translateY(-50%); /* Align center precisely */
+    /* rest of your styles */
 }
 
 .carousel-btn:hover {
@@ -79,27 +85,62 @@
     right: 15px;
 }
 
-/* Dots */
+/* Dots - Fix to be below the carousel but still within container */
 .dots-container {
     position: absolute;
-    bottom: 20px;
+    bottom: 15px; /* Position just below the carousel */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;
     z-index: 10;
+   
+    padding: 8px 16px;
+    border-radius: 20px;
+    
 }
 
 .dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
+    background: #D3D3D3; /* Light gray for inactive dots */
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
 .dot.active,
 .dot:hover {
-    background: white;
+    background: #ed1d7f; /* Match your brand color */
+    transform: scale(1.2); /* Slightly larger when active */
+}
+
+/* Additional styles from the code block */
+.dots-navigator {
+  position: relative;
+  margin-top: 10px; /* Adjust this value to control spacing */
+  text-align: center;
+}
+
+/* Mobile-specific fix */
+@media (max-width: 768px) {
+  .carousel-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel {
+    width: 100%;
+    left: 0;
+  }
+  
+  /* Product cards/slides */
+  .product-card {
+    width: 100%;
+    margin: 0;
+  }
 }
