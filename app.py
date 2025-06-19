@@ -28,6 +28,8 @@ def create_app():
     
     # Exempt the cart blueprint from CSRF
     csrf.exempt(cart_bp)
+
+    csrf.exempt(admin_bp)
     
     # Also exempt the checkout blueprint from CSRF
     csrf.exempt(checkout_bp)

@@ -1,1 +1,1 @@
-all b
+auth

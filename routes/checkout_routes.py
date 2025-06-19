@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, session, render_template, flash, jsonify
 from utilities.checkout import (
-    validate_shipping_info, process_checkout
+    validate_shipping_info, process_checkout, process_billing_fixed
 )
 from utilities.order import (
     get_order_by_id, save_order_to_database, 
@@ -54,37 +54,41 @@ def checkout():
     
     return render_template('checkout.html', cart_products=cart_products, total_amount=total_amount, selected_only=selected_only, user=user)
 
-@checkout_bp.route('/order_confirmation/<order_id>')
-def order_confirmation(order_id):
-    if 'user' not in session:
-        return redirect(url_for('auth.login'))
+# @checkout_bp.route('/order_confirmation/<order_id>')
+# def order_confirmation(order_id):
+#     if 'user' not in session:
+#         return redirect(url_for('auth.login'))
     
-    order = get_order_by_id(order_id)
+#     order = get_order_by_id(order_id)
     
-    if not order or order['user_id'] != session['user']['id']:
-        return "Order not found", 404
+#     user_id = session['user'].get('id') or session['user'].get('user_id')
     
-    return render_template('order_confirmation.html', order=order)
+#     if not order or str(order.get('user_id')) != str(user_id):
+#         return "Order not found", 404
+    
+#     return render_template('order_confirmation.html', order=order)
 
-@checkout_bp.route('/my_orders')
-def my_orders():
-    if 'user' not in session:
-        return redirect(url_for('auth.login'))
+# @checkout_bp.route('/my_orders')
+# def my_orders():
+#     if 'user' not in session:
+#         return redirect(url_for('auth.login'))
     
-    user_orders = get_user_orders_from_db(session['user']['id'])
-    return render_template('my_orders.html', orders=user_orders)
+#     user_orders = get_user_orders_from_db(session['user']['id'])
+#     return render_template('my_orders.html', orders=user_orders)
 
-@checkout_bp.route('/order_details/<order_id>')
-def order_details(order_id):
-    if 'user' not in session:
-        return redirect(url_for('auth.login'))
+# @checkout_bp.route('/order_details/<order_id>')
+# def order_details(order_id):
+#     if 'user' not in session:
+#         return redirect(url_for('auth.login'))
     
-    order = get_order_by_id(order_id)
+#     order = get_order_by_id(order_id)
     
-    if not order or order['user_id'] != session['user']['id']:
-        return "Order not found", 404
+#     user_id = session['user'].get('id') or session['user'].get('user_id')
+#     if not order or str(order.get('user_id')) != str(user_id):
+#         print(f"[DEBUG] Order access denied - order user_id: {order.get('user_id')}, session user_id: {user_id}")
+#         return "Order not found", 404
     
-    return render_template('order_details.html', order=order)
+#     return render_template('order_details.html', order=order)
 
 @checkout_bp.route('/billing', methods=['GET', 'POST'])
 def billing():

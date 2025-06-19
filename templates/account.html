@@ -89,7 +89,6 @@
                         </div>
                         <div class="order-details">
                             <div class="order-products">
-                                <!-- Check if order has items before iterating -->
                                 {% if order.get('items') %}
                                     {% for item in order['items'] %}
                                     <div class="order-product">
@@ -112,10 +111,6 @@
                                 <p>Payment Method: {{ order.payment_method }}</p>
                                 <p>Shipping Method: {{ order.get('shipping_info', {}).get('method', 'Standard Shipping') }}</p>
                             </div>
-                        </div>
-                        <div class="order-actions">
-                            <button class="btn-track">Track Order</button>
-                            <button class="btn-view-details">View Details</button>
                         </div>
                     </div>
                     {% endfor %}
