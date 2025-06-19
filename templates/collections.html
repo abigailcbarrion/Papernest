@@ -157,6 +157,12 @@
         height: 0;
         width: 0;
     }
+    .product-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #facc15;
+    margin-bottom: 12px;
+}
 
     .custom-checkbox .checkmark {
         position: absolute;
@@ -261,8 +267,8 @@
             <div class="dropdown-content" id="dropdownList">
                 <div onclick="selectOption(this)">Price: Low to High</div>
                 <div onclick="selectOption(this)">Price: High to Low</div>
-                <div onclick="selectOption(this)">Bestselling</div>
-                <div onclick="selectOption(this)">Newest</div>
+                <div onclick="selectOption(this)">Sale</div>
+                <div onclick="selectOption(this)">Pride Reads</div>
                 <div onclick="selectOption(this)">Rainy Reads</div>
                 <div onclick="selectOption(this)">Women Empowerment</div>
                 <div onclick="selectOption(this)">Mental Health</div>
@@ -296,31 +302,55 @@
                     </div>
                 </div>
                 {% endfor %}
-                <div class="product-display">
-                    <img id="rotating-image" src="{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}" alt="Women Empowerment" />
-                    <div class="card-info">
-                        {% if session.get('user') %}
-                        <form method="POST" action="{{ url_for('cart.add_to_cart') }}">
-                            <input type="hidden" name="nonbook_id" value="static_sample">
-                        </form>
-                        <form method="POST" action="{{ url_for('cart.add_to_wishlist') }}">
-                            <input type="hidden" name="nonbook_id" value="static_sample">
-    
-                        </form>
-                        {% endif %}
-                    </div>
-                </div>
-                <script>
-                    const images = [
-                        "{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}",
-                        "{{ url_for('static', filename='images/carousel/desktop_view/slide2.png') }}",
-                        "{{ url_for('static', filename='images/carousel/desktop_view/slide1.png') }}"
-                    ];
-                    let idx = 0;
-                    setInterval(() => {
-                        idx = (idx + 2) % images.length;
-                        document.getElementById('rotating-image').src = images[idx];
-                    }, 5000);
+                 <!-- Rotating Banner -->
+<div class="product-display">
+  <img id="rotating-image" src="{{ url_for('static', filename='images/carousel/desktop_view/slide1.png') }}" alt="Rotating Banner" class="rotating-banner" />
+</div>
+
+<script>
+  const images = [
+    "{{ url_for('static', filename='images/carousel/desktop_view/slide1.png') }}",
+    "{{ url_for('static', filename='images/carousel/desktop_view/slide2.png') }}",
+    "{{ url_for('static', filename='images/carousel/desktop_view/slide3.png') }}",
+    "{{ url_for('static', filename='images/carousel/desktop_view/slide4.png') }}"
+  ];
+  let idx = 0;
+  setInterval(() => {
+    idx = (idx + 1) % images.length;
+    document.getElementById('rotating-image').src = images[idx];
+  }, 5000);
+</script>
+
+<!-- Product Sections -->
+{% set sections = [
+  {'label': 'Pride Reads Collection', 'products': pride_reads},
+  {'label': 'Women Empowerment Reads', 'products': women_empowerment},
+  {'label': 'Mental Health Collection', 'products': mental_health},
+  {'label': 'Rainy Reads Collection', 'products': rainy_reads}
+] %}
+
+{% for section in sections %}
+  <h2 style="text-align: center; color: #facc15; margin: 40px 0 10px; padding-bottom: 350px;">{{ section.label }}</h2>
+  <div class="product-grid">
+    {% for book in section.products %}
+    <div class="product-card">
+      <div class="product-image-container">
+        <img src="{{ url_for('static', filename='images/userplaceholder.jpg') }}" alt="{{ book.title }}" class="product-image">
+      </div>
+      <div class="product-info">
+        <h3 class="product-title">{{ book.title }}</h3>
+        <p class="product-author">by {{ book.author }}</p>
+        <div class="product-price">${{ book.price }}</div>
+        <div class="product-buttons">
+          <button class="btn-wishlist" title="Add to Wishlist"><i class="fas fa-heart"></i></button>
+          <button class="btn-add-cart">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endfor %}
+
                 </script>
                 </div>
                 <div class="product-carousel">
