@@ -59,7 +59,7 @@ def create_app():
         login_form = LoginForm()
         registration_form = RegistrationForm()
         
-        login_form.username.id = 'login_username'
+        login_form.email.id = 'login_email'
         login_form.password.id = 'login_password'
         login_form.csrf_token.id = 'login_csrf_token'
         
