@@ -22,12 +22,15 @@ def create_app():
     
     app.config['SECRET_KEY'] = '631539ff18360356'
     
-    # Keep CSRF enabled for forms but exempt cart routes
+    # Keep CSRF enabled for forms but exempt specific routes
     csrf = CSRFProtect(app)
     csrf.init_app(app)
     
     # Exempt the cart blueprint from CSRF
     csrf.exempt(cart_bp)
+    
+    # Also exempt the checkout blueprint from CSRF
+    csrf.exempt(checkout_bp)
     
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(auth_bp, url_prefix='/')
@@ -56,7 +59,7 @@ def create_app():
         login_form = LoginForm()
         registration_form = RegistrationForm()
         
-        login_form.username.id = 'login_username'
+        login_form.email.id = 'login_email'
         login_form.password.id = 'login_password'
         login_form.csrf_token.id = 'login_csrf_token'
         
@@ -68,11 +71,6 @@ def create_app():
             'login_form': login_form,
             'registration_form': registration_form
         }
-    
-    @csrf.exempt
-    def exempt_cart_routes():
-        pass
-    
     return app
 
 # Create app instance

@@ -1,6 +1,10 @@
-from flask import Blueprint, render_template, session, redirect, url_for, request
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from utilities.load_items import get_books_image_path, get_trending, get_nonbook_image_path
 from utilities.storage import get_featured_author
+from utilities.cart import get_wishlist_items as get_wishlist, get_cart_items
+from utilities.account import get_actual_order_items, generate_representative_items
+from utilities.load_items import get_books_image_path
+from utilities.user_management import get_user_orders_from_db as get_orders
 
 main_bp = Blueprint('main', __name__)
 
@@ -73,65 +77,144 @@ def sale():
 @main_bp.route('/account')
 def account():
     if 'user' not in session:
-        return redirect(url_for('main.index'))
-    
+        return redirect(url_for('auth.login'))
+        
     try:
-        from utilities.checkout import get_user_orders_from_db
-        from utilities.cart import get_wishlist_items
-        
         user = session['user']
+        user_id = user.get('id') or user.get('user_id')
         
-        # Get recent orders safely
-        try:
-            recent_orders = get_user_orders_from_db(user['user_id'])[:5]
-        except Exception as e:
-            print(f"Error getting orders: {str(e)}")
-            recent_orders = []
+        print(f"[DEBUG] Account page accessing with user_id: {user_id}")
         
-        # Get wishlist items safely
-        try:
-            wishlist_items = get_wishlist_items()
-        except Exception as e:
-            print(f"Error getting wishlist items: {str(e)}")
-            wishlist_items = []
+        # Get orders from database
+        orders = get_orders(user_id)
+        print(f"[DEBUG] Found {len(orders)} orders for user {user_id}")
         
+        # Process each order to retrieve or generate items
+        for order in orders:
+            # Try to get actual order items
+            order_items = get_actual_order_items(order['order_id'])
+            
+            if order_items:
+                # We have actual items from order_items tables
+                order['items'] = order_items
+            else:
+                # Generate representative items
+                order['items'] = generate_representative_items(order, user_id)
+            
+            # Add shipping info
+            order['shipping_info'] = {
+                'method': 'Standard Delivery',
+                'address': user.get('address', '123 Sample St., Manila'),
+                'status': order.get('status', 'pending').capitalize()
+            }
+        
+        # Get wishlist items
+        wishlist_items = get_wishlist()
+        
+        # Determine which section to show
+        section = request.args.get('section', 'dashboard')
+        if 'show_orders' in session and session.pop('show_orders', False):
+            section = 'orders'
+        elif 'showOrdersTab' in request.args:
+            section = 'orders'
+            
         return render_template('account.html', 
-                            user=user, 
-                            recent_orders=recent_orders,
-                            wishlist_items=wishlist_items)
-    
+                              user=user,
+                              orders=orders,
+                              wishlist_items=wishlist_items,
+                              active_section=section)
+                              
     except Exception as e:
         print(f"Error in account route: {str(e)}")
-        # Return basic account page if there are errors
-        user = session['user']
+        import traceback
+        traceback.print_exc()
         return render_template('account.html', 
-                            user=user, 
-                            recent_orders=[],
-                            wishlist_items=[])
+                              user=session['user'],
+                              orders=[],
+                              wishlist_items=[],
+                              active_section='dashboard')
 
-@main_bp.route('/account/wishlist')
-def wishlist():
-    if 'user' not in session:
-        return redirect(url_for('main.index'))
+def get_category_folder(category):
+    """Get the correct folder name for a book category"""
+    if category == "Fiction":
+        return "fiction_images"
+    elif category == "Non-Fiction":
+        return "non-fiction_images"
+    elif category == "Science & Technology":
+        return "science-technology_images"
+    elif category == "Self-Help":
+        return "self-help-book_images"
+    return "fiction_images"  
 
-    # Redirect to account page with wishlist hash
-    return redirect(url_for('main.account') + '#wishlist')
-
-# Fix these route functions - they need to be properly decorated
-@main_bp.route('/account/update-address', methods=['POST'])
-def update_address():
-    if 'user' not in session:
-        return redirect(url_for('main.index'))
+def get_order_items(order_id):
+    """Get items for an order from both databases"""
+    items = []
     
+    # Get items from books.db
     try:
-        from utilities.user_management import update_user_address
-        user_id = session['user']['user_id']
-        update_user_address(user_id, request.form)
-        return redirect(url_for('main.account'))
+        from database_connection.connector import get_db_connection
+        books_conn = get_db_connection('books.db')
+        books_cursor = books_conn.cursor()
+        
+        books_cursor.execute('''
+            SELECT oi.product_id, oi.product_name, oi.price, oi.quantity,
+                   b.product_image_front, b.category
+            FROM order_items oi
+            LEFT JOIN books b ON oi.product_id = b.product_id
+            WHERE oi.order_id = ?
+        ''', (order_id,))
+        
+        book_items = books_cursor.fetchall()
+        books_conn.close()
+        
+        for item in book_items:
+            product_id, name, price, quantity, image, category = item
+            folder = get_category_folder(category) if category else "fiction_images"
+            
+            items.append({
+                'product_id': product_id,
+                'product_name': name,
+                'price': price,
+                'quantity': quantity,
+                'image_path': f"/static/images/Books_Images/{folder}/{image}.jpg" if image else "/static/images/placeholder.jpg"
+            })
+    
     except Exception as e:
-        print(f"Error updating address: {str(e)}")
-        return redirect(url_for('main.account'))
-
+        print(f"Error getting book items for order {order_id}: {str(e)}")
+    
+    # Get items from non_books.db
+    try:
+        non_books_conn = get_db_connection('non_books.db')
+        non_books_cursor = non_books_conn.cursor()
+        
+        non_books_cursor.execute('''
+            SELECT oi.product_id, oi.product_name, oi.price, oi.quantity,
+                   nb.product_image_front, nb.category
+            FROM order_items oi
+            LEFT JOIN non_books nb ON oi.product_id = nb.product_id
+            WHERE oi.order_id = ?
+        ''', (order_id,))
+        
+        non_book_items = non_books_cursor.fetchall()
+        non_books_conn.close()
+        
+        for item in non_book_items:
+            product_id, name, price, quantity, image, category = item
+            folder = category.lower().replace(' ', '_') if category else "stationery"
+            
+            items.append({
+                'product_id': product_id,
+                'product_name': name,
+                'price': price,
+                'quantity': quantity,
+                'image_path': f"/static/images/Non_Books_Images/{folder}/{image}.jpg" if image else "/static/images/placeholder.jpg"
+            })
+    
+    except Exception as e:
+        print(f"Error getting non-book items for order {order_id}: {str(e)}")
+    
+    return items
+    
 @main_bp.route('/account/delete-address', methods=['POST'])
 def delete_address():
     if 'user' not in session:
@@ -145,3 +228,13 @@ def delete_address():
     except Exception as e:
         print(f"Error deleting address: {str(e)}")
         return redirect(url_for('main.account'))
+    
+@main_bp.route('/get-user-orders')
+def get_user_orders():
+    if 'user' not in session:
+        return redirect(url_for('auth.login'))
+    
+    user_id = session['user'].get('id')
+    orders = get_user_orders(user_id)
+    
+    return jsonify({'orders': orders})

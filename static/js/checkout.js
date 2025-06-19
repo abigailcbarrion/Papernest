@@ -1,16 +1,20 @@
 /**
- * Papernest Checkout System
+ * Papernest Checkout System - Mobile Responsive Version
  * Handles checkout page functionality including:
  * - Processing selected items from cart
  * - Calculating order totals
  * - Form validation
  * - Address management
+ * - Mobile-specific optimizations
  */
 
 // ===========================================
 // INITIALIZATION
 // ===========================================
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize mobile detection
+    detectMobileDevice();
+    
     // Initialize selected items processing
     processSelectedItems();
     
@@ -19,10 +23,124 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize form validation
     initializeFormValidation();
+    
+    // Initialize mobile-specific features
+    initializeMobileFeatures();
 });
 
 // ===========================================
-// SELECTED ITEMS PROCESSING
+// MOBILE DETECTION AND OPTIMIZATION
+// ===========================================
+/**
+ * Detect mobile device and apply mobile-specific optimizations
+ */
+function detectMobileDevice() {
+    const isMobile = window.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 480;
+    
+    // Add classes for mobile styling
+    if (isMobile) {
+        document.body.classList.add('mobile-device');
+    }
+    if (isSmallMobile) {
+        document.body.classList.add('small-mobile-device');
+    }
+    
+    // Listen for resize events to handle orientation changes
+    window.addEventListener('resize', function() {
+        handleResponsiveChanges();
+    });
+}
+
+/**
+ * Handle responsive changes on resize/orientation change
+ */
+function handleResponsiveChanges() {
+    const isMobile = window.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 480;
+    
+    // Update body classes
+    document.body.classList.toggle('mobile-device', isMobile);
+    document.body.classList.toggle('small-mobile-device', isSmallMobile);
+    
+    // Recalculate layout if needed
+    updateCheckoutTotals();
+}
+
+/**
+ * Initialize mobile-specific features
+ */
+function initializeMobileFeatures() {
+    // Add touch-friendly interactions
+    addTouchFriendlyInteractions();
+    
+    // Optimize form inputs for mobile
+    optimizeMobileInputs();
+    
+    // Handle mobile keyboard visibility
+    handleMobileKeyboard();
+}
+
+/**
+ * Add touch-friendly interactions for mobile devices
+ */
+function addTouchFriendlyInteractions() {
+    // Add tap highlighting for buttons
+    const buttons = document.querySelectorAll('.btn-billing, button');
+    buttons.forEach(button => {
+        button.style.webkitTapHighlightColor = 'rgba(250, 193, 2, 0.3)';
+    });
+    
+    // Add touch feedback for radio buttons
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('touchstart', function() {
+            this.parentElement.style.backgroundColor = 'rgba(250, 193, 2, 0.1)';
+        });
+        
+        radio.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.parentElement.style.backgroundColor = '';
+            }, 150);
+        });
+    });
+}
+
+/**
+ * Optimize form inputs for mobile devices
+ */
+function optimizeMobileInputs() {
+    // Add appropriate input types for mobile keyboards
+    const phoneInputs = document.querySelectorAll('input[name*="phone"]');
+    phoneInputs.forEach(input => {
+        input.setAttribute('type', 'tel');
+        input.setAttribute('inputmode', 'numeric');
+    });
+    
+    const emailInputs = document.querySelectorAll('input[type="email"]');
+    emailInputs.forEach(input => {
+        input.setAttribute('inputmode', 'email');
+    });
+}
+
+/**
+ * Handle mobile keyboard visibility issues
+ */
+function handleMobileKeyboard() {
+    const inputs = document.querySelectorAll('input, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            // Small delay to allow keyboard to appear
+            setTimeout(() => {
+                this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+    });
+}
+
+// ===========================================
+// SELECTED ITEMS PROCESSING (Enhanced for Mobile)
 // ===========================================
 /**
  * Process items that were selected on the cart page
@@ -109,7 +227,7 @@ function addHiddenProductInput(form, productId) {
 }
 
 /**
- * Handle case when no items are selected for checkout
+ * Handle case when no items are selected for checkout (Mobile optimized)
  * @param {boolean} anyVisible - Whether any items are visible
  */
 function handleEmptyCheckout(anyVisible) {
@@ -117,8 +235,15 @@ function handleEmptyCheckout(anyVisible) {
     
     const container = document.querySelector('.checkout-items-container');
     if (container) {
-        container.innerHTML = '<div class="empty-checkout">' +
+        const isMobile = window.innerWidth <= 768;
+        const emptyMessage = isMobile ? 
+            '<div class="empty-checkout mobile-empty">' +
+            '<p>No items selected.</p>' +
+            '<a href="/cart" class="btn-billing">Return to Cart</a></div>' :
+            '<div class="empty-checkout">' +
             'No items selected. <a href="/cart">Return to cart</a> and select items to checkout.</div>';
+        
+        container.innerHTML = emptyMessage;
     }
     
     const checkoutBtn = document.querySelector('#place-order-btn');
@@ -128,10 +253,10 @@ function handleEmptyCheckout(anyVisible) {
 }
 
 // ===========================================
-// ORDER TOTAL CALCULATIONS
+// ORDER TOTAL CALCULATIONS (Mobile Enhanced)
 // ===========================================
 /**
- * Calculates and updates all order totals
+ * Calculates and updates all order totals with mobile optimizations
  */
 function updateCheckoutTotals() {
     // Calculate total from visible items only
@@ -142,6 +267,9 @@ function updateCheckoutTotals() {
     
     // Update final total
     updateTotalAmount(subtotal);
+    
+    // Add mobile-specific total display enhancements
+    enhanceMobileTotalDisplay();
 }
 
 /**
@@ -150,13 +278,18 @@ function updateCheckoutTotals() {
  */
 function calculateSubtotal() {
     let subtotal = 0;
-    const visibleItems = document.querySelectorAll('.checkout-item[style="display: flex;"]');
+    const visibleItems = document.querySelectorAll('.checkout-item[style*="flex"], .checkout-item:not([style*="none"])');
     
     visibleItems.forEach(item => {
-        const priceText = item.querySelector('.checkout-item-price').textContent.trim();
+        const priceElement = item.querySelector('.checkout-item-price');
+        const quantityElement = item.querySelector('.checkout-item-quantity');
+        
+        if (!priceElement || !quantityElement) return;
+        
+        const priceText = priceElement.textContent.trim();
         const price = parseFloat(priceText.replace('₱', '').replace(',', ''));
         
-        const qtyText = item.querySelector('.checkout-item-quantity').textContent.trim();
+        const qtyText = quantityElement.textContent.trim();
         const quantity = parseInt(qtyText);
         
         if (!isNaN(price) && !isNaN(quantity)) {
@@ -195,14 +328,31 @@ function updateTotalAmount(subtotal) {
     }
     
     const total = subtotal + shippingFee;
-    totalElement.textContent = `₱${total.toFixed(2)}`;
+    totalElement.innerHTML = `<strong>₱${total.toFixed(2)}</strong>`;
+}
+
+/**
+ * Enhance mobile total display
+ */
+function enhanceMobileTotalDisplay() {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) return;
+    
+    const totalRows = document.querySelectorAll('.subtotal-row, .shipping-row, .total-row');
+    totalRows.forEach(row => {
+        if (!row.style.display) {
+            row.style.display = 'flex';
+            row.style.justifyContent = 'space-between';
+            row.style.padding = '8px 0';
+        }
+    });
 }
 
 // ===========================================
-// ADDRESS FORM MANAGEMENT
+// ADDRESS FORM MANAGEMENT (Mobile Enhanced)
 // ===========================================
 /**
- * Initialize address form functionality
+ * Initialize address form functionality with mobile enhancements
  */
 function initializeAddressForms() {
     // Initialize same address checkbox
@@ -212,6 +362,24 @@ function initializeAddressForms() {
         // Initialize state on page load
         toggleBillingAddressFields();
     }
+    
+    // Add mobile-specific form enhancements
+    enhanceMobileForms();
+}
+
+/**
+ * Enhance forms for mobile devices
+ */
+function enhanceMobileForms() {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) return;
+    
+    // Add larger touch targets for form elements
+    const formElements = document.querySelectorAll('input, select, textarea');
+    formElements.forEach(element => {
+        element.style.minHeight = '44px'; // iOS recommended touch target size
+        element.style.fontSize = '16px'; // Prevent zoom on iOS
+    });
 }
 
 /**
@@ -244,10 +412,10 @@ function copyShippingToBillingFields() {
 }
 
 // ===========================================
-// FORM VALIDATION
+// FORM VALIDATION (Mobile Enhanced)
 // ===========================================
 /**
- * Initialize form validation
+ * Initialize form validation with mobile enhancements
  */
 function initializeFormValidation() {
     // Initialize form validation
@@ -256,6 +424,8 @@ function initializeFormValidation() {
         checkoutForm.addEventListener('submit', function(e) {
             if (!validateCheckoutForm()) {
                 e.preventDefault();
+                // Scroll to first error on mobile
+                scrollToFirstError();
             }
         });
     }
@@ -269,6 +439,20 @@ function initializeFormValidation() {
             if (errorMsg) errorMsg.remove();
         });
     });
+}
+
+/**
+ * Scroll to first error field on mobile
+ */
+function scrollToFirstError() {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) return;
+    
+    const firstError = document.querySelector('.error-field');
+    if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+    }
 }
 
 /**
@@ -348,7 +532,7 @@ function validatePhoneFormat() {
 }
 
 /**
- * Display error message for a form field
+ * Display error message for a form field (Mobile enhanced)
  * @param {HTMLElement} field - The form field with error
  * @param {string} message - The error message to display
  */
@@ -357,8 +541,9 @@ function showFieldError(field, message) {
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
     errorDiv.style.color = '#e74c3c';
-    errorDiv.style.fontSize = '0.8em';
+    errorDiv.style.fontSize = window.innerWidth <= 480 ? '0.75em' : '0.8em';
     errorDiv.style.marginTop = '5px';
+    errorDiv.style.lineHeight = '1.2';
     
     field.classList.add('error-field');
     field.parentNode.appendChild(errorDiv);

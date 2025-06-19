@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+  <div style="display:none" id="session-maintainer" data-user-id="{{ session.user.user_id or session.user.id }}"></div>
     <div class="page-wrapper">
         {% include 'components/checkout_header.html' %}
       <div class="main-content">
@@ -21,7 +23,7 @@
               <div class="address-container">
                 <p class="name">{{ user.first_name }} {{ user.last_name }}</p>
                 <p class="address">
-                  {{ user.street }},
+                  {{ user.barangay }},
                   {{ user.city }},
                   {{ user.province }},
                   {{ user.country }},

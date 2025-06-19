@@ -3,7 +3,10 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, DateFi
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', [DataRequired(), Length(min=4, max=25)], render_kw={"placeholder": "Username", "class": "form-control", "autocomplete": "off"})
+    email = StringField('Email Address', validators=[
+        DataRequired(),
+        Email(message='Please enter a valid email address')
+    ])
     password = PasswordField('Password', [DataRequired(), Length(min=6, max=35)], render_kw={"placeholder": "Password", "class": "form-control", "autocomplete": "off"})
 
     login_button = SubmitField('Login', render_kw={"class": "btn btn-primary"})
