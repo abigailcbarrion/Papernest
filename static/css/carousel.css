@@ -1,16 +1,17 @@
 /* Carousel Container - Full width */
 .carousel-container {
     position: relative;
-    width: 100vw; /* Full viewport width */
+    width: fit-content;
+     height: fit-content;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: visible;
+    left: 0;
+    right: 0;
     height: 520px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: #f8f9fa;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+    margin-bottom: 50px; /* Space for dots */
 }
 
 /* Ensure slides display properly */
