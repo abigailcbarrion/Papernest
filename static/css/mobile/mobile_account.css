@@ -1,121 +1,517 @@
-@media (max-width: 900px) {
-  .account-main-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .account-nav {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .account-container,
-  .orders-container,
-  .discount-cards-container,
-  .my-wishlist-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 20px 0;
-    padding: 20px 10px;
-  }
+/* Mobile optimization for account page */
+
+@media (max-width: 767px) {
+    /* Core layout adjustments */
+    body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Account navigation - convert to horizontal scrolling tabs */
+    .account-main-wrapper {
+        flex-direction: column !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+    
+    .account-nav {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        padding: 10px 0 !important;
+        background-color: #f5f5f5 !important;
+        border-bottom: 1px solid #ddd !important;
+        margin: 0 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    .account-nav h4 {
+        padding: 10px 15px !important;
+        margin: 0 5px !important;
+        font-size: 14px !important;
+        border-radius: 4px !important;
+        border: none !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .account-nav h4.active {
+        background-color: #ffeb3b !important;
+        color: #333 !important;
+    }
+    
+    .account-nav h4 a {
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+    
+    /* Account container */
+    .account-container {
+        width: 100% !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+    }
+    
+    .account-container h2 {
+        font-size: 20px !important;
+        margin: 10px 0 15px !important;
+    }
+    
+    .account-container h3 {
+        font-size: 18px !important;
+        margin: 15px 0 10px !important;
+    }
+    
+    /* Profile box */
+    .profile-box {
+        padding: 15px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        margin-bottom: 20px !important;
+        background-color: #fff !important;
+    }
+    
+    .profile-box h4 {
+        font-size: 14px !important;
+        margin: 8px 0 !important;
+    }
+    
+    /* Edit actions */
+    .edit-actions {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        margin: 15px 0 !important;
+    }
+    
+    .edit-details-box, 
+    .change-password-box {
+        width: 100% !important;
+        padding: 12px !important;
+        font-size: 14px !important;
+        text-align: center !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+    }
+    
+    /* Address book section */
+    .address-book-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin: 20px 0 10px !important;
+    }
+    
+    .address-book-header h4 {
+        font-size: 16px !important;
+        margin: 0 !important;
+    }
+    
+    .manage-address-book {
+        font-size: 14px !important;
+        color: #2196F3 !important;
+        cursor: pointer !important;
+    }
+    
+    /* Address rows - stack vertically on mobile */
+    .address-row-group {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+    
+    .address-row {
+        padding: 12px !important;
+        border: 1px solid #eee !important;
+        border-radius: 5px !important;
+        background-color: #f9f9f9 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .address-row h5 {
+        font-size: 14px !important;
+        margin: 0 0 5px 0 !important;
+    }
+    
+    .address-row-details {
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+    }
+    
+    /* Orders section */
+    .order-item {
+        margin-bottom: 20px !important;
+        padding: 12px !important;
+        border: 1px solid #eee !important;
+        border-radius: 8px !important;
+        background-color: #fff !important;
+    }
+    
+    .order-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #eee !important;
+    }
+    
+    .order-id {
+        font-weight: bold !important;
+        margin-right: 10px !important;
+        font-size: 14px !important;
+    }
+    
+    .order-date {
+        font-size: 13px !important;
+        color: #666 !important;
+    }
+    
+    .order-status {
+        padding: 4px 8px !important;
+        border-radius: 4px !important;
+        font-size: 12px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Order details section */
+    .order-details {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .order-products {
+        margin-bottom: 15px !important;
+    }
+    
+    .order-product {
+        display: flex !important;
+        margin: 10px 0 !important;
+    }
+    
+    .order-product img {
+        width: 60px !important;
+        height: 60px !important;
+        object-fit: contain !important;
+        margin-right: 10px !important;
+        border: 1px solid #eee !important;
+    }
+    
+    .product-info {
+        flex: 1 !important;
+    }
+    
+    .product-info h4 {
+        font-size: 14px !important;
+        margin: 0 0 5px 0 !important;
+    }
+    
+    .product-info p {
+        margin: 3px 0 !important;
+        font-size: 13px !important;
+    }
+    
+    .order-summary {
+        background-color: #f9f9f9 !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .order-summary p {
+        margin: 5px 0 !important;
+        font-size: 13px !important;
+    }
+    
+    .order-summary p.total {
+        font-size: 15px !important;
+        margin-top: 8px !important;
+        color: #e91e63 !important;
+    }
+    
+    .order-actions {
+        display: flex !important;
+        gap: 10px !important;
+        justify-content: flex-end !important;
+    }
+    
+    .order-actions button {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        border-radius: 4px !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+    
+    .btn-track {
+        background-color: #2196F3 !important;
+        color: white !important;
+    }
+    
+    .btn-view-details {
+        background-color: #f1f1f1 !important;
+        color: #333 !important;
+    }
+    
+    /* Empty states */
+    .empty-orders, 
+    .empty-wishlist {
+        text-align: center !important;
+        padding: 30px 15px !important;
+    }
+    
+    .btn-shop-now {
+        display: inline-block !important;
+        background-color: #4CAF50 !important;
+        color: white !important;
+        padding: 10px 20px !important;
+        border-radius: 4px !important;
+        text-decoration: none !important;
+        margin-top: 15px !important;
+    }
+    
+    /* Wishlist items */
+    .wishlist-items {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .wishlist-item {
+        border: 1px solid #eee !important;
+        border-radius: 8px !important;
+        padding: 12px !important;
+        background-color: #fff !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .wishlist-item img {
+        height: 120px !important;
+        object-fit: contain !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .wishlist-item h4 {
+        font-size: 14px !important;
+        margin: 0 0 5px 0 !important;
+    }
+    
+    .price {
+        font-weight: bold !important;
+        color: #e91e63 !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .wishlist-item p {
+        font-size: 12px !important;
+        color: #666 !important;
+        margin: 5px 0 10px !important;
+    }
+    
+    .buttons {
+        display: flex !important;
+        gap: 10px !important;
+    }
+    
+    .btn-add-cart,
+    .btn-remove {
+        flex: 1 !important;
+        padding: 8px 0 !important;
+        border-radius: 4px !important;
+        border: none !important;
+        font-size: 13px !important;
+        cursor: pointer !important;
+    }
+    
+    .btn-add-cart {
+        background-color: #4CAF50 !important;
+        color: white !important;
+    }
+    
+    .btn-remove {
+        background-color: #f1f1f1 !important;
+        color: #333 !important;
+    }
+    
+    /* Popup overlays */
+    .popup-overlay {
+        padding: 15px !important;
+    }
+    
+    .popup-content {
+        width: 90% !important;
+        max-width: none !important;
+        max-height: 90vh !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+        overflow-y: auto !important;
+    }
+    
+    .popup-content h3 {
+        font-size: 18px !important;
+        margin: 0 0 15px 0 !important;
+    }
+    
+    .popup-content form {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .popup-content label {
+        margin-top: 12px !important;
+        margin-bottom: 4px !important;
+        font-size: 14px !important;
+    }
+    
+    .popup-content input[type="text"],
+    .popup-content input[type="password"] {
+        height: 40px !important;
+        padding: 5px 10px !important;
+        font-size: 14px !important;
+        border-radius: 4px !important;
+        border: 1px solid #ddd !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .popup-content button[type="submit"],
+    .popup-content button[type="button"] {
+        margin-top: 20px !important;
+        padding: 12px !important;
+        font-size: 14px !important;
+        border-radius: 4px !important;
+        border: none !important;
+        background-color: #4CAF50 !important;
+        color: white !important;
+        cursor: pointer !important;
+    }
+    
+    /* Password input wrapper */
+    .password-input-wrapper {
+        position: relative !important;
+        width: 100% !important;
+    }
+    
+    .toggle-password {
+        position: absolute !important;
+        right: 10px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        color: #666 !important;
+    }
+    
+    /* Address table */
+    .address-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 15px 0 !important;
+    }
+    
+    .address-table th,
+    .address-table td {
+        padding: 8px !important;
+        text-align: left !important;
+        border-bottom: 1px solid #eee !important;
+        font-size: 13px !important;
+    }
+    
+    .address-table th {
+        background-color: #f5f5f5 !important;
+        font-weight: bold !important;
+    }
+    
+    .popup-actions {
+        display: flex !important;
+        gap: 10px !important;
+        margin-top: 15px !important;
+    }
+    
+    .popup-actions button {
+        flex: 1 !important;
+        padding: 12px 0 !important;
+        font-size: 14px !important;
+        border-radius: 4px !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+    
+    .popup-actions button:first-child {
+        background-color: #2196F3 !important;
+        color: white !important;
+    }
+    
+    .popup-actions button:last-child {
+        background-color: #f44336 !important;
+        color: white !important;
+    }
+    
+    /* Close button for popups */
+    .close-btn,
+    .change-password-close-btn {
+        font-size: 24px !important;
+        position: absolute !important;
+        top: 10px !important;
+        right: 15px !important;
+        cursor: pointer !important;
+    }
+    
+    /* Flash messages */
+    .flash-messages {
+        position: fixed !important;
+        top: 10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 90% !important;
+        max-width: 350px !important;
+        z-index: 1000 !important;
+    }
+    
+    .flash-message {
+        padding: 12px 15px !important;
+        margin-bottom: 10px !important;
+        border-radius: 5px !important;
+        font-size: 14px !important;
+        text-align: center !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+    }
+    
+    .flash-message.success {
+        background-color: #dff0d8 !important;
+        color: #3c763d !important;
+    }
+    
+    .flash-message.error {
+        background-color: #f2dede !important;
+        color: #a94442 !important;
+    }
 }
 
-@media (max-width: 600px) {
-  .account-nav h4 {
-    font-size: 16px;
-    padding: 12px 10px;
-  }
-  .edit-details-box,
-  .change-password-box,
-  .add-address-link {
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  .profile-box h4 {
-    padding: 10px 10px;
-    font-size: 15px;
-  }
-  .popup-content,
-  .change-password-content {
-    min-width: 0;
-    width: 95vw;
-    padding: 20px 10px;
-  }
-}
-@media (max-width: 768px) {
-  .account-main-wrapper {
-    flex-direction: column;
-    padding: 0 10px;
-  }
-
-  .account-nav {
-    width: 100%;
-    margin: 10px 0;
-  }
-
-  .account-container,
-  .orders-container,
-  .discount-cards-container,
-  .my-wishlist-container {
-    width: 100%;
-    margin: 10px 0;
-    padding: 20px 15px;
-    overflow-x: auto;
-  }
-
-  .edit-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .popup-content,
-  .change-password-content {
-    padding: 20px 15px;
-    width: 100%;
-    max-width: 95%;
-  }
-
-  .popup-content form button[type="submit"],
-  .change-password-content form button[type="submit"] {
-    font-size: 1rem;
-    padding: 10px;
-  }
-   .popup-content {
-    width: 70%;
-    padding: 30px 20px;
-    max-width: none;
-  }
-}
-@media (max-width: 480px) {
-  .account-nav h4 {
-    font-size: 14px;
-    padding: 10px 8px;
-  }
-
-  .edit-details-box,
-  .change-password-box {
-    font-size: 13px;
-    padding: 8px 10px;
-  }
-
-  .profile-box h4 {
-    font-size: 14px;
-  }
-
-  .popup-content {
-    padding: 15px 10px;
-  }
-
-  .popup-content form label,
-  .popup-content form input {
-    font-size: 0.9rem;
-  }
-
-  .popup-content form button {
-    font-size: 0.95rem;
-  }
-  .popup-content {
-    width: 95%;
-    padding: 20px 15px;
-  }
+/* Extra small devices (phones, 320px and down) */
+@media (max-width: 320px) {
+    .account-nav h4 {
+        font-size: 13px !important;
+        padding: 8px 10px !important;
+    }
+    
+    .account-container h2 {
+        font-size: 18px !important;
+    }
+    
+    .account-container h3 {
+        font-size: 16px !important;
+    }
+    
+    .order-product img {
+        width: 50px !important;
+        height: 50px !important;
+    }
 }
