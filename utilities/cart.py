@@ -1,21 +1,18 @@
 import sqlite3
 from flask import session
 from datetime import datetime
+from utilities.session_utils import get_current_user_id
 from utilities.load_items import get_books_image_path, get_nonbook_image_path
 from database_connection.connector import get_users_db, get_books_db, get_nonbooks_db
 
-def get_user_id():
-    """Get current user ID from session"""
-    if 'user' not in session:
-        print("[DEBUG] No user in session")
-        return None
-    user_id = session['user'].get('user_id')
-    print(f"[DEBUG] Found user_id: {user_id}")
-    return user_id
-
-def add_to_cart_data(product_id, product_type, product_name, price, image_path, quantity=1):
+def add_to_cart_data(product_id, product_type, quantity=1, **kwargs):
     """Add item to user's cart in database"""
-    user_id = get_user_id()
+    user_id = get_current_user_id()
+
+    product_name = kwargs.get('product_name', 'Unknown Product')
+    price = kwargs.get('price', 0.0)
+    image_pat = kwargs.get('image_path')
+
     print(f"[DEBUG] add_to_cart_data called - user_id: {user_id}, product_id: {product_id}, product_type: {product_type}")
     
     if not user_id:
@@ -78,7 +75,7 @@ def add_to_cart_data(product_id, product_type, product_name, price, image_path, 
 
 def get_cart_items():
     """Get all cart items for current user with product details"""
-    user_id = get_user_id()
+    user_id = get_current_user_id()
     print(f"[DEBUG] get_cart_items called - user_id: {user_id}")
     
     if not user_id:
@@ -223,7 +220,7 @@ def get_product_details(product_id, product_type):
 
 def update_cart_quantity(product_id, product_type, quantity):
     """Update quantity of item in cart"""
-    user_id = get_user_id()
+    user_id = get_current_user_id()
     if not user_id:
         return {'success': False, 'message': 'User not logged in'}
     
@@ -259,7 +256,7 @@ def update_cart_quantity(product_id, product_type, quantity):
 
 def remove_from_cart_data(product_id, product_type):
     """Remove item from cart"""
-    user_id = get_user_id()
+    user_id = get_current_user_id()
     if not user_id:
         return {'success': False, 'message': 'User not logged in'}
     
@@ -284,7 +281,7 @@ def remove_from_cart_data(product_id, product_type):
 
 def get_cart_count():
     """Get total number of items in user's cart"""
-    user_id = get_user_id()
+    user_id = get_current_user_id()
     if not user_id:
         return 0
     
@@ -310,7 +307,7 @@ def get_cart_count():
 
 def clear_user_cart():
     """Clear all items from user's cart (useful after checkout)"""
-    user_id = get_user_id()
+    user_id = get_current_user_id()
     if not user_id:
         return {'success': False, 'message': 'User not logged in'}
     
@@ -333,7 +330,7 @@ def clear_user_cart():
 def add_to_wishlist_data(product_id, product_type):
     """Add item to user's wishlist"""
     try:
-        user_id = get_user_id()
+        user_id = get_current_user_id()
         if not user_id:
             return {'success': False, 'message': 'User not found'}
         
@@ -386,7 +383,7 @@ def add_to_wishlist_data(product_id, product_type):
 def get_wishlist_items():
     """Get all items in user's wishlist"""
     try:
-        user_id = get_user_id()
+        user_id = get_current_user_id()
         if not user_id:
             return []
         
@@ -431,7 +428,7 @@ def get_wishlist_items():
 def remove_from_wishlist_data(product_id, product_type):
     """Remove item from user's wishlist"""
     try:
-        user_id = get_user_id()
+        user_id = get_current_user_id()
         if not user_id:
             return {'success': False, 'message': 'User not found'}
         

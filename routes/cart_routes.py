@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from utilities.cart import *
 from flask_wtf.csrf import CSRFError
+from utilities.session_utils import get_current_user_id
 
 cart_bp = Blueprint('cart', __name__)
 
@@ -23,10 +24,8 @@ def cart():
 @cart_bp.route('/cart/add', methods=['POST'])
 def add_to_cart():
     print("=== CART ADD ROUTE CALLED ===")
-    print(f"User in session: {'user' in session}")
     
     if 'user' not in session:
-        print("User not logged in")
         return jsonify({'success': False, 'message': 'Please log in to add items to cart'}), 401
     
     try:
@@ -34,22 +33,19 @@ def add_to_cart():
         print(f"Received data: {data}")
         
         if not data:
-            print("No data provided")
             return jsonify({'success': False, 'message': 'No data provided'}), 400
         
-        # Validate required fields
-        required_fields = ['product_id', 'product_type', 'product_name', 'price']
+        # Only validate fields we actually need
+        required_fields = ['product_id', 'product_type']
         for field in required_fields:
             if field not in data:
                 return jsonify({'success': False, 'message': f'Missing required field: {field}'}), 400
-        
+
+        # IMPORTANT: Only pass the parameters the function expects
         result = add_to_cart_data(
             data.get('product_id'),
-            data.get('product_type'),
-            data.get('product_name'),
-            data.get('price'),
-            data.get('image_path'),
-            data.get('quantity', 1)
+            data.get('product_type', 'books'),
+            int(data.get('quantity', 1))
         )
         
         print(f"Add to cart result: {result}")
@@ -162,7 +158,7 @@ def check_wishlist():
         product_id = data.get('product_id')
         product_type = data.get('product_type')
 
-        user_id = get_user_id()
+        user_id = get_current_user_id()
         if not user_id:
             return jsonify({'in_wishlist': False})
         
