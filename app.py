@@ -22,7 +22,7 @@ def create_app():
     
     app.config['SECRET_KEY'] = '631539ff18360356'
     
-    # Keep CSRF enabled for forms but exempt specific routes
+    # Keep CSRF enabled afor forms but exempt specific routes
     csrf = CSRFProtect(app)
     csrf.init_app(app)
     
