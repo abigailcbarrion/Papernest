@@ -248,7 +248,7 @@ th, td {
                 <td>{{ product['Product Name'] }}</td>
                 <td>{{ product.get('Brand', 'N/A') }}</td>
                 <td>{{ product['Category'] }}</td>
-                <td>₱{{ "%.2f"|format(product['Price (PHP)']) }}</td>
+                <td class="price">₱{{ "%.2f"|format(product['Price (PHP)']) }}</td>
                 <td>
                   <span id="stock-{{ product['Product ID'] }}">{{ product.get('stock_quantity', 'N/A') }}</span>
                   <button onclick="updateStock(this)" 
