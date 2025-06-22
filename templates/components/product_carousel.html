@@ -1,5 +1,146 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/product_carousel.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_product_carousel.css') }}">
+
+<!-- Format matching style override -->
+<style>
+    /* Card styling to match image format */
+    .product-carousel .product-card {
+        height: 420px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        border-radius: 8px !important;
+        background: white !important;
+        overflow: hidden !important;
+        margin: 0 10px !important;
+        padding-bottom: 15px !important;
+    }
+    
+    /* Updated image container styling for perfect fit */
+    .product-carousel .product-image-container {
+        height: 240px !important;
+        width: calc(100% - 30px) !important; /* Account for padding */
+        margin: 0 15px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        position: relative !important;
+        background-color: #fff !important;
+        padding: 10px !important; /* Reduced from 15px for more image space */
+        box-sizing: border-box !important; /* Include padding in width calculation */
+    }
+    
+    /* Updated image styling for perfect center alignment */
+    .product-carousel .product-image {
+        max-height: 100% !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+        display: block !important;
+        margin: auto !important; /* Center both horizontally AND vertically */
+        aspect-ratio: auto !important; /* Maintain original aspect ratio */
+    }
+    
+    /* Ensure consistent image link size */
+    .product-carousel .product-image-link {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Product info section with center alignment */
+    .product-carousel .product-info {
+        padding: 0 15px 15px !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        height: 180px !important;
+        position: relative !important; /* Ensure proper stacking */
+        top: 0 !important; /* Prevent pushing up into image area */
+    }
+    
+    /* Title styling */
+    .product-carousel .product-title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin: 0 0 5px 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    
+    /* Author styling */
+    .product-carousel .product-author {
+        font-size: 14px !important;
+        color: #666 !important;
+        margin: 0 0 10px 0 !important;
+    }
+    
+    /* Price styling */
+    .product-carousel .product-price {
+        font-size: 18px !important;
+        font-weight: bold !important;
+        color: #e6900e !important;
+        margin: 5px 0 15px !important;
+    }
+    
+    /* Button container */
+    .product-carousel .product-buttons {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        margin-top: auto !important;
+    }
+    
+    /* Heart button */
+    .product-carousel .btn-wishlist {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 4px !important;
+        border: 1px solid #ddd !important;
+        background: white !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: background-color 0.2s !important;
+    }
+    
+    /* Match heart icon styling from product list */
+    .product-carousel .btn-wishlist i {
+        font-size: 16px !important;
+        color: #666 !important;
+    }
+    
+    /* Wishlist active state */
+    .product-carousel .btn-wishlist.in-wishlist {
+        background-color: #f5f5f5 !important;
+    }
+    
+    .product-carousel .btn-wishlist.in-wishlist i {
+        color: #ED1D7F !important;
+    }
+    
+    /* Hover state */
+    .product-carousel .btn-wishlist:hover {
+        background-color: #f5f5f5 !important;
+    }
+    
+    /* Add to cart button */
+    .product-carousel .btn-add-cart {
+        height: 40px !important;
+        flex: 1 !important;
+        max-width: 180px !important;
+        border-radius: 4px !important;
+        border: none !important;
+        background: #11b8ce !important;
+        color: white !important;
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+    }
+</style>
+
 <div class="product-carousel-container">
     <div class="product-carousel" id="bookCarousel">
         {% for item in popular_items %}
@@ -98,4 +239,76 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 100);
 });
+
+// Update wishlist functionality
+function initializeWishlistButtons() {
+    const wishlistButtons = document.querySelectorAll('.btn-wishlist');
+    
+    // Check which items are in wishlist on page load
+    fetch('/api/check_wishlist_items', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Mark buttons for items in wishlist
+        wishlistButtons.forEach(button => {
+            const productId = button.dataset.productId;
+            const productType = button.dataset.productType;
+            
+            if (data.items && data.items.some(item => 
+                item.product_id === productId && item.product_type === productType)) {
+                button.classList.add('in-wishlist');
+            }
+        });
+    });
+    
+    // Add click handler for toggling wishlist
+    wishlistButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const productId = this.dataset.productId;
+            const productType = this.dataset.productType;
+            
+            if (this.classList.contains('in-wishlist')) {
+                // Remove from wishlist
+                fetch('/api/remove_from_wishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        product_type: productType
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        this.classList.remove('in-wishlist');
+                    }
+                });
+            } else {
+                // Add to wishlist
+                fetch('/api/add_to_wishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        product_type: productType
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        this.classList.add('in-wishlist');
+                    }
+                });
+            }
+        });
+    });
+}
 </script>
