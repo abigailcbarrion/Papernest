@@ -4,7 +4,6 @@ from forms import LoginForm, RegistrationForm
 from utilities.storage import get_featured_author
 from utilities.cart import get_cart_count
 
-# Import all blueprints
 from routes.main_routes import main_bp
 from routes.auth_routes import auth_bp
 from routes.cart_routes import cart_bp
@@ -12,7 +11,6 @@ from routes.checkout_routes import checkout_bp
 from routes.admin_routes import admin_bp
 from routes.product_routes import product_bp
 from routes.auth_routes import auth_bp
-
 
 def create_app():
     """Application factory pattern"""

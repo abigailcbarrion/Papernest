@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let autoPlayInterval;
     let touchStartX = 0;
     let touchEndX = 0;
-    let autoPlayDelay = 3000; // 4 seconds - customizable
+    let autoPlayDelay = 5000; // 4 seconds - customizable
     let isAutoPlayEnabled = true; // Can be toggled
     let isPaused = false;
     
