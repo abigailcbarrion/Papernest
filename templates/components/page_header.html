@@ -43,7 +43,7 @@
                 <div class="user-links">
                     {% if session.get('user') %}
                         <a href="/account"><i class="fas fa-user"></i> Account</a>
-                        <a href="account/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                        <a href="/account?section=wishlist"><i class="fas fa-heart"></i> Wishlist</a>
                         <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
                     {% else %}
                         <div class="login-dropdown">
@@ -123,12 +123,12 @@
                     <a href="/category/supplies">SUPPLIES</a>
                 </div>
             </div>
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                 <a href="/bestsellers" class="dropbtn">BESTSELLERS</a>
                 <div class="dropdown-content">
                     <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
                 </div>
-            </div>
+            </div> -->
             <div class="dropdown">
                 <a href="/collections" class="dropbtn">COLLECTIONS</a>
                 <div class="dropdown-content">
