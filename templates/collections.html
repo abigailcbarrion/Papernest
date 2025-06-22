@@ -263,11 +263,11 @@
         </div>
         <div class="collections-layout">
            <div class="dropdown" id="customDropdown">
-            <div class="dropdown-button" id="dropdownBtn">Filter by</div>
+            <div class="dropdown-button" id="dropdownBtn">Go to</div>
             <div class="dropdown-content" id="dropdownList">
-                <div onclick="selectOption(this)">Price: Low to High</div>
+                <!-- <div onclick="selectOption(this)">Price: Low to High</div>
                 <div onclick="selectOption(this)">Price: High to Low</div>
-                <div onclick="selectOption(this)">Sale</div>
+                <div onclick="selectOption(this)">Sale</div> -->
                 <div onclick="selectOption(this)">Pride Reads</div>
                 <div onclick="selectOption(this)">Rainy Reads</div>
                 <div onclick="selectOption(this)">Women Empowerment</div>
@@ -370,12 +370,36 @@
     dropdown.classList.toggle('active');
   };
 
-  function selectOption(option) {
-    dropdownBtn.textContent = option.textContent;
-    dropdown.classList.remove('active');
-    // Add filtering/sorting logic here
-    console.log('Selected:', option.textContent);
+  // Replace the selectOption function with this improved version
+function selectOption(option) {
+  // Update dropdown text
+  dropdownBtn.textContent = option.textContent;
+  dropdown.classList.remove('active');
+  
+  // Map dropdown options to section headers
+  const sectionMapping = {
+    "Pride Reads": "Pride Reads Collection",
+    "Rainy Reads": "Rainy Reads Collection",
+    "Women Empowerment": "Women Empowerment Reads",
+    "Mental Health": "Mental Health Collection"
+  };
+  
+  // Find the section heading that matches the selection
+  const targetText = sectionMapping[option.textContent];
+  const headers = document.querySelectorAll('h2');
+  
+  // Find and scroll to the matching section
+  for (let header of headers) {
+    if (header.textContent.trim() === targetText) {
+      // Scroll to the section with smooth behavior
+      header.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      break;
+    }
   }
+}
 
   window.onclick = function(event) {
     if (!dropdown.contains(event.target)) {
