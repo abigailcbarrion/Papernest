@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from utilities.load_items import get_books_image_path, get_trending, get_nonbook_image_path
 from utilities.storage import get_featured_author
-from utilities.cart import get_wishlist_items as get_wishlist, get_cart_items
+from utilities.cart import get_wishlist_items as get_wishlist, get_cart_items, remove_from_wishlist_data
 from utilities.account import get_actual_order_items, generate_representative_items
 from utilities.load_items import get_books_image_path
 from utilities.user_management import get_user_orders_from_db as get_orders
@@ -68,11 +68,17 @@ def bestsellers():
 
 @main_bp.route('/collections')
 def collections():
-    return render_template('collections.html')
+    trending_books = get_trending(curr_section='books')
+    for item in trending_books:
+        item['image_path'] = get_books_image_path(item['Product ID'])
+    return render_template('collections.html', products=trending_books, page_type='collections')
 
 @main_bp.route('/sale')
 def sale():
-    return render_template('sale.html')
+    trending_books = get_trending(curr_section='books')
+    for item in trending_books:
+        item['image_path'] = get_books_image_path(item['Product ID'])
+    return render_template('sale.html', products=trending_books, page_type='sale')
 
 @main_bp.route('/account')
 def account():
@@ -214,6 +220,18 @@ def get_order_items(order_id):
         print(f"Error getting non-book items for order {order_id}: {str(e)}")
     
     return items
+
+@main_bp.route('/remove-from-wishlist', methods=['POST'])
+def remove_from_wishlist():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'User not logged in'})
+    
+    data = request.get_json()
+    product_id = data.get('product_id')
+    product_type = data.get('product_type')
+    
+    result = remove_from_wishlist_data(product_id, product_type)
+    return jsonify(result)
     
 @main_bp.route('/account/delete-address', methods=['POST'])
 def delete_address():
