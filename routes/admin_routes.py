@@ -3,10 +3,11 @@ from utilities.login import load_users_from_db
 from utilities.load_items import load_books, load_nonbooks, get_books_image_path, get_nonbook_image_path
 from utilities.checkout import get_all_orders, get_order_stats
 from utilities.admin import admin_required
-from utilities.handle_products import get_all_products, delete_product as delete_product_function
+from utilities.handle_products import get_all_products, get_current_stock, update_product_inventory, delete_product as delete_product_function
 from utilities.handle_products import add_product, get_order_items, update_product
 import time
 from utilities.order import get_order_by_id
+from constants import NORMALIZE_BOOK_CATEGORIES, NORMALIZE_NON_BOOK_CATEGORIES, CATEGORY_MAPPING
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -29,7 +30,6 @@ def admin_dashboard():
                         total_orders=total_orders,
                         total_revenue=total_revenue)
 
-
 @admin_bp.route('/admin/books')
 @admin_required
 def admin_books():
@@ -45,8 +45,8 @@ def admin_books():
                 product['image_path'] = get_books_image_path(product_id)
         
         return render_template('components/admin_products.html', 
-                             products=products, 
-                             product_type='Books')
+                            products=products, 
+                            product_type='Books')
     except Exception as e:
         print(f"Error in admin_books route: {e}")
         import traceback
@@ -68,43 +68,77 @@ def admin_non_books():
                 product['image_path'] = get_nonbook_image_path(product_id)
         
         return render_template('components/admin_products.html', 
-                             products=products, 
-                             product_type='Non-Books')
+                            products=products, 
+                            product_type='Non-Books')
     except Exception as e:
         print(f"Error in admin_non_books route: {e}")
         import traceback
         traceback.print_exc()
         return f"Error loading non-books: {str(e)}"
 
-# Also update the advanced non-books view
-@admin_bp.route('/admin/non-books/advanced', methods=['GET'])
+@admin_bp.route('/admin/products/advanced', methods=['GET', 'POST'])
 @admin_required
-def admin_non_books_advanced():
-    """Advanced non-books management with search, filtering"""
+def admin_products_advanced():
+    """Edit mode for managing books and non-books"""
     try:
+        # Get product type from query parameters (default to 'non_books')
+        product_type = request.args.get('product_type', 'non_books').lower()
         search = request.args.get('search', '')
         category = request.args.get('category')
+
+        # Load products based on product type
+        if product_type == 'books':
+            all_products = load_books()
+            get_image_path = get_books_image_path
+            for product in all_products:
+                product['quantity'] = get_current_stock(product['Product ID'], 'book')
+            categories = sorted(list(NORMALIZE_BOOK_CATEGORIES))
+            # print(f"Product Type: {product_type}")
+            # print(f"Categories: {categories}")
+
+        elif product_type == 'non_books' or product_type == 'non-books':
+            all_products = load_nonbooks()
+            get_image_path = get_nonbook_image_path
+            for product in all_products:
+                product['quantity'] = get_current_stock(product['Product ID'], 'non_book')
+            categories = sorted(list(NORMALIZE_NON_BOOK_CATEGORIES))
+            # print(f"Product Type: {product_type}")
+            # print(f"Categories: {categories}")
+        else:
+            return "Invalid product type", 400
         
-        # Get all non-books
-        all_products = load_nonbooks()
-        
-        # Add image paths using the specialized function
+        for product in all_products:
+            product.setdefault('Product Name', product.get('Book Name', 'N/A'))
+            product.setdefault('Category', 'N/A')
+            product.setdefault('Price (PHP)', 0)
+            product.setdefault('stock_quantity', 0)
+
+        # Add image paths using the appropriate function
         for product in all_products:
             product_id = product.get('Product ID')
             if product_id:
-                product['image_path'] = get_nonbook_image_path(product_id)
-        
+                product['image_path'] = get_image_path(product_id)
+
+        if not all_products:
+            flash(f"No {product_type} products found for the given search or category.", "info")
+
         # Filter by search term if provided
         if search:
             filtered_products = []
             search = search.lower()
             for product in all_products:
-                if (search in product.get('Product Name', '').lower() or
-                    search in product.get('Brand', '').lower() or
-                    search in product.get('Product Description', '').lower()):
-                    filtered_products.append(product)
+                if product_type == 'books':
+                    if (search in product.get('Book Name', '').lower() or
+                        search in product.get('Author', '').lower() or
+                        search in product.get('Product Description', '').lower()):
+                        filtered_products.append(product)
+                else:  # non_books
+                    if (search in product.get('Product Name', '').lower() or
+                        search in product.get('Brand', '').lower() or
+                        search in product.get('Product Description', '').lower()):
+                        filtered_products.append(product)
             all_products = filtered_products
-            
+
         # Filter by category if provided
         if category:
             filtered_products = []
@@ -112,65 +146,98 @@ def admin_non_books_advanced():
                 if product.get('Category') == category:
                     filtered_products.append(product)
             all_products = filtered_products
-        
-        # Get unique categories for the filter dropdown
-        categories = set()
-        for product in load_nonbooks():
-            if product.get('Category'):
-                categories.add(product.get('Category'))
-        
+
+        # Handle POST request for saving edits
+        if request.method == 'POST':
+            try:
+                data = request.get_json()
+                for product in data.get('products', []):
+                    product_id = product.get('Product ID')
+                    new_data = {
+                        'name': product.get('name'),
+                        'price': product.get('price'),
+                        'stock': product.get('stock'),
+                        'category': product.get('category'),
+                    }
+                    update_product(product_id, new_data, product_type)
+                return jsonify({'success': True, 'message': 'Products updated successfully'})
+            except Exception as e:
+                print(f"Error updating products: {e}")
+                return jsonify({'success': False, 'message': str(e)})
+
+        # Render the template for edit mode
         return render_template(
-            'components/admin_products2.html', 
-            non_book_products=all_products,
-            categories=sorted(list(categories)),
+            'components/admin_edit_products.html',
+            products=all_products,
+            product_type=product_type,
             search=search,
-            category=category
+            categories=categories,
+            edit_mode=True,
         )
     except Exception as e:
-        print(f"Error in admin_non_books_advanced route: {e}")
+        print(f"Error in admin_products_advanced route: {e}")
         import traceback
         traceback.print_exc()
-        return f"Error loading advanced non-books view: {str(e)}"
+        return f"Error loading advanced products view: {str(e)}"
 
-# Add this route to maintain backward compatibility
 @admin_bp.route('/admin_products')
 @admin_bp.route('/admin_products/<product_type>')
 @admin_required
 def admin_products(product_type='books'):
     """Legacy route for compatibility - redirects to the new specific routes"""
-    if product_type.lower() == 'books':
-        return redirect(url_for('admin.admin_books'))
-    elif product_type.lower() == 'non-books':
-        return redirect(url_for('admin.admin_non_books'))
-    else:
-        return "Invalid product type", 404
+    try:
+        if product_type.lower() == 'books':
+            products = load_books()
+            for product in products:
+                product['quantity'] = get_current_stock(product['Product ID'], 'book')
+                if product:
+                    product['image_path'] = get_books_image_path(product['Product ID'])
+            # Pass products to the 'admin_books' route via session or re-render the template
+            return render_template('components/admin_products.html', 
+                                   products=products, 
+                                   product_type='Books')
+        elif product_type.lower() == 'non-books' or product_type.lower() == 'non_books':
+            products = load_nonbooks()
+            for product in products:
+                product['quantity'] = get_current_stock(product['Product ID'], 'non_book')
+                if product:
+                    product['image_path'] = get_nonbook_image_path(product['Product ID'])
+            # Pass products to the 'admin_non_books' route via session or re-render the template
+            return render_template('components/admin_products.html', 
+                                   products=products, 
+                                   product_type='Non-Books')
+        else:
+            return "Invalid product type", 404
+    except Exception as e:
+        print(f"Error in admin_products route: {e}")
+        import traceback
+        traceback.print_exc()
+        return f"Error loading products: {str(e)}"
 
-# Add this route for backward compatibility
-@admin_bp.route('/admin_products2', methods=['GET'])
+@admin_bp.route('/admin/products/update-stock', methods=['POST'])
 @admin_required
-def admin_products2():
-    """Legacy route for compatibility - redirects to advanced non-books page"""
-    return redirect(url_for('admin.admin_non_books_advanced', **request.args))
-
-def handle_stock_update():
-    """Handle stock update requests"""
+def update_stock():
+    """Update the stock quantity of a product"""
     try:
         data = request.get_json()
+        print(f"Received data for stock update: {data}")
         product_id = data.get('product_id')
+        product_type = data.get('product_type')
         new_stock = data.get('new_stock')
-        
-        # Update database
-        from database_connection.connector import get_nonbooks_db
-        
-        with get_nonbooks_db() as conn:
-            cursor = conn.cursor()
-            cursor.execute('UPDATE non_books SET quantity = ? WHERE product_id = ?', 
-                        (new_stock, product_id))
-            conn.commit()
-        
-        return jsonify({'success': True})
+
+        if not product_id or not product_type or new_stock is None:
+            return jsonify({'success': False, 'message': 'Invalid data provided'}), 400
+
+        # Update the inventory
+        success = update_product_inventory(product_id, product_type, new_stock - get_current_stock(product_id, product_type))
+
+        if success:
+            return jsonify({'success': True, 'message': 'Stock updated successfully'})
+        else:
+            return jsonify({'success': False, 'message': 'Failed to update stock'}), 500
     except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
+        print(f"Error updating stock: {e}")
+        return jsonify({'success': False, 'message': 'An error occurred while updating stock'}), 500
     
 @admin_bp.route('/admin_registeredUsers', methods=['GET', 'POST'])
 @admin_required
@@ -224,38 +291,44 @@ def admin_login():
         traceback.print_exc()
         return render_template('adminlogin.html', error=f'Error: {str(e)}')
 
-@admin_bp.route('/api/update_order_status', methods=['POST'])
+@admin_bp.route('/admin/update_order_status', methods=['POST'])
 @admin_required
 def update_order_status():
-    if 'user' not in session or session['user'].get('role') != 'admin':
-        return jsonify({'success': False, 'message': 'Unauthorized'})
-    
+    print("Update order status route called")
     order_id = request.json.get('order_id')
     new_status = request.json.get('status')
     
     from utilities.checkout import update_order_status
     success = update_order_status(order_id, new_status)
     
+    
     return jsonify({'success': success})
 
-@admin_bp.route('/admin/delete_product', methods=['POST'])
+@admin_bp.route('/admin/products/delete', methods=['POST'])
 @admin_required
 def delete_product_route():
-    """Delete a product from the database"""
-    if 'user' not in session or not session.get('user', {}).get('is_admin'):
-        return jsonify({'success': False, 'message': 'Unauthorized'})
-    
-    product_id = request.json.get('product_id')
-    product_type = request.json.get('product_type')
-    
-    # Convert product_type to match expected format
-    db_product_type = 'book' if product_type == 'books' else 'non_book'
-    
-    # Use the imported function with a different name
-    result = delete_product_function(product_id, db_product_type)
-    return jsonify(result)
-    
-@admin_bp.route('/get-order-details/<order_id>', methods=['GET'])
+    try:
+        data = request.get_json()
+        product_id = data.get('product_id')
+        product_type = data.get('product_type')
+
+        if not product_id or not product_type:
+            return jsonify({'success': False, 'message': 'Missing product_id or product_type'}), 400
+        # Convert product_type to match expected format in handle_products.py
+        db_product_type = 'book' if product_type in ['books', 'book'] else 'non_book'
+
+        result = delete_product_function(product_id, db_product_type)
+
+        if result.get('success'):
+            return jsonify({'success': True, 'message': 'Product deleted successfully'})
+        else:
+            return jsonify({'success': False, 'message': result.get('error', 'Delete failed')}), 500
+
+    except Exception as e:
+        print(f"Error deleting product: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@admin_bp.route('/admin/get-order-details/<order_id>', methods=['GET'])
 @admin_required
 def get_order_details(order_id):
     """Get details for a specific order in JSON format for the admin modal"""
@@ -266,10 +339,15 @@ def get_order_details(order_id):
             return jsonify({'error': 'Order not found'}), 404
         
         order_items = get_order_items(order_id)
+        for item in order_items:
+            # Add image path based on product_type
+            if item.get('product_type') in ['book', 'books']:
+                item['image_path'] = get_books_image_path(item['product_id'])
+            else:
+                item['image_path'] = get_nonbook_image_path(item['product_id'])
         
         # Assign items to order
         order['items'] = order_items
-        
         return jsonify(order)
         
     except Exception as e:

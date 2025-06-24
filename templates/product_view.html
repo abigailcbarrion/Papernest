@@ -190,6 +190,12 @@
                                 {{ product["Book Name"] }}
                             {% endif %}
                         </h1>
+                        {% if quantity == 0 %}
+                        <p class="product-price" style="color: red; font-weight: bold;">Out of Stock</p>
+                        {% else %}
+                        <p class="product-price" style="color: green; font-weight: bold;">In Stock</p>
+                        {% endif %}
+                        <span >{{ quantity }}</span>
                         <p class="product-price">₱{{ "%.2f"|format(product["Price (PHP)"]) }}</p>
                         <div class="quantity-controls">
                             <button type="button" id="decrease-qty">-</button>

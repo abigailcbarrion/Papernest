@@ -16,6 +16,23 @@ NON_BOOK_CATEGORIES = [
     "supplies"
 ]
 
+NORMALIZE_BOOK_CATEGORIES = {
+    'Fiction',
+    'Non-fiction',
+    'Science and Technology',
+    'Self-Help and Personal Development',
+    'Children\'s Books',
+}
+
+NORMALIZE_NON_BOOK_CATEGORIES = {
+    'Art Supplies',
+    'Calendars and Planners',
+    'Notebooks and Journals',
+    'Novelties',
+    'Reading Accessories',
+    'Supplies'
+}
+
 CATEGORY_MAPPING = {
     "art-supplies": "Art Supplies",
     "calendars-and-planners": "Calendars and Planners",

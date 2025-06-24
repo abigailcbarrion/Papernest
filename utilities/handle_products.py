@@ -196,7 +196,10 @@ def update_product_inventory(product_id, product_type, quantity_change, is_reser
         is_reserved: True to update reserved quantity instead of stock
     """
     try:
-        db_name = 'books.db' if product_type == 'book' else 'non_books.db'
+        if product_type == 'books' or product_type == 'book':
+            db_name = 'books.db'
+        elif product_type == 'non_books' or product_type == 'non-books' or product_type == 'non_book' or product_type == 'non-book':
+            db_name = 'non_books.db'
         conn = get_db_connection(db_name)
         cursor = conn.cursor()
         
@@ -235,6 +238,7 @@ def update_product_inventory(product_id, product_type, quantity_change, is_reser
                 """, (product_id, quantity_change))
                 
         conn.commit()
+        print(f"Inventory updated successfully for product ID {product_id}")
         conn.close()
         return True
         
@@ -556,3 +560,26 @@ def get_order_items(order_id):
     except Exception as e:
         print(f"Error getting order items: {e}")
         return []
+    
+def get_current_stock(product_id, product_type):
+    """Get the current stock quantity of a product"""
+    try:
+        if product_type == 'books' or product_type == 'book':
+            db_name = 'books.db'
+        elif product_type == 'non_books' or product_type == 'non-books' or product_type == 'non_book' or product_type == 'non-book':
+            db_name = 'non_books.db'
+        else:
+            return 0
+        conn = get_db_connection(db_name)
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT stock_quantity FROM inventory WHERE product_id = ?", (product_id,))
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            return result[0]
+        return 0
+    except Exception as e:
+        print(f"Error getting current stock: {e}")
+        return 0

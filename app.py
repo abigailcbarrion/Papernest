@@ -23,6 +23,8 @@ def create_app():
     # Keep CSRF enabled afor forms but exempt specific routes
     csrf = CSRFProtect(app)
     csrf.init_app(app)
+
+    csrf.exempt(main_bp)
     
     # Exempt the cart blueprint from CSRF
     csrf.exempt(cart_bp)

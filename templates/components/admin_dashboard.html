@@ -129,7 +129,7 @@
             </a>
             <a href="{{ url_for('admin.admin_orders') }}" style="text-decoration: none; color: inherit; flex: 1; max-width: 200px;">
               <div style="background: #d3d3d3; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 40px 24px; text-align: center; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">0</div>
+                <div style="font-size: 4rem; font-weight: bold; color: #666; margin-bottom: 10px;">{{ total_orders }}</div>
                 <h3 style="margin: 0; color: #666; font-size: 1rem; font-weight: normal;">Total Orders</h3>
               </div>
             </a>
