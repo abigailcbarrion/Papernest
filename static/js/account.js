@@ -92,7 +92,12 @@ function removeFromWishlist(productId, productType, button) {
             product_type: productType
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             // Remove the item from the DOM
@@ -101,7 +106,7 @@ function removeFromWishlist(productId, productType, button) {
                 item.remove();
             }
         } else {
-            alert('Failed to remove item from wishlist');
+            alert(data.message);
         }
     })
     .catch(error => {
