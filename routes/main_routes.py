@@ -68,11 +68,17 @@ def bestsellers():
 
 @main_bp.route('/collections')
 def collections():
-    return render_template('collections.html')
+    trending_books = get_trending(curr_section='books')
+    for item in trending_books:
+        item['image_path'] = get_books_image_path(item['Product ID'])
+    return render_template('collections.html', products=trending_books, page_type='collections')
 
 @main_bp.route('/sale')
 def sale():
-    return render_template('sale.html')
+    trending_books = get_trending(curr_section='books')
+    for item in trending_books:
+        item['image_path'] = get_books_image_path(item['Product ID'])
+    return render_template('sale.html', products=trending_books, page_type='sale')
 
 @main_bp.route('/account')
 def account():
