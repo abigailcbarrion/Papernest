@@ -4,7 +4,6 @@ from forms import LoginForm, RegistrationForm
 from utilities.storage import get_featured_author
 from utilities.cart import get_cart_count
 
-# Import all blueprints
 from routes.main_routes import main_bp
 from routes.auth_routes import auth_bp
 from routes.cart_routes import cart_bp
@@ -12,7 +11,6 @@ from routes.checkout_routes import checkout_bp
 from routes.admin_routes import admin_bp
 from routes.product_routes import product_bp
 from routes.auth_routes import auth_bp
-
 
 def create_app():
     """Application factory pattern"""
@@ -22,12 +20,17 @@ def create_app():
     
     app.config['SECRET_KEY'] = '631539ff18360356'
     
-    # Keep CSRF enabled for forms but exempt cart routes
+    # Keep CSRF enabled afor forms but exempt specific routes
     csrf = CSRFProtect(app)
     csrf.init_app(app)
     
     # Exempt the cart blueprint from CSRF
     csrf.exempt(cart_bp)
+
+    csrf.exempt(admin_bp)
+    
+    # Also exempt the checkout blueprint from CSRF
+    csrf.exempt(checkout_bp)
     
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(auth_bp, url_prefix='/')
@@ -56,7 +59,7 @@ def create_app():
         login_form = LoginForm()
         registration_form = RegistrationForm()
         
-        login_form.username.id = 'login_username'
+        login_form.email.id = 'login_email'
         login_form.password.id = 'login_password'
         login_form.csrf_token.id = 'login_csrf_token'
         
@@ -68,11 +71,6 @@ def create_app():
             'login_form': login_form,
             'registration_form': registration_form
         }
-    
-    @csrf.exempt
-    def exempt_cart_routes():
-        pass
-    
     return app
 
 # Create app instance

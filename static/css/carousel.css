@@ -1,22 +1,25 @@
 /* Carousel Container - Full width */
 .carousel-container {
     position: relative;
-    width: 100vw; /* Full viewport width */
+    width: fit-content;
+     height: fit-content;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: visible;
+    left: 0;
+    right: 0;
     height: 520px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: #f8f9fa;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+    margin-bottom: 50px; /* Space for dots */
 }
 
-/* Carousel - Full width */
+/* Ensure slides display properly */
 .carousel {
     position: relative;
     width: 100%;
+    padding: 0;
+    margin: 0;
     height: 100%;
     display: flex;
     transition: transform 0.5s ease-in-out;
@@ -51,10 +54,10 @@
     display: block;
 }
 
-/* Navigation buttons */
+/* Navigation buttons - fix to carousel container */
 .carousel-btn {
-    position: absolute;
-    top: 50%;
+    position: absolute; /* This is correct, but we need to ensure the container has position: relative */
+    top: 50%; /* This positions at 50% of the container height */
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.5);
     color: white;
@@ -65,6 +68,10 @@
     border-radius: 5px;
     z-index: 10;
     transition: background 0.3s ease;
+    position: absolute;
+    top: calc(50%); /* Center vertically */
+    transform: translateY(-50%); /* Align center precisely */
+    /* rest of your styles */
 }
 
 .carousel-btn:hover {
@@ -79,18 +86,19 @@
     right: 15px;
 }
 
-/* Dots - Positioned below content */
+/* Dots - Fix to be below the carousel but still within container */
 .dots-container {
     position: absolute;
+    bottom: 15px; /* Position just below the carousel */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 10px;
     z-index: 10;
-    background: #ffffff; /* White background for contrast */
-    padding: 8px 16px; /* Add padding for better visibility */
-    border-radius: 20px; /* Rounded corners */
    
+    padding: 8px 16px;
+    border-radius: 20px;
+    
 }
 
 .dot {
@@ -107,4 +115,33 @@
 .dot:hover {
     background: #ed1d7f; /* Match your brand color */
     transform: scale(1.2); /* Slightly larger when active */
+}
+
+/* Additional styles from the code block */
+.dots-navigator {
+  position: relative;
+  margin-top: 10px; /* Adjust this value to control spacing */
+  text-align: center;
+}
+
+/* Mobile-specific fix */
+@media (max-width: 768px) {
+  .carousel-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel {
+    width: 100%;
+    left: 0;
+  }
+  
+  /* Product cards/slides */
+  .product-card {
+    width: 100%;
+    margin: 0;
+  }
 }

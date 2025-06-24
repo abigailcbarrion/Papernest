@@ -6,16 +6,22 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/billing.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_billing.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <div class="page-wrapper">
+    <!-- Add this right after opening body tag -->
+    <input type="hidden" id="user-id-maintainer" 
+        data-user-id="{{ session.user.id or session.user.user_id }}"
+        data-username="{{ session.user.username }}">
+    <div class="page-wrapper" style="margin-bottom: 20px;">
         {% include 'components/billing_header.html' %}
         <div class="main-content">
         <div class="container">
             <div class="checkout-wrapper">
                 <!-- Payment Methods (left) -->
                 <div class="left-side">
-                    <form method="POST" action="{{ url_for('checkout.billing') }}">
+                    <form id="billing-form" method="POST" action="{{ url_for('checkout.billing') }}">
                         <div class="billing-container">
                             <h3>Payment Details</h3>
                             <div class="payment-method">
@@ -56,7 +62,7 @@
                             </div>
                         </div>
                         <div id="placeOrderBtn">
-                            <button type="submit" class="btn-placeOrder">PLACE ORDER</button>
+                            <button type="button" id="process-payment-btn" class="btn-placeOrder">PLACE ORDER</button>
                         </div>
                     </form>
                 </div>
@@ -72,7 +78,7 @@
                                 <td>
                                     <div class="cart-item">
                                         <img src="{{ item.image_path or url_for('static', filename='images/placeholder.png') }}" 
-                                             alt="{{ item.product_name }}" class="item-image">
+                                            alt="{{ item.product_name }}" class="item-image">
                                         <div class="prod-details">
                                             <span class="prod-name">{{ item.product_name }}</span>
                                             <div class="prod-row">
@@ -109,7 +115,144 @@
             </div>
         </div>
         </div>
-     <footer>
+        
+        <!-- Credit/Debit Card Popup -->
+        <div id="card-payment-popup" class="popup-overlay">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h3 class="popup-title">Enter Card Details</h3>
+                <form id="card-payment-form">
+                    <div class="form-group">
+                        <label for="card-name">Cardholder Name</label>
+                        <input type="text" id="card-name" required placeholder="Name on card">
+                    </div>
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" required placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="card-expiry">Expiration Date</label>
+                            <input type="text" id="card-expiry" required placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-cvv">CVV</label>
+                            <input type="text" id="card-cvv" required placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <button type="submit">Confirm Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Digital Wallet Popup -->
+        <div id="digital-wallet-popup" class="popup-overlay">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h3 class="popup-title">Choose Payment App</h3>
+                <div class="e-wallet-options">
+                    <div class="e-wallet-option" data-wallet="gcash">
+                        <img src="{{ url_for('static', filename='images/E-Wallet-Img/gcash-logo.png') }}" 
+                            alt="GCash" 
+                            class="wallet-image" 
+                            data-fallback="{{ url_for('static', filename='images/placeholder.png') }}">
+                        <p>GCash</p>
+                    </div>
+                    <div class="e-wallet-option" data-wallet="paymaya">
+                        <img src="{{ url_for('static', filename='images/E-Wallet-Img/paymaya-logo.png') }}" 
+                            alt="PayMaya" 
+                            class="wallet-image" 
+                            data-fallback="{{ url_for('static', filename='images/placeholder.png') }}">
+                        <p>PayMaya</p>
+                    </div>
+                </div>
+                <div class="popup-actions">
+                    <button id="select-wallet-btn" disabled>Continue</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GCash Payment Form -->
+        <div id="gcash-payment-popup" class="popup-overlay">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h3 class="popup-title">GCash Payment</h3>
+                <form id="gcash-payment-form">
+                    <div class="form-group">
+                        <label for="gcash-number">GCash Mobile Number</label>
+                        <input type="text" id="gcash-number" required placeholder="09XX XXX XXXX" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <label for="gcash-name">Account Name</label>
+                        <input type="text" id="gcash-name" required placeholder="Full Name">
+                    </div>
+                    <div class="popup-actions">
+                        <button type="submit">Confirm Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- PayMaya Payment Form -->
+        <div id="paymaya-payment-popup" class="popup-overlay">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h3 class="popup-title">PayMaya Payment</h3>
+                <form id="paymaya-payment-form">
+                    <div class="form-group">
+                        <label for="paymaya-number">PayMaya Mobile Number</label>
+                        <input type="text" id="paymaya-number" required placeholder="09XX XXX XXXX" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <label for="paymaya-name">Account Name</label>
+                        <input type="text" id="paymaya-name" required placeholder="Full Name">
+                    </div>
+                    <div class="popup-actions">
+                        <button type="submit">Confirm Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- COD Confirmation Popup -->
+        <div id="cod-confirmation-popup" class="popup-overlay">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h3 class="popup-title">Cash on Delivery Confirmation</h3>
+                <p>You have selected Cash on Delivery as your payment method. You will pay the total amount when your order arrives.</p>
+                <div class="order-details">
+                    <h4>Order Total: <span class="total-price">₱{{ "%.2f"|format(total_amount) }}</span></h4>
+                </div>
+                <div class="popup-actions">
+                    <button id="confirm-cod-btn">Confirm</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Success Popup -->
+        <div id="order-success-popup" class="popup-overlay">
+            <div class="popup-content confirmation-content">
+                <i class="fas fa-check-circle"></i>
+                <h3 class="popup-title">Order Placed Successfully!</h3>
+                <p>Your order has been placed successfully. You will receive an email confirmation shortly.</p>
+                <div class="order-details">
+                    <h4>Order Summary</h4>
+                    <p>Order Number: <span id="order-number">#ORD-12345</span></p>
+                    <p>Order Date: <span id="order-date"></span></p>
+                    <p>Payment Method: <span id="order-payment-method">Credit Card</span></p>
+                    <p>Total Amount: <span class="total-price">₱{{ "%.2f"|format(total_amount) }}</span></p>
+                </div>
+                <div class="popup-actions">
+                    <button id="view-order-btn">View Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/billing.js') }}"></script>
+        
+    <footer>
         {% include 'components/page_footer.html' %}
     </footer>
 </body>

@@ -3,11 +3,13 @@ from forms import LoginForm
 from database_connection.connector import get_users_db
 import sqlite3
 
+
 def row_to_user_dict(row):
     """Convert database row to user dictionary"""
     return {
         'user_id': row['user_id'],
         'username': row['username'],
+        'email': row['email'],
         'password': row['password'],
         'first_name': row['first_name'],
         'last_name': row['last_name'],
@@ -15,7 +17,6 @@ def row_to_user_dict(row):
         'birth_date': row['birth_date'],
         'gender': row['gender'],
         'phone_number': row['phone_number'],
-        'email': row['email'],
         'country': row['country'],
         'province': row['province'],
         'city': row['city'],
@@ -23,6 +24,20 @@ def row_to_user_dict(row):
         'postal_code': row['postal_code']
     }
 
+def authenticate_user(email, password):
+    """Authenticate user using database query with email"""
+    try:
+        with get_users_db() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            # Changed to search by email instead of username
+            cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
+            row = cursor.fetchone()
+            return row_to_user_dict(row) if row else None
+    except Exception as e:
+        print(f"Error authenticating user: {e}")
+        return None
+    
 def load_users_from_db():
     """Load all users from SQLite database"""
     try:
@@ -35,19 +50,6 @@ def load_users_from_db():
     except Exception as e:
         print(f"Error loading users: {e}")
         return []
-
-def authenticate_user(username, password):
-    """Authenticate user using database query"""
-    try:
-        with get_users_db() as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
-            row = cursor.fetchone()
-            return row_to_user_dict(row) if row else None
-    except Exception as e:
-        print(f"Error authenticating user: {e}")
-        return None
 
 def handle_login():
     """Handle user login with Flask-WTF form validation"""
@@ -64,16 +66,17 @@ def handle_login():
                 print("AJAX request detected")
                 
                 # Get form data directly for AJAX requests
-                username = request.form.get('username')
+                # Changed username to email
+                email = request.form.get('email')
                 password = request.form.get('password')
                 
-                print(f"Username: {username}, Password: {'*' * len(password) if password else None}")
+                print(f"Email: {email}, Password: {'*' * len(password) if password else None}")
                 
-                if not username or not password:
-                    return jsonify({'success': False, 'message': 'Username and password are required'})
+                if not email or not password:
+                    return jsonify({'success': False, 'message': 'Email and password are required'})
                 
-                # Authenticate user
-                user = authenticate_user(username.strip(), password)
+                # Authenticate user with email
+                user = authenticate_user(email.strip(), password)
                 print(f"Authentication result: {user is not None}")
                 
                 if user:
@@ -84,17 +87,18 @@ def handle_login():
                     
                     return jsonify({'success': True, 'message': 'Login successful'})
                 else:
-                    return jsonify({'success': False, 'message': 'Invalid username or password'})
+                    return jsonify({'success': False, 'message': 'Invalid email or password'})
             else:
                 # Handle regular form submission with Flask-WTF
                 from forms import LoginForm
                 form = LoginForm(request.form)
                 
                 if form.validate():
-                    username = form.username.data
+                    # Changed username to email
+                    email = form.email.data
                     password = form.password.data
                     
-                    user = authenticate_user(username, password)
+                    user = authenticate_user(email, password)
                     
                     if user:
                         session['user'] = user
@@ -119,3 +123,5 @@ def handle_login():
             return jsonify({'success': False, 'message': 'Server error occurred'})
         else:
             return redirect(url_for('main.index', error='server_error'))
+        
+

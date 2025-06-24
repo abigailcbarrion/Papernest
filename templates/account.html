@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_footer.css') }}">
+    <!-- Add mobile CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_account.css') }}">
     <style>
         .password-input-wrapper input[type="password"],
         .password-input-wrapper input[type="text"] {
@@ -71,10 +73,57 @@
                 </div>
             </div>
         </div>
+        <!-- Update the orders-container section in account.html -->
         <div id="orders-container" class="account-container" style="display: none;">
             <h2>My Orders</h2>
-            <p>You don't have any orders yet.</p>
-            <!-- Orders content will be here -->
+            {% if orders %}
+                <div class="orders-list">
+                    {% for order in orders %}
+                    <div class="order-item">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-id">Order #{{ order.order_id }}</span>
+                                <span class="order-date">{{ order.order_date }}</span>
+                            </div>
+                            <div class="order-status {{ order.status|lower }}">
+                                {{ order.status }}
+                            </div>
+                        </div>
+                        <div class="order-details">
+                            <div class="order-products">
+                                {% if order.get('items') %}
+                                    {% for item in order['items'] %}
+                                    <div class="order-product">
+                                        <img src="{{ item.image_path or url_for('static', filename='images/placeholder.png') }}" alt="{{ item.product_name }}">
+                                        <div class="product-info">
+                                            <h4>{{ item.product_name }}</h4>
+                                            <p>Quantity: {{ item.quantity }}</p>
+                                            <p>Price: ₱{{ "%.2f"|format(item.price) }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p>No items found for this order</p>
+                                {% endif %}
+                            </div>
+                            <div class="order-summary">
+                                <p>Subtotal: ₱{{ "%.2f"|format(order.subtotal) }}</p>
+                                <p>Shipping: ₱{{ "%.2f"|format(order.shipping_cost) }}</p>
+                                <p class="total"><strong>Total: ₱{{ "%.2f"|format(order.total_amount) }}</strong></p>
+                                <p>Payment Method: {{ order.payment_method }}</p>
+                                <p>Shipping Method: {{ order.get('shipping_info', {}).get('method', 'Standard Shipping') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-orders">
+                    <i class="fas fa-shopping-bag" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                    <p>You don't have any orders yet.</p>
+                    <a href="{{ url_for('main.index') }}" class="btn-shop-now">Start Shopping</a>
+                </div>
+            {% endif %}
         </div>
         <div id="discount-container" class="account-container" style="display: none;">
             <h2>Discount Cards</h2>
@@ -245,156 +294,18 @@
         </div>
     </div>
 
+    <!-- Add any flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <script src="{{ url_for( 'static', filename='js/account.js' ) }}"></script>
-    <script>
-// Navigation between sections
-function showSection(sectionName) {
-    // Hide all containers
-    document.getElementById('dashboard-container').style.display = 'none';
-    document.getElementById('orders-container').style.display = 'none';
-    document.getElementById('discount-container').style.display = 'none';
-    document.getElementById('wishlist-container').style.display = 'none';
-    
-    // Remove active class from all nav items
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Show selected container
-    document.getElementById(sectionName + '-container').style.display = 'block';
-    
-    // Add active class to selected nav item
-    document.getElementById('nav-' + sectionName).classList.add('active');
-    
-    // Update URL hash
-    window.location.hash = sectionName;
-}
-
-// Check URL hash on page load
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('addressPopup').style.display = 'none';
-    const hash = window.location.hash.substring(1);
-    if (hash && ['dashboard', 'orders', 'discount', 'wishlist'].includes(hash)) {
-        showSection(hash);
-    }
-    
-    // Initialize cart buttons for wishlist items
-    if (typeof initializeCartButtons === 'function') {
-        initializeCartButtons();
-    }
-});
-
-// Remove item from wishlist
-function removeFromWishlist(productId, productType, button) {
-    if (!confirm('Remove this item from your wishlist?')) {
-        return;
-    }
-    
-    fetch('/wishlist/remove', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({
-            product_id: productId,
-            product_type: productType
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Remove the item from the page
-            const wishlistItem = button.closest('.wishlist-item');
-            wishlistItem.style.transition = 'all 0.3s ease';
-            wishlistItem.style.transform = 'translateX(-100%)';
-            wishlistItem.style.opacity = '0';
-            
-            setTimeout(() => {
-                wishlistItem.remove();
-
-                // Check if wishlist is now empty
-                const remainingItems = document.querySelectorAll('.wishlist-item');
-                if (remainingItems.length === 0) {
-                    const wishlistContainer = document.getElementById('wishlist-container');
-                    wishlistContainer.innerHTML = `
-                        <h2>My Wishlist</h2>
-                        <div class="empty-wishlist">
-                            <i class="fas fa-heart" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
-                            <p>Your wishlist is empty. Find your next great read!</p>
-                            <p><a href="{{ url_for('main.index') }}">Go back to homepage and start browsing</a></p>
-                        </div>
-                    `;
-                }
-            }, 300);
-            
-            showNotification('Item removed from wishlist', 'success');
-        } else {
-            showNotification(data.message || 'Failed to remove item', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error removing from wishlist:', error);
-        showNotification('Error removing item', 'error');
-    });
-}
-
-function showEditPopup() {
-  document.getElementById('editDetailsPopup').style.display = 'flex';
-}
-function closeEditPopup() {
-  document.getElementById('editDetailsPopup').style.display = 'none';
-}
-function showChangePasswordPopup() {
-  document.querySelector('.change-password-overlay').style.display = 'flex';
-}
-function closeChangePasswordPopup() {
-  document.querySelector('.change-password-overlay').style.display = 'none';
-}
-function togglePassword(btn) {
-  const input = btn.parentElement.querySelector('input');
-  const icon = btn.querySelector('.eye-icon');
-  if (input.type === "password") {
-    input.type = "text";
-    icon.classList.add('closed'); // Show eye closed
-  } else {
-    input.type = "password";
-    icon.classList.remove('closed'); // Show eye open
-  }
-}
-  function openAddressPopup() {
-    document.getElementById("addressPopup").style.display = "flex";
-  }
-
-  function closeAddressPopup() {
-    document.getElementById("addressPopup").style.display = "none";
-  }
-
-  function showEditAddress() {
-    document.getElementById("editAddressPopup").style.display = "flex";
-  }
-
-  function closeEditAddressPopup() {
-    document.getElementById("editAddressPopup").style.display = "none";
-  }
-
-  function confirmDeleteAddress() {
-    document.getElementById("deleteAddressPopup").style.display = "flex";
-  }
-
-  function closeDeleteAddressPopup() {
-    document.getElementById("deleteAddressPopup").style.display = "none";
-  }
-
-  window.addEventListener("click", function (e) {
-    ['addressPopup', 'editAddressPopup', 'deleteAddressPopup'].forEach(id => {
-      const popup = document.getElementById(id);
-      if (e.target === popup) {
-        popup.style.display = "none";
-      }
-    });
-  });
-</script>
     {% include 'components/page_footer.html' %}
 </body>
 </html>

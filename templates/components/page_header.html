@@ -43,7 +43,7 @@
                 <div class="user-links">
                     {% if session.get('user') %}
                         <a href="/account"><i class="fas fa-user"></i> Account</a>
-                        <a href="account/wishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                        <a href="/account?section=wishlist"><i class="fas fa-heart"></i> Wishlist</a>
                         <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
                     {% else %}
                         <div class="login-dropdown">
@@ -62,15 +62,15 @@
                                 
                                 <div class="error-message" id="loginError" style="display: none;">
                                     <i class="fas fa-exclamation-circle"></i>
-                                    <span id="errorText">Invalid username or password. Please try again.</span>
+                                    <span id="errorText">Invalid email or password. Please try again.</span>
                                 </div>
                                 
                                 <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}">
                                     {{ login_form.hidden_tag() }}
                                     <div class="form-login-container">
                                         <div class="input-group">
-                                            {{ login_form.username.label(class="form-label") }}
-                                            {{ login_form.username(class="form-input") }}
+                                            {{ login_form.email.label(class="form-label") }}
+                                            {{ login_form.email(class="form-input", placeholder="Enter your email address") }}
                                         </div>
                                         <div class="input-group password-group">
                                             {{ login_form.password.label(class="form-label") }}
@@ -123,12 +123,12 @@
                     <a href="/category/supplies">SUPPLIES</a>
                 </div>
             </div>
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                 <a href="/bestsellers" class="dropbtn">BESTSELLERS</a>
                 <div class="dropdown-content">
                     <a href="/bestsellers">BESTSELLERS OF THE MONTH</a>
                 </div>
-            </div>
+            </div> -->
             <div class="dropdown">
                 <a href="/collections" class="dropbtn">COLLECTIONS</a>
                 <div class="dropdown-content">
@@ -164,7 +164,7 @@
                 <a href="/" class="mobile-nav-item">
                     <i class="fas fa-home"></i> HOME
                 </a>
-        
+                
 
                 
                 <div class="mobile-dropdown">

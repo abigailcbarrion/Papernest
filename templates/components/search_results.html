@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/product_list.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
+    <!-- Add this line for mobile styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_search_results.css') }}">
     <title>Search Results - {{ query }}</title>
 </head>
 <body>
@@ -161,6 +163,32 @@
         function clearFilters() {
             window.location.href = "{{ url_for('product.search') }}?query={{ query }}";
         }
+
+        // Add collapsible functionality for the sidebar on mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 767) {
+                var sidebar = document.querySelector('.sidebar');
+                
+                // Handle clicks on the sidebar (specifically the pseudo-element header)
+                sidebar.addEventListener('click', function(e) {
+                    // Get click position relative to sidebar
+                    var rect = sidebar.getBoundingClientRect();
+                    var clickY = e.clientY - rect.top;
+                    
+                    // If clicking near the top where the header is
+                    if (clickY < 40 && e.target === sidebar) {
+                        sidebar.classList.toggle('active');
+                        e.preventDefault();
+                    }
+                });
+                
+                // Show filters by default if any are applied
+                if (window.location.search.includes('price=') || 
+                    window.location.search.includes('language=')) {
+                    sidebar.classList.add('active');
+                }
+            }
+        });
     </script>
 
     {% include 'components/page_footer.html' %}

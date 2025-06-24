@@ -165,6 +165,58 @@ th, td {
       </section>
     </main>
   </div>
+
+  <div id="orderDetailsModal" style="display: none; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="background-color: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 800px; border-radius: 8px; max-height: 80vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">
+        <h2 id="modal-title">Order Details</h2>
+        <span onclick="closeOrderModal()" style="cursor: pointer; font-size: 24px;">&times;</span>
+      </div>
+    
+      <div class="order-info">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+          <div>
+            <h3 id="order-number" style="margin: 0;">Order #<span id="order-id"></span></h3>
+            <p id="order-date" style="margin: 5px 0; color: #666;"></p>
+          </div>
+          <div style="text-align: right;">
+            <span id="order-status" style="padding: 5px 10px; border-radius: 4px; font-weight: bold;"></span>
+            <p>Total: ₱<span id="order-total"></span></p>
+          </div>
+        </div>
+      </div>
+    
+      <div class="customer-info" style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+        <h4 style="margin-bottom: 8px;">Customer Information</h4>
+        <p style="margin: 3px 0;"><strong>Name:</strong> <span id="customer-name"></span></p>
+        <p style="margin: 3px 0;"><strong>User ID:</strong> <span id="customer-id"></span></p>
+      </div>
+    
+      <div class="items-section">
+        <h4 style="margin-bottom: 10px;">Order Items</h4>
+        <div id="order-items" style="border: 1px solid #eee; border-radius: 5px; padding: 10px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
+                <th style="text-align: left; padding: 8px;">Product</th>
+                <th style="text-align: center; padding: 8px;">Quantity</th>
+                <th style="text-align: right; padding: 8px;">Price</th>
+                <th style="text-align: right; padding: 8px;">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="order-items-body">
+              <!-- Items will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    
+      <div class="actions" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; text-align: right;">
+        <button onclick="closeOrderModal()" style="background-color: #666; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     function updateOrderStatus(orderId, newStatus) {
         fetch('{{ url_for("admin.update_order_status") }}', {
@@ -190,10 +242,95 @@ th, td {
         });
     }
 
-    function viewOrderDetails(orderId) {
-        // Use proper Flask URL
-        window.open(`{{ url_for('checkout.order_details', order_id=0) }}`.replace('0', orderId), '_blank');
+  function viewOrderDetails(orderId) {
+    // Show the modal first with loading state
+    document.getElementById('orderDetailsModal').style.display = 'block';
+    document.getElementById('order-id').textContent = orderId;
+    document.getElementById('order-items-body').innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">Loading order details...</td></tr>';
+    
+    // Fetch order details
+    fetch(`/admin/get-order-details/${orderId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(order => {
+        // Populate order details
+        document.getElementById('order-id').textContent = order.order_id;
+        document.getElementById('order-date').textContent = order.order_date;
+        document.getElementById('order-total').textContent = parseFloat(order.total_amount).toFixed(2);
+        document.getElementById('customer-name').textContent = order.username;
+        document.getElementById('customer-id').textContent = order.user_id;
+        
+        // Set status with color coding
+        const statusElement = document.getElementById('order-status');
+        statusElement.textContent = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+        
+        // Apply color based on status
+        if (order.status === 'pending') {
+          statusElement.style.backgroundColor = '#FFC107';
+          statusElement.style.color = '#333';
+        } else if (order.status === 'processing') {
+          statusElement.style.backgroundColor = '#2196F3';
+          statusElement.style.color = 'white';
+        } else if (order.status === 'shipped' || order.status === 'delivered') {
+          statusElement.style.backgroundColor = '#4CAF50';
+          statusElement.style.color = 'white';
+        } else if (order.status === 'cancelled') {
+          statusElement.style.backgroundColor = '#F44336';
+          statusElement.style.color = 'white';
+        }
+
+        // Generate table rows for order items
+        let itemsHTML = '';
+        if (order.items && order.items.length > 0) {
+          order.items.forEach(item => {
+            const subtotal = (parseFloat(item.price) * parseInt(item.quantity)).toFixed(2);
+            itemsHTML += `
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 8px;">
+                  <div style="display: flex; align-items: center;">
+                    <div style="width: 60px; height: 60px; margin-right: 10px; overflow: hidden; border-radius: 4px;">
+                      <img src="${item.image_path}" alt="${item.product_name}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div>
+                      <div style="font-weight: bold;">${item.product_name}</div>
+                      <div style="color: #666; font-size: 0.9em;">ID: ${item.product_id}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="text-align: center; padding: 8px;">${item.quantity}</td>
+                <td style="text-align: right; padding: 8px;">₱${parseFloat(item.price).toFixed(2)}</td>
+                <td style="text-align: right; padding: 8px;">₱${subtotal}</td>
+              </tr>
+            `;
+          });
+        } else {
+          itemsHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">No items found for this order.</td></tr>';
+        }
+        document.getElementById('order-items-body').innerHTML = itemsHTML;
+      })
+      .catch(error => {
+        console.error('Error fetching order details:', error);
+        document.getElementById('order-items-body').innerHTML = 
+          `<tr><td colspan="4" style="text-align:center; color:red; padding: 20px;">
+            Error loading order details: ${error.message}. Please try again.</td></tr>`;
+      });
+  }
+
+  function closeOrderModal() {
+    document.getElementById('orderDetailsModal').style.display = 'none';
+  }
+
+  // Close the modal if user clicks outside of it
+  window.onclick = function(event) {
+    const modal = document.getElementById('orderDetailsModal');
+    if (event.target === modal) {
+      closeOrderModal();
     }
+  };
   </script>
 </body>
 </html>

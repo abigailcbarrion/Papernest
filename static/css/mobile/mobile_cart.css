@@ -1,0 +1,235 @@
+/* mobile_cart.css - Complete mobile cart layout (non-scrollable version) */
+
+@media (max-width: 767px) {
+    /* ===== CORE LAYOUT FIXES ===== */
+    body, html {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .page-wrapper {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .container {
+        width: 100% !important;
+        padding: 0 10px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ===== STACKED LAYOUT ===== */
+    .cart-section {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .cart-left, .cart-right {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .cart-right {
+        margin-top: 20px !important;
+    }
+
+    /* ===== TABLE RESTRUCTURING ===== */
+    .table-cart-items {
+        display: block !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    /* Hide headers except first column */
+    .table-cart-items tr:first-child th:not(:first-child) {
+        display: none !important;
+    }
+
+    .table-cart-items tr:first-child th:first-child {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    /* Convert rows to cards */
+    .table-cart-items .cart-item-row {
+        display: block !important;
+        position: relative !important;
+        margin-bottom: 15px !important;
+        padding: 10px !important;
+        border: 1px solid #ddd !important;
+        border-radius: 8px !important;
+    }
+
+    /* Hide quantity cell but make quantity appear below item name */
+    .cart-item-row td:nth-child(2) {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        padding-left: 40px !important;  /* Align with item name */
+    }
+
+    /* Style first cell with item details */
+    .cart-item-row td:first-child {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Price cell styling */
+    .cart-item-row td:nth-child(3) {
+        display: inline-block !important;
+        width: auto !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 10px 0 0 40px !important;
+        text-align: left !important;
+    }
+
+    /* Remove button position */
+    .cart-item-row td:nth-child(4) {
+        display: inline-block !important;
+        width: auto !important;
+        border: none !important;
+        padding: 0 !important;
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+    }
+
+    /* ===== CART ITEM STYLING ===== */
+    /* Instead, make images smaller */
+    .cart-item .item-image {
+        width: 40px !important;
+        height: 55px !important;
+        object-fit: cover !important;
+        margin-right: 10px !important;
+    }
+
+    .cart-item {
+        position: relative !important;
+        padding-left: 30px !important; /* Space for checkbox */
+    }
+
+    .item-checkbox {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+    }
+
+    .item-name {
+        font-size: 14px !important;
+        margin: 0 !important;
+        padding-right: 25px !important; /* Space for remove button */
+    }
+
+    /* Quantity controls styling */
+    .item-quantity {
+        margin: 8px 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+    }
+
+    .btn-decrease, .btn-increase {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 12px !important;
+    }
+
+    .quantity-input {
+        width: 40px !important;
+        height: 28px !important;
+        font-size: 14px !important;
+        text-align: center !important;
+    }
+
+    /* Price styling */
+    .item-price {
+        font-size: 16px !important;
+        font-weight: bold !important;
+    }
+
+    /* Remove button styling */
+    .btn-remove {
+        background: transparent !important;
+        border: none !important;
+        color: #999 !important;
+        font-size: 16px !important;
+    }
+
+    /* ===== ORDER SUMMARY STYLING ===== */
+    .table-cart-summary {
+        width: 100% !important;
+    }
+
+    /* ===== UTILITIES ===== */
+    /* Empty cart styling */
+    .empty-cart {
+        padding: 30px 10px !important;
+    }
+
+    .empty-cart i {
+        font-size: 40px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .empty-cart h3 {
+        font-size: 18px !important;
+    }
+
+    .empty-cart p {
+        font-size: 14px !important;
+    }
+    
+    /* Keep header with background color but not sticky */
+    .table-cart-items tr:first-child {
+        background-color: #fff !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+}
+
+/* Fix for the header gap in mobile cart view */
+@media (max-width: 767px) {
+    /* Adjust table header row */
+    .table-cart-items tr:first-child {
+        display: block !important;
+        width: 100% !important;
+        background-color: #f5f5f5 !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+    
+    /* Fix first header cell */
+    .table-cart-items tr:first-child th:first-child {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        padding: 10px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Completely remove other header cells */
+    .table-cart-items tr:first-child th:not(:first-child) {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        overflow: hidden !important;
+    }
+    
+    /* Fix table structure */
+    .table-cart-items thead,
+    .table-cart-items tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+}

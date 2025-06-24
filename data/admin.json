@@ -1,0 +1,10 @@
+{
+  "admins": [
+    {
+      "email": "admin@papernest.com",
+      "password": "Admin123!",
+      "role": "administrator",
+      "name": "System Administrator"
+    }
+  ]
+}
