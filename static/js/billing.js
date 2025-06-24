@@ -67,7 +67,7 @@ function initializePaymentPopups() {
     });
     
     // Initialize e-wallet selection
-    initializeEWalletSelection();
+    // initializeEWalletSelection();
     
     // Card payment form submission
     document.getElementById('card-payment-form').addEventListener('submit', function(e) {
@@ -144,33 +144,33 @@ function initializePopupCloseButtons() {
 /**
  * Initialize e-wallet selection functionality
  */
-function initializeEWalletSelection() {
-    const eWalletOptions = document.querySelectorAll('.e-wallet-option');
-    const continueButton = document.getElementById('select-wallet-btn');
-    let selectedWallet = null;
+// function initializeEWalletSelection() {
+//     const eWalletOptions = document.querySelectorAll('.e-wallet-option');
+//     const continueButton = document.getElementById('select-wallet-btn');
+//     let selectedWallet = null;
     
-    // Add event listeners to e-wallet options
-    eWalletOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            eWalletOptions.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            selectedWallet = this.getAttribute('data-wallet');
-            continueButton.disabled = false;
-        });
-    });
+//     // Add event listeners to e-wallet options
+//     eWalletOptions.forEach(option => {
+//         option.addEventListener('click', function() {
+//             eWalletOptions.forEach(opt => opt.classList.remove('selected'));
+//             this.classList.add('selected');
+//             selectedWallet = this.getAttribute('data-wallet');
+//             continueButton.disabled = false;
+//         });
+//     });
     
-    // E-wallet continue button
-    continueButton.addEventListener('click', function() {
-        const digitalWalletPopup = document.getElementById('digital-wallet-popup');
-        closePopup(digitalWalletPopup);
+//     // E-wallet continue button
+//     continueButton.addEventListener('click', function() {
+//         const digitalWalletPopup = document.getElementById('digital-wallet-popup');
+//         closePopup(digitalWalletPopup);
         
-        if (selectedWallet === 'gcash') {
-            openPopup(document.getElementById('gcash-payment-popup'));
-        } else if (selectedWallet === 'paymaya') {
-            openPopup(document.getElementById('paymaya-payment-popup'));
-        }
-    });
-}
+//         if (selectedWallet === 'gcash') {
+//             openPopup(document.getElementById('gcash-payment-popup'));
+//         } else if (selectedWallet === 'paymaya') {
+//             openPopup(document.getElementById('paymaya-payment-popup'));
+//         }
+//     });
+// }
 
 /**
  * Initialize input formatting for card fields
@@ -298,12 +298,14 @@ function finalizeOrder(paymentMethod, refNumber = '') {
     // Set payment method in order summary
     document.getElementById('order-payment-method').textContent = paymentMethod;
     
+    // const selectedItems = getSelectedCartItems();
+
     // Create the payment data
     const paymentData = {
         payment_method: paymentMethod,
         user_id: userId,   // Include user ID from the hidden field
         username: username, // Include username from the hidden field
-        reference_number: refNumber
+        reference_number: refNumber,
     };
     
     // Use fetch to send the payment data

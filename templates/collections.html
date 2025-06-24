@@ -242,14 +242,38 @@
                             <img src="{{ item.image }}" alt="{{ item.name }}">
                             <div class="card-info">
                                 {% if session.get('user') %}
-                                <form method="POST" action="{{ url_for('cart.add_to_cart') }}">
-                                    <input type="hidden" name="nonbook_id" value="{{ item.id }}">
-                                    <button type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                                </form>
-                                <form method="POST" action="{{ url_for('cart.add_to_wishlist') }}">
-                                    <input type="hidden" name="nonbook_id" value="{{ item.id }}">
-                                    <button type="submit"><i class="fas fa-heart"></i> Wishlist</button>
-                                </form>
+                                <button
+                                  class="btn-add-cart"
+                                  data-product-id="{{ item.id }}"
+                                  data-product-type="{{ item.type or 'nonbook' }}"
+                                  data-product-name="{{ item.name }}"
+                                  data-price="{{ item.price }}"
+                                  data-image-path="{{ item.image }}"
+                                  onclick="addToCart(
+                                      this.dataset.productId,
+                                      this.dataset.productType,
+                                      this.dataset.productName,
+                                      this.dataset.price,
+                                      this.dataset.imagePath,
+                                      1,
+                                      this
+                                  )"
+                              >
+                                  <i class="fas fa-cart-plus"></i> Add to Cart
+                              </button>
+                                <button
+                                    class="btn-wishlist"
+                                    data-product-id="{{ item.id }}"
+                                    data-product-type="{{ item.type or 'nonbook' }}"
+                                    onclick="addToWishlist(
+                                        this.dataset.productId,
+                                        this.dataset.productType,
+                                        this
+                                    )"
+                                >
+                                    <i class="fas fa-heart"></i> Wishlist
+                                </button>
+                                {% else %}          
                                 {% endif %}
                             </div>
                         </div>
@@ -293,7 +317,24 @@
                                 <button class="btn-wishlist" title="Add to Wishlist">
                                     <i class="fas fa-heart"></i>
                                 </button>
-                                <button class="btn-add-cart" title="Add to Cart">Add to Cart</i>
+                                <button
+                                    class="btn-add-cart"
+                                    data-product-id="{{ product.get('Product ID') }}"
+                                    data-product-type="{{ product.get('Product Type', 'book') }}"
+                                    data-product-name="{{ product.get('Book Name', product.get('Product Name', 'No Title')) }}"
+                                    data-price="{{ product.get('Price (PHP)', 0) }}"
+                                    data-image-path="{{ product.get('image_path') }}"
+                                    onclick="addToCart(
+                                        this.dataset.productId,
+                                        this.dataset.productType,
+                                        this.dataset.productName,
+                                        this.dataset.price,
+                                        this.dataset.imagePath,
+                                        1,
+                                        this
+                                    )"
+                                >
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
                                 </button>
                             </div>
                         </div>
@@ -309,6 +350,7 @@
     <footer>
         {% include 'components/page_footer.html' %}
     </footer>
+    <script src="{{ url_for('static', filename='js/cart-utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/product_carousel.js') }}"></script>
     <script>
         const dropdown = document.getElementById('customDropdown');

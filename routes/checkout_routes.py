@@ -151,12 +151,12 @@ def process_payment():
             payment_method = data.get('payment_method')
             user_id = data.get('user_id')
             username = data.get('username')
-            
+
             print(f"[DEBUG] Processing payment via JSON: method={payment_method}, user_id={user_id}")
             
             # Process with explicit user_id from request
             result = save_order_with_user_id(payment_method, user_id, username)
-            
+
             # Return JSON response
             if result.get('success'):
                 return jsonify({

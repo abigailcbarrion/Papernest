@@ -358,7 +358,7 @@ def process_billing(payment_method, payment_details=None):
         print(f"Error processing billing: {str(e)}")
         return {'success': False, 'error': f'An error occurred: {str(e)}'}
 
-def save_order_with_user_id(payment_method, user_id, username=None):
+def save_order_with_user_id(payment_method, user_id, username=None, cart_items=None,**kwargs):
     """Save an order with explicit user ID without relying on session"""
     try:
         print(f"[DEBUG] Processing order for user_id: {user_id}")
@@ -368,9 +368,17 @@ def save_order_with_user_id(payment_method, user_id, username=None):
         if 'user' in session:
             original_user = session.get('user')
             
-        # Set the user in session temporarily to use with get_cart_items()
-        session['user'] = {'id': user_id, 'user_id': user_id, 'username': username or 'Customer'}
+        # # Set the user in session temporarily to use with get_cart_items()
+        # session['user'] = {'id': user_id, 'user_id': user_id, 'username': username or 'Customer'}
         
+        if cart_items is None:
+            cart_items, total_amount = get_cart_items()
+        else:
+            total_amount = sum(item['price'] * item['quantity'] for item in cart_items)
+
+        if not cart_items:
+            return {'success': False, 'error': 'Your cart is empty'}
+
         try:
             cart_items, total_amount = get_cart_items()  # Remove the parameter
             
