@@ -9,7 +9,7 @@ from utilities.cart import clear_user_cart
 import json
 
 def get_db_connection(db_name):
-    conn = sqlite3.connect(f'data/{db_name}')
+    conn = sqlite3.connect(f'data/{db_name}', timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -235,14 +235,15 @@ def validate_shipping_info(form_data):
 def update_order_status(order_id, new_status):
     """Update order status"""
     try:
-        conn = get_db_connection('users.db')
-        cursor = conn.cursor()
-        
-        cursor.execute('UPDATE orders SET status = ?, updated_date = ? WHERE order_id = ?', 
-                    (new_status, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), order_id))
-        
-        conn.commit()
-        conn.close()
+        with get_db_connection('users.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'UPDATE orders SET status = ?, updated_date = ? WHERE order_id = ?',
+                (new_status, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), order_id)
+            )
+            conn.commit()
+            print("Rows affected:", cursor.rowcount)
+            return cursor.rowcount > 0 
         return True
     except Exception as e:
         print(f"Error updating order status: {e}")
@@ -357,7 +358,7 @@ def process_billing(payment_method, payment_details=None):
         print(f"Error processing billing: {str(e)}")
         return {'success': False, 'error': f'An error occurred: {str(e)}'}
 
-def save_order_with_user_id(payment_method, user_id, username=None):
+def save_order_with_user_id(payment_method, user_id, username=None, cart_items=None,**kwargs):
     """Save an order with explicit user ID without relying on session"""
     try:
         print(f"[DEBUG] Processing order for user_id: {user_id}")
@@ -367,9 +368,17 @@ def save_order_with_user_id(payment_method, user_id, username=None):
         if 'user' in session:
             original_user = session.get('user')
             
-        # Set the user in session temporarily to use with get_cart_items()
-        session['user'] = {'id': user_id, 'user_id': user_id, 'username': username or 'Customer'}
+        # # Set the user in session temporarily to use with get_cart_items()
+        # session['user'] = {'id': user_id, 'user_id': user_id, 'username': username or 'Customer'}
         
+        if cart_items is None:
+            cart_items, total_amount = get_cart_items()
+        else:
+            total_amount = sum(item['price'] * item['quantity'] for item in cart_items)
+
+        if not cart_items:
+            return {'success': False, 'error': 'Your cart is empty'}
+
         try:
             cart_items, total_amount = get_cart_items()  # Remove the parameter
             

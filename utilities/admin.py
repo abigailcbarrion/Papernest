@@ -1,7 +1,7 @@
 import json
 import os
 from functools import wraps
-from flask import session, redirect, url_for, flash
+from flask import session, redirect, url_for, flash, request, jsonify
 
 def load_admin_credentials():
     """Load admin credentials from JSON file"""
@@ -40,10 +40,11 @@ def check_admin_login(email, password):
         return False
 
 def admin_required(f):
-    """Simple decorator to require admin access for routes"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session or not session.get('user', {}).get('is_admin'):
+            if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'success': False, 'message': 'Unauthorized'}), 401
             flash('Admin access required', 'error')
             return redirect(url_for('admin.admin_login'))
         return f(*args, **kwargs)

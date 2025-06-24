@@ -24,7 +24,7 @@ def create_app():
     csrf = CSRFProtect(app)
     csrf.init_app(app)
 
-    csrf.exempt(main_bp)
+    csrf.exempt(main_bp)    
     
     # Exempt the cart blueprint from CSRF
     csrf.exempt(cart_bp)
