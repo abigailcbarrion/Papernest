@@ -190,26 +190,28 @@ th, td {
         <h4 style="margin-bottom: 8px;">Customer Information</h4>
         <p style="margin: 3px 0;"><strong>Name:</strong> <span id="customer-name"></span></p>
         <p style="margin: 3px 0;"><strong>User ID:</strong> <span id="customer-id"></span></p>
+        <p style="margin: 3px 0;">  <strong>Shipping Address:</strong> <span id="customer-address"></span></p>
+        <p style="margin: 3px 0;"><strong>Payment Method:</strong> <span id="payment-method"></span></p>
       </div>
     
-      <div class="items-section">
+      <!-- <div class="items-section">
         <h4 style="margin-bottom: 10px;">Order Items</h4>
         <div id="order-items" style="border: 1px solid #eee; border-radius: 5px; padding: 10px;">
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
-              <tr style="border-bottom: 1px solid #ddd; background-color: #f9f9f9;">
-                <th style="text-align: left; padding: 8px;">Product</th>
+              <tr style="border-bottom: 1px solid #ddd; background-color: #f9f9f9;"> -->
+                <!-- <th style="text-align: left; padding: 8px;">Product</th>
                 <th style="text-align: center; padding: 8px;">Quantity</th>
                 <th style="text-align: right; padding: 8px;">Price</th>
-                <th style="text-align: right; padding: 8px;">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody id="order-items-body">
+                <th style="text-align: right; padding: 8px;">Subtotal</th> -->
+              <!-- </tr>
+            </thead> -->
+            <!-- <tbody id="order-items-body"> -->
               <!-- Items will be inserted here -->
-            </tbody>
-          </table>
+            <!-- </tbody> -->
+          <!-- </table>
         </div>
-      </div>
+      </div> -->
     
       <div class="actions" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; text-align: right;">
         <button onclick="closeOrderModal()" style="background-color: #666; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Close</button>
@@ -224,6 +226,7 @@ th, td {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include', 
             body: JSON.stringify({
                 order_id: orderId,
                 status: newStatus
@@ -243,11 +246,10 @@ th, td {
     }
 
   function viewOrderDetails(orderId) {
-    // Show the modal first with loading state
+    // Show the modal first
     document.getElementById('orderDetailsModal').style.display = 'block';
     document.getElementById('order-id').textContent = orderId;
-    document.getElementById('order-items-body').innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">Loading order details...</td></tr>';
-    
+
     // Fetch order details
     fetch(`/admin/get-order-details/${orderId}`)
       .then(response => {
@@ -263,11 +265,14 @@ th, td {
         document.getElementById('order-total').textContent = parseFloat(order.total_amount).toFixed(2);
         document.getElementById('customer-name').textContent = order.username;
         document.getElementById('customer-id').textContent = order.user_id;
-        
+        document.getElementById('customer-address').textContent =
+          order.shipping_info && order.shipping_info.address ? order.shipping_info.address : 'N/A';
+        document.getElementById('payment-method').textContent = order.payment_method || 'N/A';
+
         // Set status with color coding
         const statusElement = document.getElementById('order-status');
         statusElement.textContent = order.status.charAt(0).toUpperCase() + order.status.slice(1);
-        
+
         // Apply color based on status
         if (order.status === 'pending') {
           statusElement.style.backgroundColor = '#FFC107';
@@ -282,43 +287,13 @@ th, td {
           statusElement.style.backgroundColor = '#F44336';
           statusElement.style.color = 'white';
         }
-
-        // Generate table rows for order items
-        let itemsHTML = '';
-        if (order.items && order.items.length > 0) {
-          order.items.forEach(item => {
-            const subtotal = (parseFloat(item.price) * parseInt(item.quantity)).toFixed(2);
-            itemsHTML += `
-              <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 8px;">
-                  <div style="display: flex; align-items: center;">
-                    <div style="width: 60px; height: 60px; margin-right: 10px; overflow: hidden; border-radius: 4px;">
-                      <img src="${item.image_path}" alt="${item.product_name}" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div>
-                      <div style="font-weight: bold;">${item.product_name}</div>
-                      <div style="color: #666; font-size: 0.9em;">ID: ${item.product_id}</div>
-                    </div>
-                  </div>
-                </td>
-                <td style="text-align: center; padding: 8px;">${item.quantity}</td>
-                <td style="text-align: right; padding: 8px;">₱${parseFloat(item.price).toFixed(2)}</td>
-                <td style="text-align: right; padding: 8px;">₱${subtotal}</td>
-              </tr>
-            `;
-          });
-        } else {
-          itemsHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">No items found for this order.</td></tr>';
-        }
-        document.getElementById('order-items-body').innerHTML = itemsHTML;
+        // No itemsHTML or order-items-body code here!
       })
       .catch(error => {
         console.error('Error fetching order details:', error);
-        document.getElementById('order-items-body').innerHTML = 
-          `<tr><td colspan="4" style="text-align:center; color:red; padding: 20px;">
-            Error loading order details: ${error.message}. Please try again.</td></tr>`;
+        // Optionally show an error message somewhere else in your modal
       });
-  }
+}
 
   function closeOrderModal() {
     document.getElementById('orderDetailsModal').style.display = 'none';
