@@ -52,47 +52,6 @@
             width: 220px;
             font-family: Arial, sans-serif;
         }
-
-        .dropdown-button {
-            padding: 10px 16px;
-            width: 100%;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            text-align: left;
-            border-radius: 4px;
-        }
-
-        .dropdown-button::after {
-            content: '▾';
-            float: right;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            width: 100%;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-            border-radius: 4px;
-            margin-top: 2px;
-        }
-
-        .dropdown-content div {
-            padding: 10px 16px;
-            cursor: pointer;
-        }
-
-        .dropdown-content div:hover {
-            background-color: #f2f2f2;
-        }
-
-        .dropdown.active .dropdown-content {
-            display: block;
-        }
-
         .collections-content {
             flex: 1;
             min-width: 0;
@@ -192,7 +151,8 @@
         .product-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
+            gap: 30px;
+            margin-left: 100px;
             margin-bottom: 40px;
         }
         .product-card {
@@ -205,9 +165,9 @@
         }
 
         .product-card img {
-            width: 80%;
+            width: 85%;
             height: 250px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 4px;
             margin-bottom: 8px;
         }
@@ -386,36 +346,10 @@
         </div>
 
         <div class="collections-layout">
-<<<<<<< HEAD
-            <!-- Sidebar Filter -->
-            <div class="dropdown" id="customDropdown">
-                <div class="dropdown-button" id="dropdownBtn">Filter by</div>
-                <div class="dropdown-content" id="dropdownList">
-                    <div onclick="selectOption(this)">Price: Low to High</div>
-                    <div onclick="selectOption(this)">Price: High to Low</div>
-                    <div onclick="selectOption(this)">Bestselling</div>
-                    <div onclick="selectOption(this)">Newest</div>
-                    <div onclick="selectOption(this)">Summer Reads</div>
-                    <div onclick="selectOption(this)">Rainy Reads</div>
-                    <div onclick="selectOption(this)">Mental Health</div>
-                </div>
+            <div class="collections-content">
+                <h2>Sale</h2>
+                <p>Discover our exclusive sale items.</p>
             </div>
-=======
-            <!-- Sidebar Section -->
-             <!-- <div class="dropdown" id="customDropdown">
-            <div class="dropdown-button" id="dropdownBtn">Filter by</div>
-            <div class="dropdown-content" id="dropdownList">
-                <div onclick="selectOption(this)">Price: Low to High</div>
-                <div onclick="selectOption(this)">Price: High to Low</div>
-                <div onclick="selectOption(this)">Bestselling</div>
-                <div onclick="selectOption(this)">Newest</div>
-                <div onclick="selectOption(this)">Summer Reads</div>
-                <div onclick="selectOption(this)">Rainy Reads</div>
-                <div onclick="selectOption(this)">Mental Health</div>
-            </div>
-            </div> -->
->>>>>>> 92c2be62813276f251d7fbda935b28fffedb914c
-
             <!-- Main Content -->
             <div class="collections-content">
                 {% for section in collection_sections %}
