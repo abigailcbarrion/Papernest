@@ -3,6 +3,7 @@ from utilities.load_items import (
     load_books, load_nonbooks, get_books_image_path, get_nonbook_image_path, get_trending
 )
 from utilities.search_item import search_products
+from utilities.handle_products import get_current_stock
 from constants import BOOK_CATEGORIES, NON_BOOK_CATEGORIES, CATEGORY_MAPPING
 
 product_bp = Blueprint('product', __name__)
@@ -62,8 +63,8 @@ def product_view(product_id):
         similar_products = get_trending(curr_section='books')
         for item in similar_products:
             item['image_path'] = get_books_image_path(item['Product ID'])
-        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books')
-    
+        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='books', product_type='book', product_id=product_id, quantity=get_current_stock(product_id, 'book'))
+
     # Try non-books
     product = next((nb for nb in non_books if nb.get('Product ID') == product_id), None)
     
@@ -73,8 +74,7 @@ def product_view(product_id):
         similar_products = get_trending(curr_section='non_books')
         for item in similar_products:
             item['image_path'] = get_nonbook_image_path(item['Product ID'])
-        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='non_books')
-    
+        return render_template('product_view.html', product=product, popular_items=similar_products, page_type='non_books', product_id=product_id, quantity=get_current_stock(product_id, 'non_book'))
     return "Product not found", 404
 
 @product_bp.route('/category/<category_name>')
