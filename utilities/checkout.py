@@ -9,7 +9,7 @@ from utilities.cart import clear_user_cart
 import json
 
 def get_db_connection(db_name):
-    conn = sqlite3.connect(f'data/{db_name}')
+    conn = sqlite3.connect(f'data/{db_name}', timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -235,14 +235,15 @@ def validate_shipping_info(form_data):
 def update_order_status(order_id, new_status):
     """Update order status"""
     try:
-        conn = get_db_connection('users.db')
-        cursor = conn.cursor()
-        
-        cursor.execute('UPDATE orders SET status = ?, updated_date = ? WHERE order_id = ?', 
-                    (new_status, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), order_id))
-        
-        conn.commit()
-        conn.close()
+        with get_db_connection('users.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'UPDATE orders SET status = ?, updated_date = ? WHERE order_id = ?',
+                (new_status, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), order_id)
+            )
+            conn.commit()
+            print("Rows affected:", cursor.rowcount)
+            return cursor.rowcount > 0 
         return True
     except Exception as e:
         print(f"Error updating order status: {e}")

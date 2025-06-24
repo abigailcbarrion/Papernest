@@ -44,7 +44,7 @@
                                         </div>
                                         <div class="payment-desc">
                                             <div>Digital Wallet</div>
-                                            <div class="wallet-desc">PayMaya, GCash, GrabPay, ShopeePay, WeChatPay, QR Pay, others</div>
+                                            <div class="wallet-desc">PayMaya & GCash</div>
                                         </div>
                                     </span>
                                 </label>
@@ -151,42 +151,19 @@
         <div id="digital-wallet-popup" class="popup-overlay">
             <div class="popup-content">
                 <span class="popup-close">&times;</span>
-                <h3 class="popup-title">Choose Payment App</h3>
-                <div class="e-wallet-options">
-                    <div class="e-wallet-option" data-wallet="gcash">
-                        <img src="{{ url_for('static', filename='images/E-Wallet-Img/gcash-logo.png') }}" 
-                            alt="GCash" 
-                            class="wallet-image" 
-                            data-fallback="{{ url_for('static', filename='images/placeholder.png') }}">
-                        <p>GCash</p>
-                    </div>
-                    <div class="e-wallet-option" data-wallet="paymaya">
-                        <img src="{{ url_for('static', filename='images/E-Wallet-Img/paymaya-logo.png') }}" 
-                            alt="PayMaya" 
-                            class="wallet-image" 
-                            data-fallback="{{ url_for('static', filename='images/placeholder.png') }}">
-                        <p>PayMaya</p>
-                    </div>
+                <h3 class="popup-title">Digital Wallet Payment</h3>
+                <div style="text-align:center; margin-bottom:15px;">
+                    <img src="{{ url_for('static', filename='images/your-qr-code.png') }}" alt="QR Code" style="width:160px; height:160px; border:1px solid #eee; border-radius:8px;">
+                    <p style="margin-top:10px; color:#555;">Scan this QR code with your GCash or PayMaya app to pay.</p>
                 </div>
-                <div class="popup-actions">
-                    <button id="select-wallet-btn" disabled>Continue</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- GCash Payment Form -->
-        <div id="gcash-payment-popup" class="popup-overlay">
-            <div class="popup-content">
-                <span class="popup-close">&times;</span>
-                <h3 class="popup-title">GCash Payment</h3>
-                <form id="gcash-payment-form">
+                <form id="digital-wallet-form">
                     <div class="form-group">
-                        <label for="gcash-number">GCash Mobile Number</label>
-                        <input type="text" id="gcash-number" required placeholder="09XX XXX XXXX" maxlength="11">
+                        <label for="wallet-ref-number">Reference Number</label>
+                        <input type="text" id="wallet-ref-number" required placeholder="Enter Reference Number">
                     </div>
                     <div class="form-group">
-                        <label for="gcash-name">Account Name</label>
-                        <input type="text" id="gcash-name" required placeholder="Full Name">
+                        <label>Subtotal</label>
+                        <input type="text" value="₱{{ '%.2f'|format(total_amount) }}" readonly style="background:#f9f9f9;">
                     </div>
                     <div class="popup-actions">
                         <button type="submit">Confirm Payment</button>
@@ -195,8 +172,33 @@
             </div>
         </div>
         
+        <!-- GCash Payment Form -->
+        <!-- <div id="gcash-wallet-popup" class="popup-overlay">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h3 class="popup-title">Gcash</h3>
+                <div style="text-align:center; margin-bottom:15px;">
+                    <img src="{{ url_for('static', filename='images/your-qr-code.png') }}" alt="QR Code" style="width:160px; height:160px; border:1px solid #eee; border-radius:8px;">
+                    <p style="margin-top:10px; color:#555;">Scan this QR code with your GCash app to pay.</p>
+                </div>
+                <form id="gcash-wallet-form">
+                    <div class="form-group">
+                        <label for="wallet-ref-number">Reference Number</label>
+                        <input type="text" id="wallet-ref-number" required placeholder="Enter Reference Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtotal</label>
+                        <input type="text" value="₱{{ '%.2f'|format(total_amount) }}" readonly style="background:#f9f9f9;">
+                    </div>
+                    <div class="popup-actions">
+                        <button type="submit">Confirm Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div> -->
+        
         <!-- PayMaya Payment Form -->
-        <div id="paymaya-payment-popup" class="popup-overlay">
+        <!-- <div id="paymaya-payment-popup" class="popup-overlay">
             <div class="popup-content">
                 <span class="popup-close">&times;</span>
                 <h3 class="popup-title">PayMaya Payment</h3>
@@ -214,7 +216,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> -->
         
         <!-- COD Confirmation Popup -->
         <div id="cod-confirmation-popup" class="popup-overlay">

@@ -78,26 +78,37 @@ function initializePaymentPopups() {
             finalizeOrder('Credit/Debit Card');
         }
     });
+    // Digital wallet form submission
+    document.getElementById('digital-wallet-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const refNumber = document.getElementById('wallet-ref-number').value.trim();
+        if (!refNumber) {
+            showMessage('Please enter the reference number.');
+            return;
+        }
+        closePopup(document.getElementById('digital-wallet-popup'));
+        finalizeOrder('Digital Wallet', refNumber);
+    });
     
     // GCash payment form submission
-    document.getElementById('gcash-payment-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // document.getElementById('gcash-payment-form').addEventListener('submit', function(e) {
+    //     e.preventDefault();
         
-        if (validateMobileForm('gcash')) {
-            closePopup(gcashPopup);
-            finalizeOrder('GCash');
-        }
-    });
+    //     if (validateMobileForm('gcash')) {
+    //         closePopup(gcashPopup);
+    //         finalizeOrder('GCash');
+    //     }
+    // });
     
     // PayMaya payment form submission
-    document.getElementById('paymaya-payment-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // document.getElementById('paymaya-payment-form').addEventListener('submit', function(e) {
+    //     e.preventDefault();
         
-        if (validateMobileForm('paymaya')) {
-            closePopup(paymayaPopup);
-            finalizeOrder('PayMaya');
-        }
-    });
+    //     if (validateMobileForm('paymaya')) {
+    //         closePopup(paymayaPopup);
+    //         finalizeOrder('PayMaya');
+    //     }
+    // });
     
     // COD confirmation button
     document.getElementById('confirm-cod-btn').addEventListener('click', function() {
@@ -278,7 +289,7 @@ function showMessage(message) {
  * Process the order with the selected payment method
  * @param {string} paymentMethod - The selected payment method
  */
-function finalizeOrder(paymentMethod) {
+function finalizeOrder(paymentMethod, refNumber = '') {
     // Get the user ID from our hidden maintainer
     const userIdMaintainer = document.getElementById('user-id-maintainer');
     const userId = userIdMaintainer ? userIdMaintainer.dataset.userId : null;
@@ -291,7 +302,8 @@ function finalizeOrder(paymentMethod) {
     const paymentData = {
         payment_method: paymentMethod,
         user_id: userId,   // Include user ID from the hidden field
-        username: username // Include username from the hidden field
+        username: username, // Include username from the hidden field
+        reference_number: refNumber
     };
     
     // Use fetch to send the payment data
