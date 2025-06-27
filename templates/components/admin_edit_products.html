@@ -201,12 +201,12 @@ th, td {
       <section class="content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <h2 style="margin: 0;">{% if page_type == 'non_books' %}Non-Books {% else %} Books {% endif %}</h2>
-          <a href="#form-group" style="background: #00bcd4; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-size: 14px;"> ➕ Want to add items? </a>
+          <!-- <a href="#form-group" style="background: #00bcd4; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-size: 14px;"> ➕ Want to add items? </a> -->
         </div>       
         
         <div class="table-container" style="margin-top: 10px;">
           <div class="table-header">
-            <h3>{% if page_type == 'non_books' %}All Non-Book Products ({{ non_book_products|length }}) {% else %} All Book Products ({{ book_products|length }}) {% endif %}</h3>
+            <h3>{% if page_type == 'non_books' or page_type == 'non-books' %}All Non-Book Products ({{ non_book_products|length }}) {% else %} All Book Products ({{ book_products|length }}) {% endif %}</h3>
             <div style="margin-bottom: 10px;">
               <input type="text" id="searchInput" placeholder="Search non-books..." style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 300px;">
               <!-- {% set filter_categories = non_book_products | map(attribute='Category') | unique | list %} -->
@@ -289,7 +289,7 @@ th, td {
           </table>
         </div>
 
-        <div class="form-group" id="form-group" style="margin-top: 30px;">
+        <!-- <div class="form-group" id="form-group" style="margin-top: 30px;">
           <h3>Add New {{ product_type.capitalize() }} Product</h3>
           <form id="addProductForm" method="POST" action="{{ url_for('admin.admin_products') }}" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -315,8 +315,7 @@ th, td {
                 <input type="text" name="brand" id="brand">
               </div>
             {% endif %}
-            
-            <!-- {% set filter_categories = non_book_products | map(attribute='Category') | unique | list %} -->
+          
             <div class="form-group">
               <label for="category">Category:</label>
               <select name="category" id="category" required> 
@@ -347,7 +346,7 @@ th, td {
               <button type="reset" class="btn-reset">Clear Form</button>
             </div>
           </form>
-        </div>
+        </div> -->
       </section>
     </main>
   </div>
