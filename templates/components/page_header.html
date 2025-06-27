@@ -8,8 +8,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/mobile_page_header.css') }}">
 </head>
-<body>
+<body> 
+    <style>
+    .desktop-nav {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    /* Optional: Add some spacing between nav items */
+    .desktop-nav .dropdown {
+        margin: 0 10px;
+    }
+</style>
     <div class="container">
+        
         <div class="top-bar">
             <div class="shipping-info">Shop now and get FREE shipping!</div>
             <div class="utility-links">
@@ -132,10 +145,10 @@
                 </div>
             </div>
             <div class="dropdown">
-                <a href="/sale" class="dropbtn">SALE</a>
+                <!-- <a href="/sale" class="dropbtn">SALE</a>
                 <div class="dropdown-content">
                     <a>FAV READS UNDER 500</a>
-                </div>
+                </div> -->
             </div>
         </nav>
 
@@ -211,7 +224,7 @@
                     </div>
                 </div>
                 
-                <div class="mobile-dropdown">
+                <!-- <div class="mobile-dropdown">
                     <button class="mobile-dropdown-btn" data-target="sale-dropdown">
                         <i class="fas fa-tag"></i> SALE <i class="fas fa-chevron-down"></i>
                     </button>
@@ -219,7 +232,7 @@
                         <a href="/sale">All Sale Items</a>
                         <a href="/fav_reads_under_500">Fav Reads Under 500</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 

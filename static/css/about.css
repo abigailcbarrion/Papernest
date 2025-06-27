@@ -67,3 +67,59 @@
     height: 100%;
     object-fit: cover;
 }
+
+/* Responsive adjustments for About Us page */
+@media (max-width: 900px) {
+    .about-images {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+    .about-img {
+        width: 95vw;
+        max-width: 100%;
+        height: 140px;
+    }
+    .team-members {
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    .team-member {
+        width: 45vw;
+        min-width: 120px;
+        max-width: 180px;
+        margin-bottom: 20px;
+    }
+    .member-image {
+        width: 100px;
+        height: 100px;
+    }
+    .about-us-container {
+        padding: 16px 4vw;
+    }
+    .about-us-container h1,
+    .team-title {
+        font-size: 1.7em;
+        margin-bottom: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .about-img {
+        height: 90px;
+    }
+    .team-member {
+        width: 90vw;
+        min-width: 0;
+        max-width: 100vw;
+    }
+    .about-us-container {
+        padding: 8px 2vw;
+    }
+    .about-us-container h1,
+    .team-title {
+        font-size: 1.2em;
+    }
+}   
