@@ -425,10 +425,17 @@ def save_order_with_user_id(payment_method, user_id, username=None, cart_items=N
                 # Commit transaction
                 conn.commit()
 
+                # After successfully creating the order
                 for item in cart_items:
                     save_item_to_order_items(order_id, item)
-                
-                clear_user_cart()  # No parameters here either
+                    # Update product stock
+                    update_product_stock(
+                        item.get('product_id'),
+                        item.get('product_type', 'book'),
+                        item.get('quantity', 1)
+                    )
+
+                clear_user_cart()
                 
                 return {'success': True, 'order_id': order_id}
                 
@@ -584,4 +591,60 @@ def save_item_to_order_items(order_id, item):
         
     except Exception as e:
         print(f"[ERROR] Failed to save item {item.get('product_id')} to order_items: {str(e)}")
+        return False
+    
+def update_product_stock(product_id, product_type, quantity):
+    """
+    Decrement product stock after order placement
+    
+    Args:
+        product_id: ID of the product
+        product_type: 'book' or 'nonbook'
+        quantity: quantity ordered
+    
+    Returns:
+        bool: True if successful, False otherwise
+    """
+    try:
+        # Determine which database to use
+        db_name = 'books.db' if product_type.lower() == 'book' or product_type.lower() == 'books' else 'non_books.db'
+
+        # Connect to appropriate database
+        conn = get_db_connection(db_name)
+        cursor = conn.cursor()
+        
+        # Different table structures for books vs non-books
+        if product_type.lower() == 'book':
+            # Get current stock
+            cursor.execute('SELECT stock_quantity FROM inventory WHERE "Product ID" = ?', (product_id,))
+            result = cursor.fetchone()
+            
+            if result:
+                current_stock = result['stock_quantity']
+                new_stock = max(0, current_stock - quantity)  # Prevent negative stock
+                
+                # Update stock
+                cursor.execute('UPDATE inventory SET stock_quantity = ? WHERE "Product ID" = ?', 
+                            (new_stock, product_id))
+                print(f"[STOCK] Updated book #{product_id} stock: {current_stock} → {new_stock}")
+        else:
+            # For non-books
+            cursor.execute('SELECT stock_quantity FROM inventory WHERE id = ?', (product_id,))
+            result = cursor.fetchone()
+            
+            if result:
+                current_stock = result['stock_quantity']
+                new_stock = max(0, current_stock - quantity)  # Prevent negative stock
+                
+                # Update stock
+                cursor.execute('UPDATE inventory SET stock_quantity = ? WHERE id = ?', 
+                            (new_stock, product_id))
+                print(f"[STOCK] Updated nonbook #{product_id} stock: {current_stock} → {new_stock}")
+        
+        conn.commit()
+        conn.close()
+        return True
+        
+    except Exception as e:
+        print(f"[ERROR] Failed to update stock for product {product_id}: {str(e)}")
         return False
